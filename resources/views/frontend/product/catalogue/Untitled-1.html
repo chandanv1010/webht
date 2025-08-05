@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Preview Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Controls */
+        .preview-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .url-section {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            max-width: 500px;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .load-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .load-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .device-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .device-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            color: #495057;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .device-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .device-btn:hover:not(.active) {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        /* Preview Container */
+        .preview-container {
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 100px);
+        }
+
+        .device-frame {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .device-frame::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        /* Device Frames */
+        .desktop-frame {
+            width: 1200px;
+            height: 800px;
+        }
+
+        .tablet-frame {
+            width: 768px;
+            height: 1024px;
+        }
+
+        .mobile-frame {
+            width: 375px;
+            height: 667px;
+        }
+
+        .frame-header {
+            background: #34495e;
+            height: 30px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 8px;
+        }
+
+        .frame-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+
+        .frame-url {
+            flex: 1;
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-size: 11px;
+            text-align: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100% - 30px);
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            background: white;
+            position: relative;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .device-info {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #495057;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .quick-link {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .quick-link:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 1300px) {
+            .desktop-frame {
+                width: 1000px;
+                height: 700px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .desktop-frame {
+                width: 900px;
+                height: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .url-section {
+                max-width: none;
+                width: 100%;
+            }
+
+            .device-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .desktop-frame,
+            .tablet-frame {
+                width: 95vw;
+                height: 70vh;
+            }
+
+            .mobile-frame {
+                width: 90vw;
+                height: 70vh;
+            }
+        }
+
+        /* Error State */
+        .error-message {
+            color: #dc3545;
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Floating refresh button */
+        .refresh-btn {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .refresh-btn:hover {
+            background: white;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Controls -->
+    <div class="preview-header">
+        <div class="header-content">
+            <div class="logo">📱 Responsive Preview</div>
+            
+            <div class="url-section">
+                <input 
+                    type="url" 
+                    class="url-input" 
+                    placeholder="Nhập URL website (ví dụ: https://example.com)"
+                    value="https://example.com"
+                    id="urlInput"
+                >
+                <button class="load-btn" onclick="loadWebsite()">
+                    🔄 Load
+                </button>
+            </div>
+
+            <div class="quick-links">
+                <a href="#" class="quick-link" onclick="loadQuickSite('https://example.com')">Example</a>
+                <a href="#" class="quick-link" onclick="loadQuickSite('https://httpbin.org')">HTTPBin</a>
+                <a href="#" class="quick-link" onclick="loadQuickSite('https://jsonplaceholder.typicode.com')">API Demo</a>
+                <a href="#" class="quick-link" onclick="loadQuickSite('https://her-cosmetic.mysapo.net/')">Her Cosmetic</a>
+            </div>
+
+            <div class="device-controls">
+                <button class="device-btn active" onclick="switchDevice('desktop')" id="desktop-btn">
+                    🖥️ Desktop
+                </button>
+                <button class="device-btn" onclick="switchDevice('tablet')" id="tablet-btn">
+                    📱 Tablet
+                </button>
+                <button class="device-btn" onclick="switchDevice('mobile')" id="mobile-btn">
+                    📱 Mobile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Preview Container -->
+    <div class="preview-container">
+        <div class="device-frame desktop-frame" id="deviceFrame">
+            <div class="device-info" id="deviceInfo">Desktop - 1200 x 800px</div>
+            
+            <div class="frame-header">
+                <div class="frame-dot dot-red"></div>
+                <div class="frame-dot dot-yellow"></div>
+                <div class="frame-dot dot-green"></div>
+                <div class="frame-url" id="frameUrl">Nhập URL để preview...</div>
+            </div>
+            
+            <div class="iframe-container">
+                <iframe 
+                    class="preview-iframe" 
+                    id="previewIframe"
+                    src=""
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-navigation"
+                    loading="lazy">
+                </iframe>
+                
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner"></div>
+                    <div>Đang tải website...</div>
+                </div>
+            </div>
+
+            <button class="refresh-btn" onclick="refreshIframe()" title="Refresh">
+                🔄
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentDevice = 'desktop';
+        let isLoading = false;
+
+        const deviceSizes = {
+            desktop: { width: 1200, height: 800, label: 'Desktop - 1200 x 800px' },
+            tablet: { width: 768, height: 1024, label: 'Tablet - 768 x 1024px' },
+            mobile: { width: 375, height: 667, label: 'Mobile - 375 x 667px' }
+        };
+
+        function switchDevice(device) {
+            if (isLoading) return;
+            
+            currentDevice = device;
+            const frame = document.getElementById('deviceFrame');
+            const info = document.getElementById('deviceInfo');
+            const buttons = document.querySelectorAll('.device-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(device + '-btn').classList.add('active');
+            
+            // Update frame class
+            frame.classList.remove('desktop-frame', 'tablet-frame', 'mobile-frame');
+            frame.classList.add(device + '-frame');
+            
+            // Update device info
+            info.textContent = deviceSizes[device].label;
+            
+            // Add transition effect
+            frame.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                frame.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function loadWebsite() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                showError('Vui lòng nhập URL');
+                return;
+            }
+
+            // Add protocol if missing
+            let finalUrl = url;
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                finalUrl = 'https://' + url;
+                urlInput.value = finalUrl;
+            }
+
+            loadIframe(finalUrl);
+        }
+
+        function loadQuickSite(url) {
+            document.getElementById('urlInput').value = url;
+            loadIframe(url);
+        }
+
+        function loadIframe(url) {
+            if (isLoading) return;
+            
+            isLoading = true;
+            const iframe = document.getElementById('previewIframe');
+            const loading = document.getElementById('loadingOverlay');
+            const frameUrl = document.getElementById('frameUrl');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            // Show loading
+            loading.style.display = 'flex';
+            errorMsg.style.display = 'none';
+            frameUrl.textContent = url;
+
+            // Load iframe
+            iframe.src = url;
+
+            // Handle iframe load
+            iframe.onload = function() {
+                // Check if iframe content loaded successfully
+                try {
+                    // Try to access iframe content to detect blocking
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (iframeDoc.body && iframeDoc.body.innerHTML.trim() === '') {
+                        // Empty body might indicate blocking
+                        setTimeout(() => {
+                            if (iframe.contentDocument && iframe.contentDocument.body.innerHTML.trim() === '') {
+                                showFrameBlockedError(url);
+                            }
+                        }, 2000);
+                    }
+                } catch (e) {
+                    // Cross-origin access blocked - this is normal
+                }
+                
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    isLoading = false;
+                }, 1500);
+            };
+
+            // Handle iframe error
+            iframe.onerror = function() {
+                loading.style.display = 'none';
+                showFrameBlockedError(url);
+                isLoading = false;
+            };
+
+            // Check for X-Frame-Options blocking after timeout
+            setTimeout(() => {
+                if (isLoading) {
+                    loading.style.display = 'none';
+                    isLoading = false;
+                    
+                    // Check if iframe is blocked
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        if (!iframeDoc) {
+                            showFrameBlockedError(url);
+                        }
+                    } catch (e) {
+                        // This is normal for cross-origin iframes
+                    }
+                }
+            }, 8000);
+        }
+
+        function refreshIframe() {
+            const iframe = document.getElementById('previewIframe');
+            const currentSrc = iframe.src;
+            if (currentSrc) {
+                iframe.src = '';
+                setTimeout(() => {
+                    iframe.src = currentSrc;
+                }, 100);
+            }
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 8000);
+        }
+
+        // Handle Enter key on URL input
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadWebsite();
+            }
+        });
+
+        // Auto-load default URL on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                loadWebsite();
+            }, 500);
+        });
+
+        // Handle responsive iframe loading
+        window.addEventListener('message', function(e) {
+            // Handle iframe messages if needed
+        });
+    </script>
+</body>
+</html>
