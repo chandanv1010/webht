@@ -28,7 +28,7 @@ class DashboardController extends Controller
     }
 
     public function index(){
-
+        //comment
         $orderStatistic = $this->orderService->statistic(); 
         $customerStatistic = $this->customerService->statistic();
         $startDate = convertDateTime( now(), 'Y-m-d 00:00:00');
