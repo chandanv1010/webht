@@ -155,10 +155,17 @@ if(!function_exists('getVariantPrice')){
 if(!function_exists('getReview')){
     function getReview($product = ''){
 
-        $totalReviews = $product->reviews()->count();
-        $totalRate = number_format($product->reviews()->avg('score'), 1);
+        // Count and average off the loaded collection. reviews()->count() and
+        // reviews()->avg() each issue their own query, so a 13-item listing paid 26
+        // round trips for reviews that the repository had already eager-loaded.
+        $reviews = $product->relationLoaded('reviews')
+            ? $product->reviews
+            : $product->reviews()->get();
+
+        $totalReviews = $reviews->count();
+        $totalRate = number_format((float) ($reviews->avg('score') ?? 0), 1);
         $starPercent = ($totalReviews == 0) ? '0' : $totalRate/5*100;
-    
+
 
         return [
             'star' => $starPercent,
@@ -283,8 +290,17 @@ if(!function_exists('write_url')){
         if(strpos($canonical, 'http') !== false){
             return $canonical;
         }
-        $fullUrl = (($fullDomain === true) ? config('app.url') : '').$canonical.( ($suffix === true) ? config('apps.general.suffix') : '' );
-        return $fullUrl;
+        $canonical = ltrim($canonical, '/');
+        $tail = $canonical.(($suffix === true) ? config('apps.general.suffix') : '');
+
+        if ($fullDomain !== true) {
+            return $tail;
+        }
+
+        // Join with exactly one slash. This used to be a bare concatenation, so an
+        // APP_URL without a trailing slash produced "http://example.comlien-he.html".
+        // Production happens to set one, which is why it went unnoticed.
+        return rtrim(config('app.url'), '/').'/'.$tail;
     }
 }
 
@@ -744,5 +760,20 @@ if (!function_exists('convertImgToAnchor')) {
         $html = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace(['<html><body>', '</body></html>'], '', $html));
 
         return $html;
+    }
+}
+if(!function_exists('tel_href')){
+    /**
+     * Build a tel: URI from a display number.
+     *
+     * Numbers are stored for reading ("0982 365 824"), so interpolating them
+     * straight into href="tel:..." produced "tel: 0982 365 824" — spaces, and in the
+     * footer a leading one. Strip everything that is not a digit or a leading +.
+     */
+    function tel_href($number){
+        $number = trim((string) $number);
+        $plus = str_starts_with($number, '+') ? '+' : '';
+
+        return 'tel:'.$plus.preg_replace('/\D+/', '', $number);
     }
 }

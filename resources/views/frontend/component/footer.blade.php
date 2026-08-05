@@ -6,19 +6,19 @@
                 <li>
                     <div class="box">
                         <span class="label">Tư vấn thiết kế web</span>
-                        <a class="value" href="tel: {{ $system['contact_phone'] }}" title="Tư vấn thiết kế web">{{ $system['contact_phone'] }}</a>
+                        <a class="value" href="{{ tel_href($system['contact_phone']) }}" title="Tư vấn thiết kế web">{{ $system['contact_phone'] }}</a>
                     </div>
                 </li>
                 <li>
                     <div class="box">
                         <span class="label">Hỗ trợ kỹ thuật</span>
-                        <a class="value" href="tel: {{ $system['contact_hotline'] }}" title="Tư vấn thiết kế web">{{ $system['contact_hotline'] }}</a>
+                        <a class="value" href="{{ tel_href($system['contact_hotline']) }}" title="Tư vấn thiết kế web">{{ $system['contact_hotline'] }}</a>
                     </div>
                 </li>
                 <li>
                     <div class="box">
                         <span class="label">Gửi yêu cầu làm web</span>
-                        <a class="value" href="mailto: {{ $system['contact_email'] }}" title="Tư vấn thiết kế web">{{ $system['contact_email'] }}</a>
+                        <a class="value" href="mailto:{{ $system['contact_email'] }}" title="Tư vấn thiết kế web">{{ $system['contact_email'] }}</a>
                     </div>
                 </li>
             </ul>
@@ -54,9 +54,14 @@
                 <div class="uk-width-large-1-3">
                     <div class="footer-menu">
                         <div class="uk-grid uk-grid-medium">
+                            {{-- ->languages, not ->languages(): with the parentheses this
+                                 calls the relation method, which builds a brand new query
+                                 and ignores the rows MenuComposer already eager-loaded.
+                                 It ran three times per child link, which is where 26 of the
+                                 27 menu_language queries on every page came from. --}}
                             @foreach($menu['footer-menu'] as $item)
                             @php
-                                $name = $item['item']->languages()->first()->pivot->name;
+                                $name = $item['item']->languages->first()->pivot->name;
                             @endphp
                             <div class="uk-width-large-1-2">
                                 <div class="footer-menu-item">
@@ -64,8 +69,9 @@
                                     <ul class="uk-list uk-clearfix">
                                         @foreach($item['children'] as $key => $child)
                                          @php
-                                            $nameC = $child['item']->languages()->first()->pivot->name;
-                                            $canonical = write_url($child['item']->languages()->first()->pivot->canonical);
+                                            $childPivot = $child['item']->languages->first()->pivot;
+                                            $nameC = $childPivot->name;
+                                            $canonical = write_url($childPivot->canonical);
                                         @endphp
 
                                         <li><a href="{{ $canonical }}">- {{ $nameC }}</a></li>

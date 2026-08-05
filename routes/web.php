@@ -41,6 +41,7 @@ use App\Http\Controllers\Backend\Attribute\AttributeCatalogueController;
 use App\Http\Controllers\Backend\Attribute\AttributeController;
 use App\Http\Controllers\Backend\SystemController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\ContactController as FeContactController;
 use App\Http\Controllers\Frontend\RouterController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\Payment\VnpayController;
@@ -92,9 +93,17 @@ Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler.index'
 Route::get('/thumb', [App\Http\Controllers\ImageResizerController::class, 'resize'])
     ->name('thumb');
 
+// The contact page had a controller and a view but no route, so "Liên Hệ" in the
+// main menu was a 404 for every visitor.
+Route::get('lien-he'.config('apps.general.suffix', '.html'), [FeContactController::class, 'index'])->name('fe.contact.index');
+
 Route::get('tim-kiem', [FeProductCatalogueController::class, 'search'])->name('product.catalogue.search');
 
-Route::get('tim-kiem/trang-{page}', [FeProductCatalogueController::class, 'search'])->name('product.catalogue.search')->where('page', '[0-9]+');
+// Distinct name from the unpaginated route above. Both were called
+// product.catalogue.search, and because the later registration wins, route()
+// resolved to this one and demanded a {page} argument — so any caller asking for
+// the plain search URL got "Missing required parameter [Missing parameter: page]".
+Route::get('tim-kiem/trang-{page}', [FeProductCatalogueController::class, 'search'])->name('product.catalogue.search.page')->where('page', '[0-9]+');
 
 Route::post('ajax/contact/quickConsult', [AjaxContactController::class, 'quickConsult'])->name('fe.contact.quickConsult');
 

@@ -11,7 +11,7 @@
                 <p style="text-align: center;">Dành cho Cá nhân &amp; Đơn vị <br> mới Thành Lập </p>
               </div>
               <div class="price">
-                <a href="lien-he" title="BASIC">
+                <a href="{{ write_url('lien-he') }}" title="BASIC">
                   <p>Chỉ từ</p>
                   <p>
                     <strong>2.300.000</strong>
@@ -67,7 +67,7 @@
               </div>
               <div class="bestseller"> Gói được đăng ký nhiều nhất </div>
               <div class="price animated infinite pulse">
-                <a href="lien-he" title="BEST SELLER">
+                <a href="{{ write_url('lien-he') }}" title="BEST SELLER">
                   <p>Chỉ từ</p>
                   <p>
                     <strong>4.500.000</strong>
@@ -121,7 +121,7 @@
                 <p style="text-align: center;">Thiết kế giao diện website mới hoàn toàn theo yêu cầu của KH</p>
               </div>
               <div class="price">
-                <a href="lien-he" title="BUSSINESS" class="">
+                <a href="{{ write_url('lien-he') }}" title="BUSSINESS" class="">
                   <p>Chỉ từ</p>
                   <p>
                     <strong> &gt; 8.500.000</strong>
@@ -184,7 +184,7 @@
                 <p style="text-align: center;">3 phương án trang chủ</p>
               </div>
               <div class="price">
-                <a href="lien-he" title="BOOM" class="">
+                <a href="{{ write_url('lien-he') }}" title="BOOM" class="">
                   <p>Chỉ từ</p>
                   <p>
                     <strong> 15.000.000++</strong>

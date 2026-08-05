@@ -250,7 +250,53 @@ ul li,ol li{
     border:0;
 }
 .middle-toolbox button img {
-    max-width: 22px;   
+    max-width: 22px;
+}
+
+/* Header search: collapsed to just the magnifier, expanding on focus so it does not
+   compete with the navigation for space. */
+.header-search {
+    display: flex;
+    align-items: center;
+    background: #f2f5f9;
+    border: 1px solid transparent;
+    border-radius: 22px;
+    padding: 0 4px 0 0;
+    transition: border-color .25s ease, background .25s ease;
+}
+.header-search input {
+    width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #020637;
+    transition: width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1);
+}
+.header-search input::-webkit-search-cancel-button { display: none; }
+.header-search:focus-within,
+.header-search:hover {
+    background: #fff;
+    border-color: rgba(2, 6, 55, .14);
+}
+.header-search:focus-within input,
+.header-search:hover input,
+.header-search input:not(:placeholder-shown) {
+    width: 208px;
+    padding: 9px 4px 9px 16px;
+}
+.header-search button { cursor: pointer; padding: 6px 8px; display: flex; }
+.header-search button:focus-visible {
+    outline: 2px solid #833bff;
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+@media (max-width: 1200px) {
+    .header-search:focus-within input,
+    .header-search:hover input,
+    .header-search input:not(:placeholder-shown) { width: 150px; }
 }
 .middle-toolbox .middle-hotline a{
     display: block;

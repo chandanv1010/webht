@@ -3,8 +3,9 @@
         <div class="header-upper">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="header-contact uk-flex uk-flex-middle">
-                    <a href="to:{{ $system['contact_email'] }}">Email: {{ $system['contact_email'] }}</a>
-                    <a href="tel:{{ $system['contact_hotline'] }}">Phone: {{ $system['contact_hotline'] }}</a>
+                    {{-- "to:" is not a scheme — this link did nothing when clicked. --}}
+                    <a href="mailto:{{ $system['contact_email'] }}">Email: {{ $system['contact_email'] }}</a>
+                    <a href="{{ tel_href($system['contact_hotline']) }}">Phone: {{ $system['contact_hotline'] }}</a>
                 </div>
                 @php
                     $socialList = ['facebook', 'youtube', 'tiktok'];
@@ -24,11 +25,24 @@
                 {{-- <a href="" class="logo"><img src="https://xido-demo.pbminfotech.com/cybersecurity/wp-content/uploads/sites/28/2022/10/cybersecurity-logo.svg" alt=""></a> --}}
                 @include('frontend.component.navigation')
                 <div class="middle-toolbox uk-flex uk-flex-middle">
-                    <form action="">
-                        <button type="button"><img src="{{ asset('frontend/resources/img/search-interface-symbol.png') }}" alt=""></button>
+                    {{-- This was a <form action=""> with a type="button" button and no
+                         input at all, so the magnifier had never done anything. The
+                         search itself already worked at /tim-kiem?keyword=. --}}
+                    <form action="{{ route('product.catalogue.search') }}" method="get" class="header-search" role="search">
+                        <label class="uk-hidden" for="header-search-input">Tìm kiếm giao diện</label>
+                        <input
+                            id="header-search-input"
+                            type="search"
+                            name="keyword"
+                            value="{{ request('keyword') }}"
+                            placeholder="Tìm giao diện, mẫu website..."
+                            autocomplete="off">
+                        <button type="submit" aria-label="Tìm kiếm">
+                            <img src="{{ asset('frontend/resources/img/search-interface-symbol.png') }}" alt="">
+                        </button>
                     </form>
                     <div class="middle-hotline">
-                        <a class="button-style readmore" href="tel:{{ $system['contact_hotline'] }}">{{ $system['contact_hotline'] }}</a>
+                        <a class="button-style readmore" href="{{ tel_href($system['contact_hotline']) }}">{{ $system['contact_hotline'] }}</a>
                     </div>
                 </div>
             </div>
