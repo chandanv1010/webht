@@ -4,3 +4,7 @@
 /public/uploads
 /public/upload
 /public/image-cache
+# Demo cover screenshots grabbed from live websites for local review only.
+# 28MB of third-party imagery does not belong in the repo history — regenerate with
+# scripts/grab-demo-covers.sh, or drop your own screenshots in the same folder.
+/public/userfiles/image/template-cover/

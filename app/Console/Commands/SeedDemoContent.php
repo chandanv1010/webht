@@ -278,6 +278,19 @@ class SeedDemoContent extends Command
             ['giao-duc', 'Eduka - Trung tâm đào tạo', 2800000, 'Lịch khai giảng, hồ sơ giảng viên và biểu mẫu đăng ký thử.'],
             ['giao-duc', 'Coursely - Bán khoá học trực tuyến', 3600000, 'Danh sách khoá học, chương trình từng bài và trang thanh toán.'],
             ['giao-duc', 'Kidzone - Trường mầm non', 2200000, 'Màu tươi, ảnh lớn, trang thực đơn và hoạt động hằng tuần.'],
+            // Two more per category so every shelf holds six. With exactly four and
+            // four visible, nothing peeks past the right edge and the row looks
+            // finished when it is not.
+            ['website-ban-hang', 'Marketo - Cửa hàng đa ngành', 3800000, 'Nhiều nhóm hàng, bộ lọc theo thuộc tính và giỏ hàng một bước.'],
+            ['website-ban-hang', 'Freshly - Thực phẩm tươi', 2900000, 'Đặt theo ngày giao, hiển thị tồn kho và khung giờ nhận hàng.'],
+            ['website-doanh-nghiep', 'Vertex - Công ty xây dựng', 4100000, 'Trang dự án có ảnh trước sau, tiến độ và hồ sơ năng lực tải về.'],
+            ['website-doanh-nghiep', 'Lumen - Công ty tư vấn', 3300000, 'Chữ lớn, ít ảnh, tập trung vào lĩnh vực chuyên môn và đội ngũ.'],
+            ['landing-page', 'Bookly - Landing đặt lịch hẹn', 1600000, 'Chọn dịch vụ, chọn giờ, để lại số điện thoại — hết.'],
+            ['landing-page', 'Promo - Landing chương trình khuyến mại', 800000, 'Đếm ngược thời gian, thể lệ và biểu mẫu nhận mã.'],
+            ['website-bat-dong-san', 'Skyline - Căn hộ cao tầng', 5100000, 'Chọn tầng trên mặt cắt toà nhà, xem căn còn trống theo hướng.'],
+            ['website-bat-dong-san', 'LandMap - Đất nền theo bản đồ', 3900000, 'Bản đồ phân lô, trạng thái từng lô và bảng giá theo đợt.'],
+            ['giao-duc', 'Lingo - Trung tâm ngoại ngữ', 3100000, 'Kiểm tra trình độ trực tuyến, xếp lớp và lịch học theo ca.'],
+            ['giao-duc', 'Skillup - Đào tạo doanh nghiệp', 4300000, 'Khoá học nội bộ, phân quyền theo phòng ban và theo dõi tiến độ.'],
         ];
 
         $created = 0;
@@ -486,11 +499,24 @@ class SeedDemoContent extends Command
             ->where('language_id', 1)
             ->pluck('canonical', 'product_catalogue_id');
 
+        // Per-category counters, so category screenshots are handed out in order
+        // rather than every card in a shelf getting the same one.
+        $perCategory = [];
+
         $usedReal = 0;
         foreach ($products as $i => $product) {
-            $real = collect(['jpg', 'jpeg', 'png', 'webp'])
-                ->map(fn ($ext) => $product->canonical.'.'.$ext)
-                ->first(fn ($f) => is_file($coverDir.'/'.$f));
+            $cat = $catCanonical[$product->product_catalogue_id] ?? '';
+            $perCategory[$cat] = ($perCategory[$cat] ?? 0) + 1;
+
+            // A file named after the template itself wins. Failing that, the numbered
+            // screenshots for its category. Failing both, a drawn mock.
+            $candidates = collect(['jpg', 'jpeg', 'png', 'webp'])
+                ->flatMap(fn ($ext) => [
+                    $product->canonical.'.'.$ext,
+                    self::coverBase($cat).'-'.$perCategory[$cat].'.'.$ext,
+                ]);
+
+            $real = $candidates->first(fn ($f) => is_file($coverDir.'/'.$f));
 
             if ($real !== null) {
                 DB::table('products')->where('id', $product->id)
@@ -512,6 +538,14 @@ class SeedDemoContent extends Command
         }
 
         $this->line('  posters    '.(count($products) - $usedReal).' mock, '.$usedReal.' ảnh thật');
+    }
+
+    /** Filename stem used by the category screenshots in template-cover/. */
+    private static function coverBase(string $categoryCanonical): string
+    {
+        return $categoryCanonical === 'mau-quan-tri-bang-dieu-khien'
+            ? 'mau-quan-tri'
+            : $categoryCanonical;
     }
 
     private function clean(): int
