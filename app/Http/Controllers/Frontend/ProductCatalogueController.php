@@ -104,7 +104,11 @@ class ProductCatalogueController extends FrontendController
             'widgets',
             'schema',
             // 'menus'
-        ));
+        ) + $this->storeBrowse($productCatalogue, $request, $parent ?? $productCatalogue, $children) + [
+            // The store canvas is dark, so the floating header has to switch to its
+            // white-text mode or the contact strip disappears into the billboard.
+            'dark' => true,
+        ]);
     }
 
     private function combineProductValues($products){
@@ -114,6 +118,89 @@ class ProductCatalogueController extends FrontendController
         }
 
         return $products;
+    }
+
+    /**
+     * Data for the template store browse page.
+     *
+     * The store is browsed as one place: whether the visitor lands on the root
+     * (kho-giao-dien) or a category, they get the same shelves and the same filter
+     * bar, with their category pre-selected. Filtering is done with query
+     * parameters and rendered server-side, so it works with JavaScript disabled.
+     */
+    private function storeBrowse($productCatalogue, $request, $root, $children): array
+    {
+        // $root and $children are passed in: index() has already resolved the parent
+        // and its children, and re-fetching them here meant three identical full
+        // selects of product_catalogues per request.
+        $categories = collect($children)
+            ->filter(fn ($c) => (int) $c->publish === 2)
+            ->values();
+
+        $buckets = [
+            'mien-phi'  => ['label' => 'Miễn phí',      'range' => [0, 0]],
+            'duoi-2'    => ['label' => 'Dưới 2 triệu',  'range' => [1, 1999999]],
+            '2-den-4'   => ['label' => '2 – 4 triệu',   'range' => [2000000, 4000000]],
+            'tren-4'    => ['label' => 'Trên 4 triệu',  'range' => [4000001, PHP_INT_MAX]],
+        ];
+
+        $sorts = [
+            'moi-nhat'  => ['label' => 'Mới nhất',      'key' => 'newest'],
+            'gia-tang'  => ['label' => 'Giá thấp → cao', 'key' => 'price-asc'],
+            'gia-giam'  => ['label' => 'Giá cao → thấp', 'key' => 'price-desc'],
+        ];
+
+        $activeCategory = (int) $request->input('dm', 0);
+        if ($activeCategory === 0 && $productCatalogue->parent_id != 0) {
+            $activeCategory = (int) $productCatalogue->id;
+        }
+
+        $activeBucket = (string) $request->input('gia', '');
+        $activeBucket = array_key_exists($activeBucket, $buckets) ? $activeBucket : '';
+
+        $activeSort = (string) $request->input('sap-xep', '');
+        $activeSort = array_key_exists($activeSort, $sorts) ? $activeSort : 'moi-nhat';
+
+        $isFiltered = $activeCategory > 0 || $activeBucket !== '' || $activeSort !== 'moi-nhat';
+
+        $priceRange = $activeBucket !== '' ? $buckets[$activeBucket]['range'] : null;
+
+        // One query covers both modes: shelves group the same rows client-side-free,
+        // and the filtered view just renders them flat.
+        $templates = $this->productRepository->storeTemplates(
+            $activeCategory > 0 ? [$activeCategory] : $categories->pluck('id')->all(),
+            $this->language,
+            $priceRange,
+            $sorts[$activeSort]['key']
+        );
+
+        $shelves = [];
+        if (!$isFiltered) {
+            foreach ($categories as $category) {
+                $items = $templates->filter(
+                    fn ($p) => $p->product_catalogues->contains('id', $category->id)
+                )->values();
+
+                if ($items->isNotEmpty()) {
+                    $shelves[] = ['category' => $category, 'items' => $items];
+                }
+            }
+        }
+
+        return [
+            'storeRoot' => $root,
+            'storeCategories' => $categories,
+            'storeBuckets' => $buckets,
+            'storeSorts' => $sorts,
+            'storeActiveCategory' => $activeCategory,
+            'storeActiveBucket' => $activeBucket,
+            'storeActiveSort' => $activeSort,
+            'storeIsFiltered' => $isFiltered,
+            'storeShelves' => $shelves,
+            'storeResults' => $templates,
+            'storeFeatured' => $templates->first(),
+            'storeTotal' => $templates->count(),
+        ];
     }
 
     private function filter($productCatalogue){
@@ -300,13 +387,18 @@ class ProductCatalogueController extends FrontendController
     private function config(){
         return [
             'language' => $this->language,
+            // store.css is loaded per page rather than site-wide: it is a dark theme
+            // scoped to .store and only the catalogue pages use it.
+            'css' => [
+                'frontend/resources/store.css',
+            ],
             'externalJs' => [
                 '//code.jquery.com/ui/1.11.4/jquery-ui.js'
             ],
             'js' => [
                 'frontend/core/library/filter.js',
             ],
-           
+
         ];
     }
 

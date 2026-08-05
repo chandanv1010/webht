@@ -289,4 +289,54 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $this->model->where('publish' , 2)->where('product_catalogue_id', $productCatalogueId)->where('id', '!=', $productId)->orderBy('id', 'desc')->limit($limit)->get();
     }
 
+    /**
+     * Published templates for the store browse page.
+     *
+     * Everything the cards read — name, canonical, category name — is eager-loaded,
+     * so one shelf of six cards costs one query for the products and one per
+     * relation, not one per card.
+     *
+     * @param  array      $catalogueIds  restrict to these categories (empty = all)
+     * @param  array|null $priceRange    [min, max] inclusive, null for no price filter
+     */
+    public function storeTemplates(
+        array $catalogueIds,
+        int $languageId,
+        ?array $priceRange = null,
+        string $sort = 'newest'
+    ) {
+        $query = $this->model->newQuery()
+            ->where('products.publish', 2)
+            ->with([
+                'languages' => function ($q) use ($languageId) {
+                    $q->where('language_id', '=', $languageId);
+                },
+                'product_catalogues' => function ($q) {
+                    $q->where('product_catalogues.publish', 2);
+                },
+                'product_catalogues.languages' => function ($q) use ($languageId) {
+                    $q->where('language_id', '=', $languageId);
+                },
+            ]);
+
+        if (!empty($catalogueIds)) {
+            $query->whereHas('product_catalogues', function ($q) use ($catalogueIds) {
+                $q->whereIn('product_catalogues.id', $catalogueIds);
+            });
+        }
+
+        if (is_array($priceRange)) {
+            $query->whereBetween('products.price', [$priceRange[0], $priceRange[1]]);
+        }
+
+        match ($sort) {
+            'price-asc' => $query->orderBy('products.price', 'asc'),
+            'price-desc' => $query->orderBy('products.price', 'desc'),
+            'name' => $query->orderBy('products.code', 'asc'),
+            default => $query->orderBy('products.id', 'desc'),
+        };
+
+        return $query->get();
+    }
+
 }

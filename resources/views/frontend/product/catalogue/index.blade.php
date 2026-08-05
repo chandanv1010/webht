@@ -1,72 +1,210 @@
 @extends('frontend.homepage.layout')
 @section('content')
-    <div class="product-catalogue page-wrapper">
-        @include('frontend.component.breadcrumb', ['model' => $productCatalogue, 'breadcrumb' => $breadcrumb])
-        <div class="product-catalogue-wrapper">
-            <div class="uk-container uk-container-center">
-                {{-- @if(!is_null($menu['main-menu_array']))
-                    @foreach($menu['main-menu_array'] as $key => $val)
-                        @if($key !== 2 ) @continue @endif
-                        <ul class="children">
-                            @foreach($val['children'] as $key2 => $item)
-                                @php
-                                    $name = $item['item']->languages->first()->pivot->name;
-                                    $canonical = write_url($item['item']->languages->first()->pivot->canonical);
-                                @endphp
-                            <li>
-                                <a href="{{ $canonical }}" title="{{ $name }}" class="{{ $item['item']->languages->first()->pivot->canonical == $productCatalogue->canonical ? 'active' : '' }}">{{ $name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    @endforeach
-                @endif --}}
-                @if(!is_null($children))
-                    <ul class="children">
-                        @foreach($children as $key => $item)
-                            @php
-                                $name = $item->languages->first()->pivot->name;
-                                $canonical = write_url($item->languages->first()->pivot->canonical);
-                            @endphp
-                            <li>
-                                <a href="{{ $canonical }}" title="{{ $name }}" class="{{ $item->languages->first()->pivot->canonical == $productCatalogue->canonical ? 'active' : '' }}">{{ $name }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-                <h1 class="page-heading">{{ $productCatalogue->languages->first()->pivot->name }}</h1>
-            </div>
-        </div>
-        <div class="panel-body mb30">
-            <div class="uk-container uk-container-center mt20">
-                <div class="wrapper ">
-                    <div class="gray-box mb20">
-                        <h1 class="heading-2"><span></span></h1>
-                    </div>
-                    @if(!is_null($products))
-                        <div class="product-list">
-                            <div class="uk-grid uk-grid-medium">
-                                @foreach($products as $product)
-                                    <div class="uk-width-1-2 uk-width-small-1-2 uk-width-medium-1-3 mb20">
-                                        @include('frontend.component.p-item', ['product'  => $product])
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
 
-                        <div class="uk-flex uk-flex-center">
-                            @include('frontend.component.pagination', ['model' => $products])
-                        </div>
-                    @endif
+{{--
+    Kho giao diện — browsed like a catalogue of worlds rather than a product list.
+
+    A billboard for the newest template, then one shelf per category that scrolls
+    sideways. Choosing a filter collapses the shelves into a single grid, because once
+    you have narrowed things down you want to compare, not browse.
+
+    Filtering is plain query parameters rendered on the server (?dm= ?gia= ?sap-xep=),
+    so it works without JavaScript. The script at the bottom only adds the shelf arrow
+    buttons, which are useless without JS anyway and so are created by it.
+--}}
+
+@php
+    $featuredPivot = $storeFeatured?->languages->first()?->pivot;
+    $featuredName = $featuredPivot->name ?? '';
+    $featuredHref = write_url($featuredPivot->canonical ?? '');
+    $featuredDesc = $featuredPivot->description ?? '';
+    $featuredPrice = (int) ($storeFeatured->price ?? 0);
+    $rootPivot = $storeRoot->languages->first()?->pivot;
+
+    // Keep the other filters when building each control's URL, so choosing a price
+    // does not silently drop the category the visitor already picked.
+    $baseUrl = write_url($rootPivot->canonical ?? 'kho-giao-dien');
+    $buildUrl = function (array $overrides) use ($baseUrl, $storeActiveCategory, $storeActiveBucket, $storeActiveSort) {
+        $params = array_filter([
+            'dm' => $overrides['dm'] ?? $storeActiveCategory,
+            'gia' => $overrides['gia'] ?? $storeActiveBucket,
+            'sap-xep' => $overrides['sap-xep'] ?? $storeActiveSort,
+        ], fn ($v) => $v !== '' && $v !== 0 && $v !== 'moi-nhat');
+
+        return $baseUrl.(count($params) ? '?'.http_build_query($params) : '');
+    };
+@endphp
+
+<div class="store store-page">
+
+    {{-- ── Billboard ─────────────────────────────────────────────── --}}
+    @if ($storeFeatured)
+        <section class="store-hero">
+            <div class="store-hero__media" aria-hidden="true">
+                <img src="{{ image($storeFeatured->image) }}" alt="" width="720" height="450">
+            </div>
+
+            <div class="uk-container uk-container-center store-hero__inner">
+                <p class="store-hero__eyebrow">{{ $rootPivot->name ?? 'Kho giao diện' }}</p>
+                <h1 class="store-hero__title">{{ $featuredName }}</h1>
+
+                @if ($featuredDesc !== '')
+                    <p class="store-hero__desc">{{ \Illuminate\Support\Str::limit(strip_tags($featuredDesc), 160) }}</p>
+                @endif
+
+                <p class="store-hero__meta">
+                    <span class="store-hero__price">
+                        @if ($featuredPrice === 0) Miễn phí @else {{ convert_price($featuredPrice, true) }}đ @endif
+                    </span>
+                    <span class="store-hero__count">{{ $storeTotal }} mẫu đang có</span>
+                </p>
+
+                <div class="store-hero__actions">
+                    <a class="store-btn store-btn--primary" href="{{ $featuredHref }}">Xem mẫu này</a>
+                    <a class="store-btn store-btn--ghost" href="{{ write_url('lien-he') }}">Nhận tư vấn chọn mẫu</a>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- ── Filter bar ────────────────────────────────────────────── --}}
+    <nav class="store-filter" aria-label="Lọc giao diện">
+        <div class="uk-container uk-container-center">
+            <div class="store-filter__row">
+                <span class="store-filter__label">Danh mục</span>
+                <div class="store-filter__pills">
+                    <a class="store-pill {{ $storeActiveCategory === 0 ? 'is-on' : '' }}"
+                       href="{{ $buildUrl(['dm' => 0]) }}">Tất cả</a>
+                    @foreach ($storeCategories as $category)
+                        @php $cName = $category->languages->first()?->pivot->name ?? ''; @endphp
+                        <a class="store-pill {{ $storeActiveCategory === (int) $category->id ? 'is-on' : '' }}"
+                           href="{{ $buildUrl(['dm' => (int) $category->id]) }}">{{ $cName }}</a>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="store-filter__row">
+                <span class="store-filter__label">Mức giá</span>
+                <div class="store-filter__pills">
+                    <a class="store-pill {{ $storeActiveBucket === '' ? 'is-on' : '' }}"
+                       href="{{ $buildUrl(['gia' => '']) }}">Tất cả</a>
+                    @foreach ($storeBuckets as $key => $bucket)
+                        <a class="store-pill {{ $storeActiveBucket === $key ? 'is-on' : '' }}"
+                           href="{{ $buildUrl(['gia' => $key]) }}">{{ $bucket['label'] }}</a>
+                    @endforeach
+                </div>
+
+                <div class="store-filter__sort">
+                    <span class="store-filter__label">Sắp xếp</span>
+                    @foreach ($storeSorts as $key => $sort)
+                        <a class="store-pill store-pill--sm {{ $storeActiveSort === $key ? 'is-on' : '' }}"
+                           href="{{ $buildUrl(['sap-xep' => $key]) }}">{{ $sort['label'] }}</a>
+                    @endforeach
                 </div>
             </div>
         </div>
-        <div class="uk-container uk-container-center">
-            <div class="description">
-                {!! $productCatalogue->languages->first()->pivot->description !!}
+    </nav>
+
+    {{-- ── Results ───────────────────────────────────────────────── --}}
+    @if ($storeIsFiltered)
+        <section class="store-results">
+            <div class="uk-container uk-container-center">
+                <header class="store-results__head">
+                    <h2 class="store-results__title">
+                        {{ $storeTotal }} mẫu phù hợp
+                    </h2>
+                    @if ($storeActiveCategory > 0 || $storeActiveBucket !== '')
+                        <a class="store-results__clear" href="{{ $baseUrl }}">Bỏ bộ lọc</a>
+                    @endif
+                </header>
+
+                @if ($storeTotal === 0)
+                    <div class="store-empty">
+                        <p class="store-empty__title">Chưa có mẫu nào khớp bộ lọc này.</p>
+                        <p class="store-empty__hint">Thử mở rộng mức giá, hoặc bỏ chọn danh mục để xem toàn bộ kho.</p>
+                        <a class="store-btn store-btn--primary" href="{{ $baseUrl }}">Xem toàn bộ kho</a>
+                    </div>
+                @else
+                    <div class="store-grid">
+                        @foreach ($storeResults as $product)
+                            @include('frontend.component.template-card', ['product' => $product])
+                        @endforeach
+                    </div>
+                @endif
             </div>
-        </div>
-    </div>
-    <div class="mt--80">
-        @include('frontend.component.news')
-    </div>
+        </section>
+    @else
+        @foreach ($storeShelves as $shelf)
+            @php
+                $shelfPivot = $shelf['category']->languages->first()?->pivot;
+                $shelfName = $shelfPivot->name ?? '';
+                $shelfHref = write_url($shelfPivot->canonical ?? '');
+            @endphp
+            <section class="store-shelf">
+                <div class="uk-container uk-container-center">
+                    <header class="store-shelf__head">
+                        <h2 class="store-shelf__title">{{ $shelfName }}</h2>
+                        <a class="store-shelf__all" href="{{ $shelfHref }}">
+                            Xem tất cả {{ count($shelf['items']) }} mẫu
+                        </a>
+                    </header>
+                </div>
+
+                <div class="store-shelf__viewport" data-shelf>
+                    <div class="uk-container uk-container-center">
+                        <div class="store-shelf__track">
+                            @foreach ($shelf['items'] as $product)
+                                @include('frontend.component.template-card', ['product' => $product])
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </section>
+        @endforeach
+    @endif
+
+    @if (($rootPivot->description ?? '') !== '')
+        <section class="store-about">
+            <div class="uk-container uk-container-center">
+                <div class="store-about__body">{!! $rootPivot->description !!}</div>
+            </div>
+        </section>
+    @endif
+</div>
+
+<script>
+    // Shelf arrows are added by script because they do nothing without it. Scrolling
+    // with a trackpad, touch, or the keyboard works whether this runs or not.
+    document.querySelectorAll('[data-shelf]').forEach(function (shelf) {
+        var track = shelf.querySelector('.store-shelf__track');
+        if (!track) return;
+
+        function overflows() {
+            return track.scrollWidth - track.clientWidth > 4;
+        }
+        if (!overflows()) return;
+
+        ['prev', 'next'].forEach(function (dir) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'store-shelf__nav store-shelf__nav--' + dir;
+            btn.setAttribute('aria-label', dir === 'prev' ? 'Xem các mẫu trước' : 'Xem các mẫu tiếp theo');
+            btn.addEventListener('click', function () {
+                track.scrollBy({
+                    left: (dir === 'next' ? 1 : -1) * Math.round(track.clientWidth * 0.8),
+                    behavior: 'smooth'
+                });
+            });
+            shelf.appendChild(btn);
+        });
+
+        function syncEdges() {
+            shelf.classList.toggle('at-start', track.scrollLeft <= 2);
+            shelf.classList.toggle('at-end', track.scrollLeft + track.clientWidth >= track.scrollWidth - 2);
+        }
+        track.addEventListener('scroll', syncEdges, { passive: true });
+        window.addEventListener('resize', syncEdges);
+        syncEdges();
+    });
+</script>
 @endsection
