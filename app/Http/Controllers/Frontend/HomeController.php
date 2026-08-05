@@ -156,36 +156,5 @@ class HomeController extends FrontendController
         ));
     }
 
-    public function hosting(){
-        $slides = $this->slideService->getSlide(
-            [SlideEnum::BANNER, SlideEnum::MAIN, 'mobile-slide' , 'banner-1', 'brand-baochi'],
-            $this->language
-        );
-        $config = $this->config();
-        $system = $this->system;
-        $seo = [
-            'meta_title' => 'Dịch vụ Hosting Chuyên Nghiệp - Tốc độ cao, Bảo mật vượt trội | HT VIỆT NAM',
-            'meta_keyword' => 'HTVIETNAM, htvietnam, HTVIETNAM Hosting. hosting',
-            'meta_description' => 'HT Việt Nam cung cấp dịch vụ hosting tốc độ cao, ổn định, bảo mật và hỗ trợ 24/7. Giải pháp lưu trữ tối ưu cho website doanh nghiệp, sẵn sàng mở rộng khi cần.',
-            'meta_image' => $this->system['seo_meta_images'],
-            'canonical' => write_url('dich-vu-hosting'),
-        ];
-        $widgets = $this->widgetService->getWidget([
-            ['keyword' => 'feedback','object' => true],
-        ], $this->language);
-
-        // $dark = true;
-        $language = $this->language;
-        $template = 'frontend.homepage.home.hosting';
-        return view($template, compact(
-            'config',
-            'seo',
-            'system',
-            'language',
-            // 'dark',
-            'slides',
-            'widgets'
-        ));
-    }
 
 }

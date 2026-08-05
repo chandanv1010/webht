@@ -47,9 +47,8 @@ class LeadNotificationTest extends TestCase
 
     /**
      * The template detail page posts product_id and a content note alongside the name
-     * and phone. contacts has no content column, so that field has to be dropped
-     * silently rather than failing the insert — and the enquiry must still record which
-     * template it was about.
+     * and phone. The enquiry has to record which template it was about, and the note the
+     * visitor typed has to be stored — it used to exist only in the Telegram message.
      */
     public function test_enquiry_from_a_template_page_is_saved(): void
     {
@@ -69,8 +68,8 @@ class LeadNotificationTest extends TestCase
         $row = DB::table('contacts')->where('phone', '0900555666')->first();
         $this->assertNotNull($row, 'enquiry from a template page was not saved');
         $this->assertSame($productId, (int) $row->product_id, 'the template was not recorded');
+        $this->assertStringContainsString('Kidzone', (string) $row->content, 'the note was not stored');
 
-        // The note still has to reach Telegram even though it is not stored.
         $body = urldecode((string) Http::recorded()[0][0]->body());
         $this->assertStringContainsString('Kidzone', $body);
     }
@@ -91,6 +90,46 @@ class LeadNotificationTest extends TestCase
             DB::table('contacts')->where('phone', '0987654321')->first(),
             'enquiry was rolled back when the notifier failed'
         );
+    }
+
+    /**
+     * The contact page collects an email and a message. Both used to be dropped by mass
+     * assignment because the columns did not exist, so a detailed enquiry arrived as a
+     * bare name and phone number.
+     */
+    public function test_contact_page_fields_are_stored(): void
+    {
+        Http::fake(['api.telegram.org/*' => Http::response(['ok' => true], 200)]);
+
+        $res = $this->postJson('/ajax/contact/advise', [
+            'name' => 'Phạm Test Liên Hệ',
+            'phone' => '0911222333',
+            'email' => 'khach@example.com',
+            'address' => 'Chăm sóc website',
+            'content' => 'Website hiện tại chậm, cần tối ưu và có người theo dõi hằng tháng.',
+        ]);
+
+        $res->assertStatus(200);
+        $res->assertJsonPath('code', 10);
+
+        $row = DB::table('contacts')->where('phone', '0911222333')->first();
+        $this->assertNotNull($row);
+        $this->assertSame('khach@example.com', $row->email);
+        $this->assertSame('Chăm sóc website', $row->address);
+        $this->assertStringContainsString('cần tối ưu', (string) $row->content);
+    }
+
+    /** A malformed email must be rejected rather than stored as-is. */
+    public function test_a_bad_email_is_rejected(): void
+    {
+        $res = $this->postJson('/ajax/contact/advise', [
+            'name' => 'Hoàng Test',
+            'phone' => '0933444555',
+            'email' => 'khong-phai-email',
+        ]);
+
+        $res->assertJsonPath('status', 422);
+        $this->assertSame(0, DB::table('contacts')->where('phone', '0933444555')->count());
     }
 
     public function test_validation_still_rejects_an_empty_form(): void

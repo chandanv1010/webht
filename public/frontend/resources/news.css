@@ -1,0 +1,336 @@
+/* ===========================================================================
+   News listing and article pages. Loads after store.css and inherits its tokens,
+   so the blog and the template store are visibly one site.
+   =========================================================================== */
+
+.news-page { padding-bottom: 100px; }
+
+/* ── Listing billboard ──────────────────────────────────────────────────── */
+
+/* Shorter than the store's: a reader is here for the headlines below, not for an
+   image that fills the screen. */
+.news-hero {
+    min-height: 0;
+    padding: calc(144px + 56px) 0 64px;
+}
+.news-hero__inner { position: relative; max-width: 800px; }
+
+.news-hero__title { margin: 0 0 18px; }
+.news-hero__title a {
+    color: inherit;
+    text-decoration: none;
+    /* An underline that grows on hover, so a very large link still reads as a link
+       without being underlined at rest. */
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size .35s cubic-bezier(.22, .8, .3, 1);
+}
+.news-hero__title a:hover { background-size: 100% 2px; }
+.news-hero__title a:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
+
+/* ── Grid ───────────────────────────────────────────────────────────────── */
+
+.news-list { padding: 46px 0 10px; }
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+}
+
+.news-pager { margin-top: 40px; display: flex; justify-content: center; }
+.news-pager a, .news-pager span {
+    color: var(--ink-dim);
+    padding: 8px 13px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+.news-pager a:hover { background: rgba(244, 246, 255, .08); color: var(--ink); }
+
+/* ── Article card ───────────────────────────────────────────────────────── */
+
+.art-card { min-width: 0; }
+
+.art-card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 14px;
+    background: var(--raised);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .22s cubic-bezier(.2, .8, .3, 1), border-color .22s ease, box-shadow .22s ease;
+}
+.art-card__link:hover,
+.art-card__link:focus-visible {
+    transform: translateY(-5px);
+    border-color: rgba(131, 59, 255, .5);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, .5);
+}
+.art-card__link:focus-visible { outline: 2px solid var(--value); outline-offset: 2px; }
+
+.art-card__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    background: #0a0c22;
+    overflow: hidden;
+}
+.art-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* No image: set the headline in the panel. These articles have no cover art, and a
+   grey placeholder says nothing while the headline says everything. */
+.art-card__media--type {
+    display: flex;
+    align-items: flex-end;
+    padding: 22px;
+    background:
+        radial-gradient(130% 130% at 12% 6%, color-mix(in srgb, var(--art-accent) 55%, transparent) 0%, transparent 64%),
+        linear-gradient(140deg, #141838 0%, #0a0c22 100%);
+}
+.art-card__type {
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.28;
+    letter-spacing: -.02em;
+    color: rgba(244, 246, 255, .92);
+}
+
+.art-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 16px 18px 18px;
+}
+
+.art-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+.art-card__cat { color: var(--value); }
+.art-card__date { color: var(--ink-faint); letter-spacing: .04em; }
+
+.art-card__title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.art-card__desc {
+    display: block;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-dim);
+    margin-bottom: 14px;
+}
+
+/* Pushed to the bottom so the link sits on the same line across a row of cards with
+   different amounts of text. */
+.art-card__more {
+    margin-top: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+}
+.art-card__more::after {
+    content: '→';
+    margin-left: 7px;
+    display: inline-block;
+    transition: transform .2s ease;
+}
+.art-card__link:hover .art-card__more::after { transform: translateX(4px); }
+
+/* ── Article page ───────────────────────────────────────────────────────── */
+
+.article-hero {
+    min-height: 0;
+    padding: calc(144px + 60px) 0 52px;
+}
+.article-hero__inner { position: relative; max-width: 780px; }
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-faint);
+}
+/* A dot between items, drawn rather than typed, so it never lands at a line start. */
+.article-meta span + span { position: relative; padding-left: 20px; }
+.article-meta span + span::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: .55;
+    transform: translateY(-50%);
+}
+
+.article-body { padding: 8px 0 0; }
+/* 68ch, not the container width. Long lines are the fastest way to make a good article
+   unreadable. */
+.article-body__inner { max-width: 68ch; font-size: 16.5px; }
+
+.article-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    max-width: 68ch;
+    margin-top: 42px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+}
+
+.article-related { padding-top: 62px; margin-top: 46px; border-top: 1px solid var(--line); }
+.article-related .store-shelf__head { margin-bottom: 22px; }
+
+/* ── Small screens ──────────────────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+    .news-hero { padding: calc(96px + 26px) 0 42px; }
+    .article-hero { padding: calc(96px + 28px) 0 36px; }
+    .news-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .article-foot .store-btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .art-card__link, .art-card__more::after, .news-hero__title a { transition: none; }
+    .art-card__link:hover { transform: none; }
+}
+
+/* ===========================================================================
+   Service pages (Posts with template = 2)
+   =========================================================================== */
+
+.service-hero {
+    min-height: 0;
+    padding: calc(144px + 62px) 0 58px;
+}
+.service-hero__inner { position: relative; max-width: 760px; }
+.service-hero .store-hero__actions { margin-top: 28px; }
+
+.service-body { padding: 12px 0 0; }
+
+.service-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 56px;
+    align-items: start;
+}
+/* Same measure as an article: long lines are the fastest way to make good copy
+   unreadable, and these pages are copy. Scoped to .service-page so it beats
+   .tpl-prose's own 76ch regardless of which stylesheet loads first. */
+.service-page .service-main { max-width: 68ch; }
+
+/* ── Contents ───────────────────────────────────────────────────────────── */
+
+.service-toc {
+    position: sticky;
+    top: 28px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(244, 246, 255, .03);
+}
+
+.service-toc__label {
+    margin: 0 0 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.service-toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: toc;
+}
+.service-toc__list li { counter-increment: toc; margin-bottom: 2px; }
+.service-toc__list a {
+    display: flex;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: background .18s ease, color .18s ease;
+}
+/* The number is generated, so adding or removing a heading never leaves a stale one. */
+.service-toc__list a::before {
+    content: counter(toc);
+    flex: 0 0 auto;
+    color: var(--ink-faint);
+    font-weight: 700;
+    font-size: 12px;
+    padding-top: 1px;
+}
+.service-toc__list a:hover { background: rgba(244, 246, 255, .06); color: var(--ink); }
+.service-toc__list a.is-on {
+    background: rgba(131, 59, 255, .18);
+    color: var(--ink);
+}
+.service-toc__list a.is-on::before { color: var(--value); }
+.service-toc__list a:focus-visible { outline: 2px solid var(--value); outline-offset: 1px; }
+
+.service-toc__cta {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+}
+.service-toc__cta p {
+    margin: 0 0 12px;
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    line-height: 1.6;
+}
+.service-toc__cta .store-btn { width: 100%; min-height: 42px; font-size: 15px; }
+
+.service-others { padding-top: 58px; margin-top: 46px; border-top: 1px solid var(--line); }
+
+/* Headings need to clear the floating header when a contents link jumps to them. */
+.service-main :is(h2, h3) { scroll-margin-top: 170px; }
+
+/* The shared prose block is sized for a tab panel on the template page. Here the
+   headings carry a whole page, so give them a size that matches that job. */
+.service-page .service-main { font-size: 16.5px; }
+.service-page .service-main h2 {
+    font-size: 23px;
+    margin: 44px 0 14px;
+    padding-left: 18px;
+    border-left-width: 4px;
+}
+.service-page .service-main h3 { font-size: 17px; margin-top: 30px; }
+
+@media (max-width: 1023px) {
+    .service-layout { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+    /* Above the body on narrow screens, where a sidebar would be a footer nobody reads. */
+    .service-toc { position: static; order: -1; }
+    .service-page .service-main { max-width: none; }
+}
+
+@media (max-width: 767px) {
+    .service-hero { padding: calc(96px + 26px) 0 38px; }
+    .service-hero .store-hero__actions .store-btn { width: 100%; }
+}

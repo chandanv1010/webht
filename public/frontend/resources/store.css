@@ -732,3 +732,144 @@
     .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); }
     .store-shelf__track { scroll-behavior: auto; }
 }
+
+/* ===========================================================================
+   Shared editorial blocks — the prose renderer and the enquiry box. They live here
+   rather than in template-detail.css because the template detail page, the service
+   pages and the contact page all render them, and all three load store.css.
+   =========================================================================== */
+
+/* ── Prose ──────────────────────────────────────────────────────────────── */
+
+.tpl-prose {
+    max-width: 76ch;
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    line-height: 1.78;
+}
+.tpl-prose > :first-child { margin-top: 0; }
+.tpl-prose :is(h2, h3) {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin: 28px 0 10px;
+}
+.tpl-prose h2 {
+    font-size: 17.5px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+    line-height: 1.35;
+}
+.tpl-prose h3 { font-size: 15px; }
+.tpl-prose p { margin: 0 0 14px; }
+.tpl-prose strong { color: var(--ink); font-weight: 700; }
+
+/* The site reset strips list markers, so draw our own. A dash rather than a dot: these
+   lists are items in a spec, not a ranked sequence. */
+.tpl-prose ul { margin: 0 0 18px; padding: 0; list-style: none; }
+.tpl-prose li {
+    position: relative;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+.tpl-prose li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .72em;
+    width: 9px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--accent);
+}
+.tpl-prose ol { margin: 0 0 18px; padding-left: 22px; list-style: decimal; }
+.tpl-prose ol li { padding-left: 4px; }
+.tpl-prose ol li::before { content: none; }
+.tpl-prose a { color: var(--value); }
+.tpl-prose img { max-width: 100%; height: auto; border-radius: 10px; }
+
+/* ── Enquiry ────────────────────────────────────────────────────────────── */
+
+.tpl-cta { padding: 62px 0 10px; }
+
+.tpl-cta__box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 40px;
+    align-items: center;
+    padding: 38px;
+    border-radius: 20px;
+    border: 1px solid rgba(131, 59, 255, .3);
+    /* A single warm pool of colour, so the one thing we want on this page stands out
+       from everything above it without another bright band. */
+    background:
+        radial-gradient(120% 160% at 6% 0%, rgba(131, 59, 255, .22) 0%, transparent 62%),
+        var(--raised);
+}
+.tpl-cta__title {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin: 0 0 10px;
+}
+.tpl-cta__sub {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 52ch;
+}
+
+.tpl-form { display: grid; gap: 12px; }
+.tpl-form input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(5, 6, 26, .55);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14.5px;
+}
+.tpl-form input::placeholder { color: var(--ink-faint); }
+.tpl-form input:focus {
+    outline: none;
+    border-color: rgba(131, 59, 255, .7);
+    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
+}
+.tpl-form button { width: 100%; }
+
+.tpl-form__msg {
+    margin: 2px 0 0;
+    min-height: 1.2em;
+    font-size: 13px;
+    color: var(--ink-faint);
+}
+.tpl-form__msg.is-good { color: var(--value); }
+.tpl-form__msg.is-bad { color: #fc746c; }
+
+@media (max-width: 959px) {
+    .tpl-cta__box { grid-template-columns: minmax(0, 1fr); padding: 26px; }
+}
+
+/* ===========================================================================
+   Page-header type shared by the article, service and contact pages. Lives here rather
+   than in news.css because the contact page needs it without needing the news styles.
+   =========================================================================== */
+
+.article-title {
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    font-weight: 800;
+    line-height: 1.14;
+    letter-spacing: -.03em;
+    margin: 0 0 20px;
+}
+
+.article-lead {
+    font-size: 17.5px;
+    line-height: 1.68;
+    color: var(--ink);
+    margin: 0 0 22px;
+    max-width: 62ch;
+}
+

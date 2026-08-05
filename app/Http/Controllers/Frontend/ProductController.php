@@ -178,7 +178,7 @@ class ProductController extends FrontendController
         $name = $product->languages->first()->pivot->name;
         $totalReviews = $product->reviews()->where('status', 1)->count();
         $totalRate = number_format($product->reviews()->where('status', 1)->avg('score'), 1);
-        $description = strip_tags($product->languages->first()->pivot->description);
+        $description = plain_text($product->languages->first()->pivot->description);
         $cat_name = $productCatalogue->languages->first()->pivot->name;
         $cat_canonical = write_url($productCatalogue->languages->first()->pivot->canonical);
         $reviewListElements = '';

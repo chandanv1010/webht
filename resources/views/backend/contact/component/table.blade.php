@@ -7,7 +7,9 @@
             <th>Họ Tên</th>
             <th>Ngày tạo</th>
             <th>Số điện thoại</th>
+            <th>Email</th>
             <th>Địa chỉ</th>
+            <th>Nội dung</th>
             <th>Sản phẩm</th>
             <th>Showroom</th>
             <th>Bài Viết</th>
@@ -32,7 +34,19 @@
                         {{ $contact->phone }}
                     </td>
                     <td>
+                        @if($contact->email)
+                            <a href="mailto:{{ $contact->email }}">{{ $contact->email }}</a>
+                        @endif
+                    </td>
+                    <td>
                         {{ $contact->address }}
+                    </td>
+                    {{-- The message the visitor typed. Clamped so one long enquiry does not
+                         make the whole row unreadable; the full text is in the title. --}}
+                    <td style="max-width:320px;">
+                        @if($contact->content)
+                            <span title="{{ $contact->content }}">{{ \Illuminate\Support\Str::limit($contact->content, 160) }}</span>
+                        @endif
                     </td>
                     <td>
                         @if($contact->product_id)

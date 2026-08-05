@@ -1,0 +1,327 @@
+/* ===========================================================================
+   Contact page. Loads after store.css and inherits its tokens, so this page sits in
+   the same world as the template store and the blog.
+   =========================================================================== */
+
+.contact-page { padding-bottom: 100px; }
+
+.contact-hero {
+    min-height: 0;
+    padding: calc(144px + 66px) 0 46px;
+}
+.contact-hero__inner { position: relative; max-width: 720px; }
+
+/* ── Channels ───────────────────────────────────────────────────────────── */
+
+.contact-channels { padding: 8px 0 0; }
+
+.contact-channels__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contact-channel {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--raised);
+    transition: border-color .2s ease, transform .2s ease;
+}
+.contact-channel:hover { border-color: rgba(131, 59, 255, .45); transform: translateY(-3px); }
+
+.contact-channel__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+    border-radius: 11px;
+    background: rgba(131, 59, 255, .16);
+    color: #b98cff;
+}
+.contact-channel__icon svg { width: 21px; height: 21px; }
+
+/* Each channel keeps its own accent, so the four cards read as four different ways in
+   rather than one repeated block. */
+.contact-channel--chat .contact-channel__icon { background: rgba(53, 208, 186, .16); color: #35d0ba; }
+.contact-channel--email .contact-channel__icon { background: rgba(47, 128, 237, .18); color: #7cb0f5; }
+.contact-channel--place .contact-channel__icon { background: rgba(252, 116, 108, .16); color: #fc9a94; }
+
+.contact-channel__label {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.contact-channel__value {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+    text-decoration: none;
+    /* Long addresses must wrap inside the card rather than push it wider. */
+    overflow-wrap: anywhere;
+}
+a.contact-channel__value:hover { color: #b98cff; }
+a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
+
+.contact-channel--place .contact-channel__value { font-size: 14.5px; font-weight: 600; line-height: 1.55; }
+
+.contact-channel__note {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-dim);
+}
+
+/* ── Form and sidebar ───────────────────────────────────────────────────── */
+
+.contact-main { padding: 54px 0 0; }
+
+.contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 48px;
+    align-items: start;
+}
+
+.contact-formwrap {
+    padding: 34px;
+    border-radius: 20px;
+    border: 1px solid rgba(131, 59, 255, .28);
+    /* One warm pool of colour marks the thing this page exists for. */
+    background:
+        radial-gradient(120% 150% at 4% 0%, rgba(131, 59, 255, .18) 0%, transparent 60%),
+        var(--raised);
+}
+
+.contact-formwrap__title {
+    margin: 0 0 10px;
+    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+}
+.contact-formwrap__sub {
+    margin: 0 0 26px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-dim);
+    max-width: 56ch;
+}
+
+.contact-form { gap: 18px; }
+.contact-form__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.contact-field { display: grid; gap: 7px; }
+.contact-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-dim);
+}
+/* The required marker is the one place on this page that borrows the accent for
+   emphasis, so it has to be unmistakable. */
+.contact-field label span { color: #fc746c; }
+
+/* select and textarea are not covered by .tpl-form's input rules, so state them here
+   rather than relying on the browser defaults, which are light-themed. */
+.contact-field select,
+.contact-field textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(5, 6, 26, .55);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14.5px;
+    line-height: 1.6;
+}
+.contact-field textarea { resize: vertical; min-height: 120px; }
+.contact-field select {
+    /* Native arrow is drawn in the OS light theme on some platforms; draw our own. */
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%),
+                      linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 42px;
+}
+.contact-field select option { background: #0b0e2a; color: var(--ink); }
+.contact-field textarea::placeholder { color: var(--ink-faint); }
+.contact-field select:focus,
+.contact-field textarea:focus {
+    outline: none;
+    border-color: rgba(131, 59, 255, .7);
+    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
+}
+
+/* Scoped past .tpl-form button's width:100% — a full-bleed button reads as the end of
+   the page rather than the end of the form. */
+.contact-form .contact-form__submit {
+    width: auto;
+    min-width: 220px;
+    justify-self: start;
+}
+
+.contact-form__fine {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--ink-faint);
+    max-width: 60ch;
+}
+
+/* ── Sidebar cards ──────────────────────────────────────────────────────── */
+
+.contact-side { display: grid; gap: 16px; }
+
+.contact-card {
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(244, 246, 255, .03);
+}
+.contact-card--quiet { background: none; }
+
+.contact-card__title {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+.contact-card__body {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink-dim);
+}
+.contact-card__note {
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--ink-faint);
+}
+.contact-card__link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--value);
+}
+
+/* Numbered: these steps happen in order and the reader is waiting for the first one. */
+.contact-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+}
+.contact-steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 38px;
+    padding-bottom: 20px;
+}
+.contact-steps li:last-child { padding-bottom: 0; }
+.contact-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(131, 59, 255, .2);
+    color: #c3a3ff;
+    font-size: 12px;
+    font-weight: 700;
+}
+/* A line joining the markers, so the three cards read as one sequence. */
+.contact-steps li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 11.5px;
+    top: 27px;
+    bottom: 6px;
+    width: 1px;
+    background: var(--line);
+}
+.contact-steps__when {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--value);
+}
+.contact-steps__what {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.68;
+    color: var(--ink-dim);
+}
+
+.contact-hours { margin: 0; }
+.contact-hours > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 9px 0;
+    font-size: 13.5px;
+}
+.contact-hours > div + div { border-top: 1px solid var(--line); }
+.contact-hours dt { color: var(--ink-dim); }
+.contact-hours dd { margin: 0; color: var(--ink); font-weight: 600; }
+
+/* ── Questions ──────────────────────────────────────────────────────────── */
+
+.contact-faq { padding-top: 68px; margin-top: 56px; border-top: 1px solid var(--line); }
+.contact-faq .store-shelf__title { margin-bottom: 26px; }
+
+.contact-faq__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: none;
+}
+.contact-faq__grid h3 { margin-top: 0; }
+.contact-faq__grid p { margin-bottom: 0; }
+
+/* ── Small screens ──────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+    .contact-layout { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+}
+
+@media (max-width: 767px) {
+    .contact-hero { padding: calc(96px + 28px) 0 34px; }
+    .contact-channels__grid { grid-template-columns: minmax(0, 1fr); }
+    .contact-formwrap { padding: 24px 20px; }
+    .contact-form .contact-form__submit { width: 100%; }
+    .contact-main { padding-top: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contact-channel { transition: none; }
+    .contact-channel:hover { transform: none; }
+}

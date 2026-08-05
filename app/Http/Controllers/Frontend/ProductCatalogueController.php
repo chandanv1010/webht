@@ -47,14 +47,22 @@ class ProductCatalogueController extends FrontendController
 
         $children = null;
 
+        // $ownChildren is this catalogue's own children, which is what the filter bar
+        // needs. $children is the sibling set used by the navigation, and for a child
+        // catalogue those are two different lists.
+        $ownChildren = null;
+
         if($productCatalogue->parent_id != 0){
             $parent = $this->productCatalogueRepository->getParent($productCatalogue, $this->language);
             $children =  $this->productCatalogueRepository->getChildren($parent);
         }else{
             $children =  $this->productCatalogueRepository->getChildren($productCatalogue);
+            $ownChildren = $children;
         }
 
-        $filters = $this->filter($productCatalogue);
+        // Passed in when we already have it: filter() used to re-run the same getChildren
+        // query, which on the store page fetched every catalogue and its languages twice.
+        $filters = $this->filter($productCatalogue, $ownChildren);
 
         $breadcrumb = $this->productCatalogueRepository->breadcrumb($productCatalogue, $this->language);
 
@@ -211,9 +219,9 @@ class ProductCatalogueController extends FrontendController
         ];
     }
 
-    private function filter($productCatalogue){
+    private function filter($productCatalogue, $children = null){
         $filters = null;
-        $children = $this->productCatalogueRepository->getChildren($productCatalogue);
+        $children = $children ?? $this->productCatalogueRepository->getChildren($productCatalogue);
         $groupedAttributes = [];
         foreach ($children as $child) {
             if (isset($child->attribute) && !is_null($child->attribute) && count($child->attribute)) {
@@ -313,7 +321,7 @@ class ProductCatalogueController extends FrontendController
 
         $cat_canonical = write_url($productCatalogue->languages->first()->pivot->canonical);
 
-        $cat_description = strip_tags($productCatalogue->languages->first()->pivot->description);
+        $cat_description = plain_text($productCatalogue->languages->first()->pivot->description);
 
         $totalProducts = $products->total();
 

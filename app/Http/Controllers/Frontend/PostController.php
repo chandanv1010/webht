@@ -10,6 +10,7 @@ use App\Services\Interfaces\PostServiceInterface as PostService;
 use App\Repositories\Interfaces\PostRepositoryInterface as PostRepository;
 use App\Services\Interfaces\WidgetServiceInterface  as WidgetService;
 use Jenssegers\Agent\Facades\Agent;
+use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 
 class postController extends FrontendController
@@ -63,42 +64,53 @@ class postController extends FrontendController
 
         $breadcrumb = $this->postCatalogueRepository->breadcrumb($postCatalogue, $this->language);
 
-        $asidePost = $this->postService->paginate(
-            $request, 
-            $this->language, 
-            $postCatalogue, 
-            1,
-            ['path' => $postCatalogue->canonical],
-        );
-
-        $widgets = $this->widgetService->getWidget([
-            ['keyword' => 'news-feature'],
-            ['keyword' => 'projects-feature'],
-            ['keyword' => 'news'],
-            ['keyword' => 'news-outstanding','object' => true],
-            ['keyword' => 'design_construction_interior', 'object' => true],
-            ['keyword' => 'showroom-system','object' => true],
-            
-        ], $this->language);
-
-        /* ------------------- */
-        
         $config = $this->config();
         $system = $this->system;
         $seo = seo($post);
 
-        if(Agent::isMobile() && $post->template == '1'){
-            $template = 'mobile.post.post.design';
-        }else if($post->template == '1'){
-            $template = 'frontend.post.post.design';
-        }
-        else if(Agent::isMobile()){
+        // template 2 marks a standalone service page; anything else is an article.
+        // This used to send template 1 to post.design and everything else to
+        // post.index, which had it backwards: articles got the landing-page layout and
+        // service pages got the article layout.
+        if (Agent::isMobile()) {
             $template = 'mobile.post.post.index';
-        }else{
+        } elseif ((int) $post->template === 2) {
+            $template = 'frontend.post.post.service';
+        } else {
             $template = 'frontend.post.post.index';
         }
 
+        // Only the article templates show "bài viết khác"; a service page builds its own
+        // row from the menu, so this 15-post query is skipped there.
+        $asidePost = ($template === 'frontend.post.post.service')
+            ? collect()
+            : $this->postService->paginate(
+                $request,
+                $this->language,
+                $postCatalogue,
+                1,
+                ['path' => $postCatalogue->canonical],
+            );
+
+        // Only the mobile template reads these. The desktop pages were loading six
+        // widgets and their posts on every article and never rendering one of them.
+        $widgets = str_starts_with($template, 'mobile.')
+            ? $this->widgetService->getWidget([
+                ['keyword' => 'news-feature'],
+                ['keyword' => 'projects-feature'],
+                ['keyword' => 'news'],
+                ['keyword' => 'news-outstanding','object' => true],
+                ['keyword' => 'design_construction_interior', 'object' => true],
+                ['keyword' => 'showroom-system','object' => true],
+            ], $this->language)
+            : [];
+
         $schema = $this->schema($post, $postCatalogue, $breadcrumb);
+
+        $extra = ['dark' => true];
+        if ($template === 'frontend.post.post.service') {
+            $extra['serviceSiblings'] = $this->serviceSiblings($post->id);
+        }
 
         return view($template, compact(
             'config',
@@ -110,7 +122,64 @@ class postController extends FrontendController
             'asidePost',
             'widgets',
             'schema'
-        ));
+        ) + $extra);
+    }
+
+    /**
+     * The other service pages, for the row at the foot of a service page.
+     *
+     * Which pages count as services comes from the menu, not from the catalogue: every
+     * standalone page — services, policies, FAQs — sits in the same catalogue, so
+     * "other posts here" would offer someone reading about hosting a link to the payment
+     * policy. Reading the menu means editing the menu keeps this row correct.
+     *
+     * Fetched by canonical rather than filtered out of the paginated aside list, so the
+     * row is complete regardless of where those posts land in the pagination.
+     */
+    private function serviceSiblings(int $currentPostId)
+    {
+        // Two menu groups list the services: the header dropdown, which links to
+        // /dich-vu.html, and the footer column, which is a heading with no link of its
+        // own. Match on either so both sets of children count.
+        $parents = DB::table('menu_language')
+            ->where('language_id', $this->language)
+            ->where(fn ($q) => $q
+                ->where('canonical', 'dich-vu')
+                ->orWhere('name', 'Dịch vụ'))
+            ->pluck('menu_id');
+
+        if ($parents->isEmpty()) {
+            return collect();
+        }
+
+        $canonicals = DB::table('menus')
+            ->join('menu_language', 'menu_language.menu_id', '=', 'menus.id')
+            ->whereIn('menus.parent_id', $parents)
+            ->where('menu_language.language_id', $this->language)
+            ->whereNotNull('menu_language.canonical')
+            ->distinct()
+            ->pluck('menu_language.canonical');
+
+        if ($canonicals->isEmpty()) {
+            return collect();
+        }
+
+        return Post::query()
+            ->with([
+                'languages' => fn ($q) => $q->where('language_id', $this->language),
+                'post_catalogues.languages' => fn ($q) => $q->where('language_id', $this->language),
+            ])
+            // config('apps.general.defaultPublish') is the ['publish','=',2] triple the
+            // repositories expect, not a value — spelled out here because this is a plain
+            // Eloquent query.
+            ->where('posts.publish', 2)
+            ->where('posts.id', '!=', $currentPostId)
+            // Qualified: whereHas on `languages` joins the pivot, so both columns exist
+            // twice in the subquery.
+            ->whereHas('languages', fn ($q) => $q
+                ->where('post_language.language_id', $this->language)
+                ->whereIn('post_language.canonical', $canonicals))
+            ->get();
     }
 
     private function schema($post, $postCatalogue, $breadcrumb){
@@ -119,7 +188,7 @@ class postController extends FrontendController
 
         $name = $post->languages->first()->pivot->name;
 
-        $description = strip_tags($post->languages->first()->pivot->description);
+        $description = plain_text($post->languages->first()->pivot->description);
 
         $canonical = write_url($post->languages->first()->pivot->canonical);
 
@@ -216,6 +285,8 @@ class postController extends FrontendController
             ],
             'css' => [
                 'frontend/core/css/product.css',
+                'frontend/resources/store.css',
+                'frontend/resources/news.css',
                 'https://prohousevn.com/scripts/fancybox-3/dist/jquery.fancybox.min.css'
             ]
         ];

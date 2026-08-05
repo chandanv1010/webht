@@ -310,7 +310,9 @@ if(!function_exists('seo')){
         return [
             'meta_title' => ($model->meta_title) ?? $model->name,
             'meta_keyword' => ($model->meta_keyword) ?? '',
-            'meta_description' => ($model->meta_description) ?? cut_string_and_decode($model->descipriont, 168),
+            // $model->descipriont was a typo, so this fallback silently produced null and
+            // every page without an explicit meta_description shipped an empty one.
+            'meta_description' => ($model->meta_description) ?: plain_text($model->description ?? '', 168),
             'meta_image' => $model->image,
             'canonical' => $canonical,
         ];
@@ -775,5 +777,22 @@ if(!function_exists('tel_href')){
         $plus = str_starts_with($number, '+') ? '+' : '';
 
         return 'tel:'.$plus.preg_replace('/\D+/', '', $number);
+    }
+}
+
+if (!function_exists('plain_text')) {
+    /**
+     * Editor HTML as plain readable text.
+     *
+     * The editor stores accented Vietnamese as HTML entities ("Ch&uacute;ng t&ocirc;i").
+     * strip_tags leaves those entities alone, so printing the result through Blade's
+     * escaping turned them into visible "Ch&uacute;ng t&ocirc;i" on the page. Decode
+     * after stripping, and collapse the whitespace the editor leaves behind.
+     */
+    function plain_text($html, $limit = null){
+        $text = html_entity_decode(strip_tags((string) $html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = trim(preg_replace('/\s+/u', ' ', str_replace("\xC2\xA0", ' ', $text)));
+
+        return ($limit === null) ? $text : \Illuminate\Support\Str::limit($text, $limit);
     }
 }

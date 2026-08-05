@@ -8,3 +8,10 @@
 # 28MB of third-party imagery does not belong in the repo history — regenerate with
 # scripts/grab-demo-covers.sh, or drop your own screenshots in the same folder.
 /public/userfiles/image/template-cover/
+
+# Local artefacts, not part of the project
+/.phpunit.result.cache
+# `php artisan storage:link` creates this symlink per machine
+/public/storage
+# Written by `php artisan demo:service-copy` so --clean can restore the original copy
+/storage/app/service-copy-backup.json

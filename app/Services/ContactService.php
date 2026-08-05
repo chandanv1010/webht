@@ -150,6 +150,8 @@ class ContactService extends BaseService implements ContactServiceInterface
             'name',
             'address',
             'phone',
+            'email',
+            'content',
             'product_id',
             'post_id',
             'gender',

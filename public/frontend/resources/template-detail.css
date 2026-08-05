@@ -219,34 +219,6 @@
 
 .tpl-panel[hidden] { display: none; }
 
-/* ── Prose ──────────────────────────────────────────────────────────────── */
-
-.tpl-prose {
-    max-width: 76ch;
-    color: var(--ink-dim);
-    font-size: 15.5px;
-    line-height: 1.78;
-}
-.tpl-prose > :first-child { margin-top: 0; }
-.tpl-prose :is(h2, h3) {
-    color: var(--ink);
-    font-weight: 700;
-    letter-spacing: -.01em;
-    margin: 28px 0 10px;
-}
-.tpl-prose h2 {
-    font-size: 17.5px;
-    padding-left: 14px;
-    border-left: 3px solid var(--accent);
-    line-height: 1.35;
-}
-.tpl-prose h3 { font-size: 15px; }
-.tpl-prose p { margin: 0 0 14px; }
-.tpl-prose ul { margin: 0 0 16px; padding-left: 20px; }
-.tpl-prose li { margin-bottom: 8px; }
-.tpl-prose a { color: var(--value); }
-.tpl-prose img { max-width: 100%; height: auto; border-radius: 10px; }
-
 /* ── Specs ──────────────────────────────────────────────────────────────── */
 
 .tpl-specs {
@@ -318,66 +290,6 @@
     line-height: 1.7;
 }
 
-/* ── Enquiry ────────────────────────────────────────────────────────────── */
-
-.tpl-cta { padding: 62px 0 10px; }
-
-.tpl-cta__box {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-    gap: 40px;
-    align-items: center;
-    padding: 38px;
-    border-radius: 20px;
-    border: 1px solid rgba(131, 59, 255, .3);
-    /* A single warm pool of colour, so the one thing we want on this page stands out
-       from everything above it without another bright band. */
-    background:
-        radial-gradient(120% 160% at 6% 0%, rgba(131, 59, 255, .22) 0%, transparent 62%),
-        var(--raised);
-}
-.tpl-cta__title {
-    font-size: clamp(1.25rem, 2vw, 1.6rem);
-    font-weight: 700;
-    letter-spacing: -.02em;
-    margin: 0 0 10px;
-}
-.tpl-cta__sub {
-    margin: 0;
-    color: var(--ink-dim);
-    font-size: 15px;
-    line-height: 1.7;
-    max-width: 52ch;
-}
-
-.tpl-form { display: grid; gap: 12px; }
-.tpl-form input {
-    width: 100%;
-    padding: 13px 16px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: rgba(5, 6, 26, .55);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 14.5px;
-}
-.tpl-form input::placeholder { color: var(--ink-faint); }
-.tpl-form input:focus {
-    outline: none;
-    border-color: rgba(131, 59, 255, .7);
-    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
-}
-.tpl-form button { width: 100%; }
-
-.tpl-form__msg {
-    margin: 2px 0 0;
-    min-height: 1.2em;
-    font-size: 13px;
-    color: var(--ink-faint);
-}
-.tpl-form__msg.is-good { color: var(--value); }
-.tpl-form__msg.is-bad { color: #fc746c; }
-
 /* ── Sticky bar ─────────────────────────────────────────────────────────── */
 
 .tpl-bar {
@@ -417,10 +329,6 @@
 .tpl-bar .store-btn { min-height: 42px; padding: 0 22px; flex: 0 0 auto; }
 
 /* ── Small screens ──────────────────────────────────────────────────────── */
-
-@media (max-width: 959px) {
-    .tpl-cta__box { grid-template-columns: minmax(0, 1fr); padding: 26px; }
-}
 
 @media (max-width: 767px) {
     .tpl-hero { padding: calc(96px + 28px) 0 44px; }

@@ -57,15 +57,6 @@ class PostCatalogueController extends FrontendController
             ['path' => $postCatalogue->canonical],
         );
 
-        $widgets = $this->widgetService->getWidget([
-            ['keyword' => 'news','object' => true],
-            ['keyword' => 'news-outstanding','object' => true],
-            ['keyword' => 'mobile-video','object' => true],
-            ['keyword' => 'projects-feature', 'object' => true],
-            ['keyword' => 'design_construction_interior', 'object' => true],
-            ['keyword' => 'showroom-system','object' => true],
-        ], $this->language);
-
         $template = '';
 
 
@@ -94,6 +85,20 @@ class PostCatalogueController extends FrontendController
             $template = 'frontend.post.catalogue.index';
         }
 
+        // Widgets are only read by the mobile and the legacy about-us/video templates.
+        // The desktop listing was fetching six of them — each with its posts — and using
+        // none, which was most of the queries on this page.
+        $widgets = str_starts_with($template, 'mobile.') || !str_ends_with($template, '.index')
+            ? $this->widgetService->getWidget([
+                ['keyword' => 'news','object' => true],
+                ['keyword' => 'news-outstanding','object' => true],
+                ['keyword' => 'mobile-video','object' => true],
+                ['keyword' => 'projects-feature', 'object' => true],
+                ['keyword' => 'design_construction_interior', 'object' => true],
+                ['keyword' => 'showroom-system','object' => true],
+            ], $this->language)
+            : [];
+
         $config = $this->config();
         $system = $this->system;
         $seo = seo($postCatalogue, $page);
@@ -109,7 +114,7 @@ class PostCatalogueController extends FrontendController
             'posts',
             'widgets',
             'schema'
-        ));
+        ) + ['dark' => true]);
     }
 
     private function schema($postCatalogue, $posts, $breadcrumb){
@@ -118,7 +123,7 @@ class PostCatalogueController extends FrontendController
 
         $cat_canonical = write_url($postCatalogue->languages->first()->pivot->canonical);
 
-        $cat_description = strip_tags($postCatalogue->languages->first()->pivot->description);
+        $cat_description = plain_text($postCatalogue->languages->first()->pivot->description);
 
         $itemListElements = '';
 
@@ -197,6 +202,12 @@ class PostCatalogueController extends FrontendController
     private function config(){
         return [
             'language' => $this->language,
+            // Same dark canvas as the template store, so the blog is visibly the same
+            // site rather than a different one.
+            'css' => [
+                'frontend/resources/store.css',
+                'frontend/resources/news.css',
+            ],
         ];
     }
 

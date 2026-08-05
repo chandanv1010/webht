@@ -22,15 +22,17 @@ class ContactController extends FrontendController
 
 
     public function index(Request $request){
-        $widgets = $this->widgetService->getWidget([
-            ['keyword' => 'showroom-system','object' => true],
-            ['keyword' => 'news-outstanding','object' => true],
-        ], $this->language);
+        // The old page rendered a showroom grid and a "tin nổi bật" column left over from
+        // a furniture site. Neither belongs on a contact page, and loading them cost two
+        // widget lookups plus their posts on every visit.
+        $widgets = [];
         $config = $this->config();
         $system = $this->system;
         $seo = [
-            'meta_title' => 'Trang Thông tin liên hệ',
-            'meta_description' => 'Thông tin liên hệ của '.$system['homepage_company'],
+            'meta_title' => 'Liên hệ HT Việt Nam — gọi '.($system['contact_hotline'] ?? '').' hoặc để lại yêu cầu',
+            'meta_description' => 'Liên hệ '.($system['homepage_company'] ?? '').': hotline '
+                .($system['contact_hotline'] ?? '').', email '.($system['contact_email'] ?? '')
+                .'. Để lại yêu cầu, chúng tôi gọi lại trong 1 giờ làm việc.',
             'meta_keyword' => '',
             'meta_image' => '',
             'canonical' => write_url('lien-he')
@@ -45,20 +47,20 @@ class ContactController extends FrontendController
             'config',
             'seo',
             'system',
-        ));
+        ) + ['dark' => true]);
     }
 
     private function config(){
         return [
             'language' => $this->language,
+            // select2 and location.js were loaded for a province/ward picker this page no
+            // longer has, and cart.js for a cart the site does not use. The page now needs
+            // only the store theme it shares with the rest of the site.
             'css' => [
-                'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
+                'frontend/resources/store.css',
+                'frontend/resources/contact.css',
             ],
-            'js' => [
-                'backend/library/location.js',
-                'frontend/core/library/cart.js',
-                'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
-            ]
+            'js' => []
         ];
     }
 

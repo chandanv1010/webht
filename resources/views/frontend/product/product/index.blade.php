@@ -348,7 +348,7 @@
                     // Validation failure.
                     if (data.status === 422) {
                         msg.className = 'tpl-form__msg is-bad';
-                        msg.textContent = data.messages.name || data.messages.phone || 'Vui lòng kiểm tra lại thông tin.';
+                        msg.textContent = data.messages.name || data.messages.phone || data.messages.email || 'Vui lòng kiểm tra lại thông tin.';
                         btn.disabled = false;
                         return;
                     }

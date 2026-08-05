@@ -38,11 +38,15 @@ class ContactController extends Controller
         $rules = [
             'name' => 'required',
             'phone' => 'required',
+            // Optional, but validated when given: the contact page now stores this and
+            // the team replies to it, so a typo costs a lead.
+            'email' => 'nullable|email',
         ];
-        
+
         $errorMessages = [
             'name.required' => 'Bạn chưa nhập họ tên.',
             'phone.required' => 'Bạn chưa nhập số điện thoại.',
+            'email.email' => 'Email chưa đúng định dạng.',
         ];
 
         $validator = Validator::make($request->all(), $rules, $errorMessages);
@@ -54,6 +58,7 @@ class ContactController extends Controller
                 'messages' => [
                     'name' => $errors->first('name'),
                     'phone' => $errors->first('phone'),
+                    'email' => $errors->first('email'),
                 ],
             ];
         

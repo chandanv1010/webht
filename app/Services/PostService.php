@@ -92,6 +92,11 @@ class PostService extends BaseService implements PostServiceInterface
             $rawQuery
         ); 
 
+        // Every article card prints its catalogue name, which meant one query per card —
+        // nine on a listing page. Loaded here rather than through $relations because the
+        // repository passes those to withCount(), which rejects dot notation.
+        $posts->getCollection()->loadMissing('post_catalogues.languages');
+
         return $posts;
     }
 

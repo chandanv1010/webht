@@ -20,22 +20,28 @@ class RouterController extends FrontendController
     }
 
 
-    public function index(string $canonical = '', Request $request){
+    public function index(string $canonical, Request $request){
         $this->getRouter($canonical);
         if(!is_null($this->router) && !empty($this->router)){
             $method = 'index';
-            echo app($this->router->controllers)->{$method}($this->router->module_id, $request);
+
+            // return, not echo. Echoing the view wrote it straight to the output buffer
+            // and left the Response body empty, so nothing downstream could see the page:
+            // middleware could not touch it and tests read an empty string while the
+            // browser showed a full page.
+            return app($this->router->controllers)->{$method}($this->router->module_id, $request);
         }else{
             abort(404);
         }
     }
 
-    public function page(string $canonical = '', $page = 1, Request $request){
+    public function page(string $canonical, $page, Request $request){
         $this->getRouter($canonical);
-        $page = (!isset($page)) ? 1 : $page;
+        $page = ($page === null || $page === '') ? 1 : $page;
         if(!is_null($this->router) && !empty($this->router)){
             $method = 'index';
-            echo app($this->router->controllers)->{$method}($this->router->module_id, $request, $page);
+
+            return app($this->router->controllers)->{$method}($this->router->module_id, $request, $page);
         }else{
             abort(404);
         }
