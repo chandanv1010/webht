@@ -7,7 +7,7 @@
 
 .contact-hero {
     min-height: 0;
-    padding: calc(144px + 66px) 0 46px;
+    padding: 66px 0 46px;
 }
 .contact-hero__inner { position: relative; max-width: 720px; }
 
@@ -312,7 +312,7 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
 }
 
 @media (max-width: 767px) {
-    .contact-hero { padding: calc(96px + 28px) 0 34px; }
+    .contact-hero { padding: 28px 0 34px; }
     .contact-channels__grid { grid-template-columns: minmax(0, 1fr); }
     .contact-formwrap { padding: 24px 20px; }
     .contact-form .contact-form__submit { width: 100%; }

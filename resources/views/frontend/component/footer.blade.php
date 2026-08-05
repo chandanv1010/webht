@@ -93,8 +93,52 @@
     </div>
 </div>
 
-<div id="video-modal" class="uk-modal">
-    <div class="uk-modal-dialog">
-        {!! $system['homepage_video_youtube_pc'] !!}
-    </div>
+{{-- The player is built when the modal opens. A hidden iframe still loads, so this
+     block used to fetch a YouTube frame on every page of the site for a modal almost
+     nobody opens. --}}
+@php
+    $footerVideoId = null;
+    if (preg_match('~(?:embed/|v=|youtu\.be/)([A-Za-z0-9_-]{6,})~', (string) ($system['homepage_video_youtube_pc'] ?? ''), $m)) {
+        $footerVideoId = $m[1];
+    }
+@endphp
+@if ($footerVideoId)
+<div id="video-modal" class="uk-modal" data-video-modal="{{ $footerVideoId }}">
+    <div class="uk-modal-dialog"></div>
 </div>
+<script>
+(function () {
+    var modal = document.getElementById('video-modal');
+    if (!modal) return;
+
+    var dialog = modal.querySelector('.uk-modal-dialog');
+    var id = modal.getAttribute('data-video-modal');
+
+    function build() {
+        if (dialog.querySelector('iframe')) return;
+        var frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+        frame.width = '100%';
+        frame.height = '520';
+        frame.title = 'Video';
+        frame.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+        frame.allowFullscreen = true;
+        frame.style.border = '0';
+        dialog.appendChild(frame);
+    }
+
+    // Anything that opens this modal, however it does it.
+    document.addEventListener('click', function (e) {
+        var t = e.target.closest('[href="#video-modal"], [data-uk-modal]');
+        if (t) setTimeout(build, 30);
+    });
+
+    // And stop the sound when it closes.
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.uk-modal-close') && e.target !== modal) return;
+        var frame = dialog.querySelector('iframe');
+        if (frame) frame.remove();
+    });
+})();
+</script>
+@endif

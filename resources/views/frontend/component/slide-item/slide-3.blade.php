@@ -15,7 +15,7 @@
                         </div>
                         <div class="slide-2-button-group">
                             <div class="uk-flex uk-flex-middle">
-                                <button type="button" class="button" data-lead-open data-lead-subject="Slide trang chủ">Bắt đầu ngay bây giờ</button>
+                                <button type="button" class="button" data-lead-open data-lead-subject="TƯ VẤN LIÊN HỆ">Bắt đầu ngay bây giờ</button>
                             </div>
                         </div>
                     </div>

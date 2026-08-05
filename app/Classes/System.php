@@ -11,6 +11,11 @@ class System{
                 'company' => ['type' => 'text', 'label' => 'Tên công ty'],
                 'brand' => ['type' => 'text', 'label' => 'Tên thương hiệu'],
                 'slogan' => ['type' => 'text', 'label' => 'Slogan'],
+                'hot_keywords' => [
+                    'type' => 'text',
+                    'label' => 'Từ khoá tìm kiếm gợi ý',
+                    'title' => 'Hiện trong ô tìm kiếm. Mỗi từ khoá cách nhau bằng dấu phẩy.',
+                ],
                 'logo' => ['type' => 'images', 'label' => 'Logo Website', 'title' => 'Click vào ô phía dưới để tải logo'],
                 'logo_mobile' => ['type' => 'images', 'label' => 'Logo Mobile', 'title' => 'Click vào ô phía dưới để tải logo'],
                 'favicon' => ['type' => 'images', 'label' => 'Favicon', 'title' => 'Click vào ô phía dưới để tải logo'],

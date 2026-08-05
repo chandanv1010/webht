@@ -98,6 +98,14 @@ Route::get('cham-soc-website.html', [HomeController::class, 'service'])
 Route::get('dich-vu-seo.html', [HomeController::class, 'service'])
     ->defaults('key', 'seo')->name('home.service.seo');
 
+// The menu's "Dịch vụ" item. It resolved to a Post with three sentences in it; this is a
+// browsing page for the five services instead.
+Route::get('dich-vu.html', [HomeController::class, 'serviceHub'])->name('home.service.hub');
+
+// The video page. It resolved to a Post whose view was a grid of thumbnails linking to
+// href="" — nothing on it played.
+Route::get('video.html', [HomeController::class, 'video'])->name('home.video');
+
 Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler.index');
 
 Route::get('/thumb', [App\Http\Controllers\ImageResizerController::class, 'resize'])

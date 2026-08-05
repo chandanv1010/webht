@@ -53,9 +53,9 @@
 
 .store-hero {
     position: relative;
-    /* .pc-header is position:absolute and 144px tall, so it floats over the top of
+    /* The header is in the flow now, so this is the hero's own breathing room.
        this section. Clear it, or the billboard title sits behind the logo. */
-    padding: calc(144px + 60px) 0 84px;
+    padding: 60px 0 84px;
     /* Deliberately tall. The brief asked for the store to feel overwhelming, and a
        short band of text over a faded image does the opposite. */
     min-height: 88vh;
@@ -725,7 +725,7 @@
 }
 
 @media (max-width: 767px) {
-    .store-hero { padding: calc(96px + 30px) 0 48px; min-height: 0; }
+    .store-hero { padding: 30px 0 48px; min-height: 0; }
     .store-hero__back-layer { filter: saturate(.85) brightness(.42) blur(3px); }
     .store-hero::before {
         background:

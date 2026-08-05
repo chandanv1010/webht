@@ -147,18 +147,72 @@ class PageTemplateTest extends TestCase
         $res->assertDontSee('class="news-outstanding"', false);
     }
 
-    /** The header the client asked for: slogan on top, search as its own field. */
-    public function test_header_has_the_slogan_and_its_own_search(): void
+    /** The header the client asked for: slogan on top, one search button, one CTA. */
+    public function test_header_shape(): void
     {
         $res = $this->get('/');
 
         $res->assertStatus(200);
         $res->assertSee('site-header__slogan', false);
-        $res->assertSee('site-search', false);
+        // A button that opens a panel, not a form sitting in the bar.
+        $res->assertSee('data-search-open', false);
         $res->assertSee('site-header__cta', false);
-        // The old markup, whose hover-expanding field flickered without end.
+        $res->assertSee('site-social', false);
+
+        // The old markup: a hover-expanding field that flickered without end, and a phone
+        // number that appeared three times on every page.
         $res->assertDontSee('class="header-search"', false);
         $res->assertDontSee('middle-toolbox', false);
+        $res->assertDontSee('site-header__call', false);
+    }
+
+    /** The search panel, and its suggestions, which come from a setting. */
+    public function test_search_panel_shows_configured_keywords(): void
+    {
+        $res = $this->get('/');
+
+        $res->assertStatus(200);
+        $res->assertSee('id="search-panel"', false);
+        $res->assertSee('search-panel__chips', false);
+
+        $configured = collect(explode(',', (string) DB::table('systems')
+            ->where('keyword', 'homepage_hot_keywords')
+            ->where('language_id', 1)
+            ->value('content')))
+            ->map(fn ($k) => trim($k))
+            ->filter();
+
+        $this->assertNotEmpty($configured, 'no hot keywords configured');
+        $res->assertSee($configured->first(), false);
+    }
+
+    /** Dịch vụ is a page listing the services, not a post with three sentences. */
+    public function test_service_hub_lists_every_service(): void
+    {
+        $res = $this->get('/dich-vu.html');
+
+        $res->assertStatus(200);
+        $res->assertSee('hub-row', false);
+
+        foreach (['Website mẫu có sẵn', 'Thiết kế theo yêu cầu', 'Chăm sóc website',
+                  'Dịch vụ SEO', 'Hosting &amp; tên miền'] as $name) {
+            $res->assertSee($name, false);
+        }
+    }
+
+    /** The video page plays. The old one linked its thumbnails to href="". */
+    public function test_video_page_has_playable_cards(): void
+    {
+        $res = $this->get('/video.html');
+
+        $res->assertStatus(200);
+        $res->assertSee('vid-card', false);
+        $res->assertSee('data-video-play', false);
+        // No player in the delivered HTML. Asserted on an iframe's src attribute, not on
+        // the URL alone: the page's own click-to-play script builds that URL, and the
+        // skeleton script mentions <iframe> in a comment.
+        $res->assertDontSee('<iframe src="https://www.youtube', false);
+        $res->assertDontSee('href=""', false);
     }
 
     /** Every page carries the enquiry popup, so any CTA can open it. */

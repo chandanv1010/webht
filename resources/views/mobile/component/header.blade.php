@@ -34,7 +34,9 @@
                 @foreach ($menu['mobile'] as $key => $val)
                     @php
                         $name = $val['item']->languages->first()->pivot->name;
-                        $canonical = ($name == 'Trang chủ') ?  '' : write_url($val['item']->languages->first()->pivot->canonical, true, true);
+                        // url('/') rather than '': an empty href reloads whatever page you are on, so the
+                        // home link in the mobile menu never went home.
+                        $canonical = ($name == 'Trang chủ') ? url('/') : write_url($val['item']->languages->first()->pivot->canonical, true, true);
                     @endphp
                     <li class="l1 {{ (count($val['children']))?'uk-parent uk-position-relative':'' }}">
                         <?php echo (isset($val['children']) && is_array($val['children']) && count($val['children']))?'<a href="#" title="" class="dropicon"></a>':''; ?>

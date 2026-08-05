@@ -11,7 +11,9 @@
             @foreach($menu['mobile-menu'] as $key => $val)
                 @php
                     $name = $val['item']->languages->first()->pivot->name;
-                    $canonical = ($name == 'Trang chủ') ?  '' : write_url($val['item']->languages->first()->pivot->canonical, true, true);
+                    // url('/') rather than '': an empty href reloads whatever page you are on, so the
+                        // home link in the mobile menu never went home.
+                        $canonical = ($name == 'Trang chủ') ? url('/') : write_url($val['item']->languages->first()->pivot->canonical, true, true);
                 @endphp
                 <li>
                     <a href="{{ $canonical }}" title="{{ $name }}">{{ $name }}</a>

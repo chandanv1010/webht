@@ -144,41 +144,154 @@ ul li,ol li{
 
 /**  PAGE HEADER  */
 /* ===========================================================================
-   Site header. Absolutely positioned over the hero, as the previous one was, so every
-   page's hero top padding still lines up.
+   Site header.
+
+   In the flow, not floating over the hero: every page used to pad its own top by the
+   header's height, which meant the header could not change height without breaking
+   six stylesheets. Square corners, and no phone number — it appeared three times on
+   every page between here, the button beside it and the footer.
    =========================================================================== */
 
 .site-header {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    z-index: 10;
+    position: relative;
+    z-index: 20;
+    background: #fff;
 }
 
-/* ── Slogan row ─────────────────────────────────────────────────────────── */
+/* ── Slogan and social ──────────────────────────────────────────────────── */
 
-.site-header__upper { padding: 11px 0; }
+/* Violet, and thin. It carries one sentence and a row of small links; anything taller
+   pushes the menu and the page's own first line further down for no gain. */
+.site-header__upper { background: #4c1d95; padding: 0; }
 .site-header__upper-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    min-height: 34px;
 }
 .site-header__slogan {
     margin: 0;
     min-width: 0;
-    font-size: 13.5px;
-    font-weight: 600;
-    letter-spacing: .01em;
-    color: #5b6478;
-    /* One line: a slogan that wraps changes the header's height between pages, and every
-       hero's top padding is measured against it. */
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .82);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* On the dark pages the slogan has to invert or it disappears into the canvas. */
-.site-header.white-text-mode .site-header__slogan { color: rgba(244, 246, 255, .74); }
+
+.site-social {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.site-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: rgba(255, 255, 255, .7);
+}
+.site-social svg { width: 15px; height: 15px; }
+.site-social a:hover { color: #fff; }
+.site-social a:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+
+/* ── Main row ───────────────────────────────────────────────────────────── */
+
+.site-header__main { border-bottom: 1px solid #eef1f6; }
+.site-header__row { display: flex; align-items: center; gap: 18px; }
+
+.site-header__logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    height: 76px;
+}
+.site-header__logo img { max-height: 46px; width: auto; display: block; }
+
+.site-header .navigation { flex: 1 1 auto; min-width: 0; }
+.site-header__tools {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* One row, never wrapping: the old float layout wrapped into a second line when the
+   toolbox grew, which doubled the header height. */
+.site-header .main-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+}
+.site-header .main-menu > li { float: none; white-space: nowrap; }
+.site-header .navigation .main-menu > li > a {
+    padding: 27px 12px;
+    font-size: 13px;
+    letter-spacing: .01em;
+}
+
+/* ── Search: a button, not a field ──────────────────────────────────────── */
+
+.site-search-open,
+.mobile-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f3;
+    border-radius: 0;
+    background: #fff;
+    color: #3f4657;
+    cursor: pointer;
+}
+.site-search-open svg,
+.mobile-search svg { width: 18px; height: 18px; }
+.site-search-open:hover,
+.mobile-search:hover { border-color: #4c1d95; color: #4c1d95; }
+.site-search-open:focus-visible,
+.mobile-search:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+.mobile-search { width: 38px; height: 38px; margin-right: 8px; }
+
+/* ── The one call to action ─────────────────────────────────────────────── */
+
+/* The single gradient left on the site, and deliberately: it is the one thing on the
+   page we want looked at, and it now has nothing competing with it. */
+.site-header__cta {
+    height: 44px;
+    padding: 0 30px;
+    border: 0;
+    border-radius: 0;
+    background-image: linear-gradient(90deg, #ff7337 0%, #ee4d2d 100%);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.site-header__cta:hover {
+    background-image: linear-gradient(90deg, #ff5f1f 0%, #d93c1d 100%);
+    box-shadow: 0 8px 22px rgba(238, 77, 45, .3);
+}
+.site-header__cta:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+
+@media (max-width: 1320px) {
+    .site-header__row { gap: 12px; }
+    .site-header .navigation .main-menu > li > a { padding: 27px 9px; font-size: 12.5px; }
+    .site-header__cta { padding: 0 20px; font-size: 13.5px; }
+}
 
 /** NAVIGATION */
 .header-middle{
@@ -238,212 +351,6 @@ ul li,ol li{
     color:#fc746c;
     
 }
-/* ── Main row ───────────────────────────────────────────────────────────── */
-
-.site-header__main {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 6px 26px rgba(3, 29, 91, .07);
-}
-.site-header.white-text-mode .site-header__main {
-    /* Solid, not translucent: the menu has to stay readable over a photo backdrop. */
-    background: #fff;
-}
-
-.site-header__row {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 0 18px 0 26px;
-}
-
-.site-header__logo {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    height: 78px;
-}
-.site-header__logo img { max-height: 46px; width: auto; display: block; }
-
-.site-header .navigation { flex: 1 1 auto; min-width: 0; }
-
-.site-header__tools {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-/* One row, never wrapping: the old float layout wrapped into a second line when the
-   toolbox grew, which doubled the header height and pushed every hero down. */
-.site-header .main-menu {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-end;
-    margin: 0;
-    padding: 0;
-}
-.site-header .main-menu > li { float: none; white-space: nowrap; }
-.site-header .navigation .main-menu > li > a {
-    padding: 28px 11px;
-    font-size: 13px;
-    letter-spacing: .01em;
-}
-
-/* ── Search, on the slogan row ──────────────────────────────────────────── */
-
-/* The previous field expanded on hover, which flickered forever: expanding moved the
-   button out from under the cursor, hover was lost, it collapsed, and the cycle
-   repeated. A fixed width has no such feedback loop. */
-.site-search {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    width: 280px;
-    padding: 0 3px 0 14px;
-    border: 1px solid #e2e8f3;
-    border-radius: 22px;
-    background: #fff;
-    transition: border-color .26s cubic-bezier(.2, .7, .3, 1),
-                background-color .26s cubic-bezier(.2, .7, .3, 1),
-                box-shadow .26s cubic-bezier(.2, .7, .3, 1);
-}
-.site-search:focus-within {
-    background: #fff;
-    border-color: #1c6cdc;
-    box-shadow: 0 0 0 3px rgba(28, 108, 220, .12);
-}
-.site-search input {
-    flex: 1 1 auto;
-    min-width: 0;
-    height: 36px;
-    border: 0;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 14px;
-    color: #031d5b;
-}
-.site-search input::placeholder { color: #9aa4b8; }
-.site-search input::-webkit-search-cancel-button { display: none; }
-.site-search button {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: #5b6478;
-    cursor: pointer;
-    transition: background-color .26s ease, color .26s ease;
-}
-.site-search button:hover { background: #1c6cdc; color: #fff; }
-.site-search button svg { width: 17px; height: 17px; }
-.site-search button:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
-
-/* ── Call and CTA ───────────────────────────────────────────────────────── */
-
-.site-header__call {
-    display: flex;
-    align-items: center;
-    height: 42px;
-    padding: 0 18px;
-    border-radius: 50px;
-    border: 1px solid #e2e8f3;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: .01em;
-    color: #031d5b;
-    white-space: nowrap;
-    transition: border-color .26s cubic-bezier(.2, .7, .3, 1),
-                color .26s cubic-bezier(.2, .7, .3, 1),
-                background-color .26s cubic-bezier(.2, .7, .3, 1);
-}
-.site-header__call:hover { border-color: #1c6cdc; color: #1c6cdc; background: #f4f8ff; }
-
-.site-header__cta {
-    height: 42px;
-    padding: 0 22px;
-    border: 0;
-    border-radius: 50px;
-    /* Flat fill. The old button was an orange-to-coral gradient, one of several on the
-       page competing for the same attention. */
-    background: #ee3d51;
-    color: #fff;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background-color .26s cubic-bezier(.2, .7, .3, 1),
-                transform .26s cubic-bezier(.2, .7, .3, 1),
-                box-shadow .26s cubic-bezier(.2, .7, .3, 1);
-}
-.site-header__cta:hover {
-    background: #d92c40;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(238, 61, 81, .26);
-}
-.site-header__call:focus-visible,
-.site-header__cta:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
-
-/* ── Social ─────────────────────────────────────────────────────────────── */
-
-/* Monochrome, and they only take their brand colour on hover. Three saturated brand
-   squares in the header pulled attention off everything it exists for. */
-.site-social {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin: 0 0 0 2px;
-    padding: 0;
-    list-style: none;
-}
-.site-social a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    color: #9aa4b8;
-    transition: color .26s ease, background-color .26s ease;
-}
-.site-social svg { width: 17px; height: 17px; }
-.site-social a:hover { color: #031d5b; background: #f2f5fa; }
-.site-social a:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
-
-/* On the dark pages the search sits on the canvas, not on the white bar. */
-.site-header.white-text-mode .site-search {
-    background: rgba(244, 246, 255, .08);
-    border-color: rgba(244, 246, 255, .16);
-}
-.site-header.white-text-mode .site-search input { color: #f4f6ff; }
-.site-header.white-text-mode .site-search input::placeholder { color: rgba(244, 246, 255, .5); }
-.site-header.white-text-mode .site-search button { color: rgba(244, 246, 255, .75); }
-.site-header.white-text-mode .site-search:focus-within {
-    background: rgba(244, 246, 255, .12);
-    border-color: rgba(244, 246, 255, .45);
-    box-shadow: none;
-}
-
-/* ── Narrower desktops ──────────────────────────────────────────────────── */
-
-@media (max-width: 1320px) {
-    .site-header__row { gap: 10px; padding: 0 12px 0 16px; }
-    .site-header .navigation .main-menu > li > a { padding: 28px 9px; font-size: 12.5px; }
-    .site-search { width: 230px; }
-    .site-social { display: none; }
-}
-@media (max-width: 1200px) {
-    /* The call button and the CTA say the same thing; below this width only one fits. */
-    .site-header__call { display: none; }
-}
-
 /* ── Mobile bar ─────────────────────────────────────────────────────────── */
 
 .mobile-call {
@@ -496,8 +403,7 @@ ul li,ol li{
 .offcanvas-search button svg { width: 17px; height: 17px; }
 
 @media (prefers-reduced-motion: reduce) {
-    .site-search, .site-search button, .site-header__call, .site-header__cta, .site-social a { transition: none; }
-    .site-header__cta:hover { transform: none; }
+    .site-search-open, .mobile-search, .site-header__cta, .site-social a { transition: none; }
 }
 
 .panel-slide{
@@ -1804,8 +1710,10 @@ ul li,ol li{
 }
 .panel-customer .panel-head .heading-10 > *{
     font-family: 'Manrope';
-    font-size: 29px;
-    line-height: 88px;
+    /* An outlined watermark word, not body copy — the site-wide type reduction cut it to
+       29px, which turned the effect into a blur. It is meant to be read as texture. */
+    font-size: 110px;
+    line-height: 118px;
     color:transparent;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-width: 2px;
@@ -2457,9 +2365,8 @@ ul li,ol li{
     z-index: 2;
 }
 .hosting-header{
-    /* The header is absolutely positioned over the page and is 138px tall, so 80px put
-       the first line of the title underneath it. */
-    padding-top: 176px;
+    /* The header is in the flow now, so this is the hero's own breathing room. */
+    padding-top: 64px;
 }
 .hosting-content{
     max-width: 600px;
@@ -3325,4 +3232,208 @@ button,
         transition: none;
     }
     .best-item:hover, .service-item-1:hover, .hosting-item:hover { transform: none; }
+}
+
+/* ===========================================================================
+   Search panel — what the header's search icon opens.
+   =========================================================================== */
+
+.search-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 96px 20px 20px;
+}
+.search-panel[hidden] { display: none; }
+
+.search-panel__veil {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 12, 40, .62);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.search-panel.is-open .search-panel__veil { opacity: 1; }
+
+.search-panel__body {
+    position: relative;
+    width: 100%;
+    max-width: 660px;
+    padding: 26px 28px 28px;
+    background: #fff;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity .2s ease, transform .26s cubic-bezier(.2, .7, .3, 1);
+}
+.search-panel.is-open .search-panel__body { opacity: 1; transform: none; }
+
+.search-panel__form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #4c1d95;
+}
+.search-panel__icon { display: flex; color: #4c1d95; }
+.search-panel__icon svg { width: 20px; height: 20px; }
+
+.search-panel__form input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 40px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 19px;
+    color: #031d5b;
+}
+.search-panel__form input::placeholder { color: #a7afc0; }
+.search-panel__form input::-webkit-search-cancel-button { display: none; }
+
+.search-panel__go {
+    flex: 0 0 auto;
+    height: 40px;
+    padding: 0 22px;
+    border: 0;
+    background: #4c1d95;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.search-panel__go:hover { background: #3b1479; }
+
+.search-panel__x {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: transparent;
+    color: #8b93a5;
+    cursor: pointer;
+}
+.search-panel__x svg { width: 17px; height: 17px; }
+.search-panel__x:hover { color: #ee4d2d; }
+
+/* The suggestions. This is the half that makes a search box useful to someone who does
+   not yet know the word for what they want. */
+.search-panel__hot { margin-top: 22px; }
+.search-panel__hot-label {
+    margin: 0 0 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8b93a5;
+}
+.search-panel__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.search-panel__chips a {
+    display: block;
+    padding: 8px 14px;
+    background: #f4f5f9;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #3f4657;
+    text-decoration: none;
+}
+.search-panel__chips a:hover { background: #4c1d95; color: #fff; }
+.search-panel__chips a:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+
+@media (max-width: 600px) {
+    .search-panel { padding-top: 70px; }
+    .search-panel__body { padding: 20px 18px 22px; }
+    .search-panel__form input { font-size: 17px; }
+    .search-panel__go { padding: 0 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .search-panel__veil, .search-panel__body { transition: none; }
+    .search-panel__body { transform: none; }
+}
+
+/* ===========================================================================
+   Home: "Về chúng tôi".
+
+   The section had no padding of its own, so it sat flush against the video panel above
+   it — two different subjects with no seam between them. It also had no type hierarchy:
+   the eyebrow, the heading and the body were all within a few pixels of each other after
+   the site-wide type reduction.
+   =========================================================================== */
+
+.panel-intro {
+    padding: 84px 0 88px;
+    background: #fff;
+}
+
+/* The eyebrow. Small on purpose — it labels the section, it is not the heading. */
+.panel-intro .heading-1 { margin: 0 0 14px; }
+.panel-intro .heading-1 > * {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #4c1d95;
+}
+
+.panel-intro .main-heading {
+    margin: 0 0 18px;
+    max-width: 22ch;
+    font-size: 31px;
+    line-height: 42px;
+    font-weight: 700;
+    letter-spacing: -.015em;
+    color: #031d5b;
+}
+
+.panel-intro > .uk-container .description {
+    max-width: 60ch;
+    font-size: 16px;
+    line-height: 28px;
+    color: #5b6478;
+}
+
+/* The two points below the copy. A rule down the left instead of a hover card: they are
+   read once, not clicked. */
+.panel-intro .intro-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0 18px 20px;
+    border-left: 2px solid #ede9fe;
+    border-radius: 0;
+    cursor: default;
+}
+.panel-intro .intro-item:hover { background: transparent; border-left-color: #4c1d95; }
+.panel-intro .intro-item .icon { flex: 0 0 auto; width: 42px; }
+.panel-intro .intro-item .icon img { width: 100%; height: auto; display: block; }
+.panel-intro .intro-title {
+    margin-bottom: 6px;
+    font-size: 17.5px;
+    font-weight: 700;
+    color: #031d5b;
+}
+.panel-intro .intro-item .description { margin-bottom: 0; font-size: 15px; line-height: 26px; }
+
+/* The illustration column: capped and centred so it does not tower over the copy. */
+.panel-intro .illus { max-width: 420px; }
+
+@media (max-width: 1023px) {
+    .panel-intro { padding: 56px 0 60px; }
+    .panel-intro .main-heading { max-width: none; font-size: 26px; line-height: 36px; }
 }

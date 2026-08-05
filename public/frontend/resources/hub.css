@@ -1,0 +1,241 @@
+/* ===========================================================================
+   Dịch vụ — the services index.
+
+   Loads after store.css and uses its tokens, so this and the template store read as one
+   browsing surface. Rows rather than a grid of cards: five services with real numbers in
+   them need width, and a card would only hold the name.
+   =========================================================================== */
+
+.hub { padding-bottom: 90px; }
+
+/* ── Billboard ──────────────────────────────────────────────────────────── */
+
+.hub-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 74px 0 78px;
+}
+
+/* The template covers, dimmed, behind the copy. The store page does the same thing: the
+   work itself is the backdrop. */
+.hub-hero__art { position: absolute; inset: 0; }
+.hub-hero__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 1fr;
+    height: 100%;
+    gap: 4px;
+    opacity: .16;
+}
+.hub-hero__grid span {
+    background-size: cover;
+    background-position: center top;
+}
+/* Faded into the canvas at the bottom so the rows below do not start on a hard edge. */
+.hub-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .92) 46%, rgba(5, 6, 26, .74) 100%),
+        linear-gradient(0deg, var(--canvas) 0%, rgba(5, 6, 26, 0) 52%);
+}
+
+.hub-hero__inner { position: relative; z-index: 2; max-width: 660px; }
+
+.hub-eyebrow {
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--value);
+}
+
+.hub-title {
+    margin: 0 0 16px;
+    font-size: clamp(1.7rem, 2.7vw, 2.4rem);
+    line-height: 1.18;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--ink);
+}
+
+.hub-lead {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 16.5px;
+    line-height: 28px;
+    color: var(--ink-dim);
+}
+
+.hub-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+/* ── Rows ───────────────────────────────────────────────────────────────── */
+
+.hub-rows { padding: 46px 0 0; }
+
+.hub-row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) 220px;
+    gap: 28px;
+    align-items: center;
+    padding: 34px 0;
+    border-top: 1px solid var(--line);
+}
+.hub-row:last-child { border-bottom: 1px solid var(--line); }
+
+/* Numbered because the order is the order we would recommend them in — fastest and
+   cheapest first. */
+.hub-row__mark {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--ink-faint);
+    padding-top: 4px;
+    align-self: start;
+}
+
+.hub-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 18px;
+    margin-bottom: 12px;
+}
+.hub-row__title { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -.015em; }
+.hub-row__title a { color: var(--ink); text-decoration: none; }
+.hub-row__title a:hover { color: #c3a3ff; }
+.hub-row__title a:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
+
+.hub-row__price {
+    margin: 0;
+    padding: 4px 12px;
+    background: rgba(53, 208, 186, .14);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #35d0ba;
+    white-space: nowrap;
+}
+
+.hub-row__lead {
+    margin: 0 0 14px;
+    max-width: 68ch;
+    font-size: 15.5px;
+    line-height: 27px;
+    color: var(--ink-dim);
+}
+
+.hub-row__points { margin: 0; padding: 0; list-style: none; }
+.hub-row__points li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 7px;
+    font-size: 14.5px;
+    line-height: 24px;
+    color: var(--ink-dim);
+}
+.hub-row__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 8px;
+    height: 1px;
+    background: var(--ink-faint);
+}
+
+.hub-row__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+    margin-top: 18px;
+}
+.hub-row__go {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+}
+.hub-row__go::after { content: ' →'; }
+.hub-row__go:hover { color: #c3a3ff; }
+.hub-row__when { font-size: 13.5px; color: var(--ink-faint); }
+
+/* ── The row's own schematic ────────────────────────────────────────────── */
+
+/* Four bars per row, arranged differently per service: a stack for ready-made, a rising
+   staircase for bespoke, an even pulse for maintenance, a climb for SEO. The shape is the
+   only illustration each row needs. */
+.hub-art {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 96px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    background: rgba(244, 246, 255, .03);
+}
+.hub-art i { flex: 1; border-radius: 2px; background: rgba(244, 246, 255, .16); }
+
+.hub-art--template i { height: 42%; }
+.hub-art--template i:nth-child(2) { height: 42%; background: var(--accent); }
+
+.hub-art--custom i:nth-child(1) { height: 26%; }
+.hub-art--custom i:nth-child(2) { height: 48%; }
+.hub-art--custom i:nth-child(3) { height: 72%; }
+.hub-art--custom i:nth-child(4) { height: 96%; background: var(--accent); }
+
+.hub-art--care i { height: 62%; }
+.hub-art--care i:nth-child(3) { height: 30%; background: #f5a623; }
+
+.hub-art--seo i:nth-child(1) { height: 18%; }
+.hub-art--seo i:nth-child(2) { height: 30%; }
+.hub-art--seo i:nth-child(3) { height: 58%; }
+.hub-art--seo i:nth-child(4) { height: 92%; background: #35d0ba; }
+
+.hub-art--hosting i { height: 72%; }
+.hub-art--hosting i:nth-child(4) { height: 72%; background: #2f80ed; }
+
+/* ── The table ──────────────────────────────────────────────────────────── */
+
+.hub-compare { padding-top: 66px; margin-top: 48px; border-top: 1px solid var(--line); }
+.hub-compare__wrap { overflow-x: auto; }
+
+.hub-table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+}
+.hub-table th, .hub-table td {
+    padding: 15px 18px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid var(--line);
+}
+.hub-table thead th {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+.hub-table tbody th { font-weight: 500; color: var(--ink-dim); }
+.hub-table tbody td a { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hub-table tbody td a:hover { color: #c3a3ff; }
+.hub-table tbody tr:hover th { color: var(--ink); }
+
+/* ── Narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+    .hub-row { grid-template-columns: 40px minmax(0, 1fr); gap: 18px; }
+    .hub-row__art { display: none; }
+}
+
+@media (max-width: 767px) {
+    .hub-hero { padding: 44px 0 52px; }
+    .hub-hero__grid { grid-template-columns: repeat(4, 1fr); }
+    .hub-hero__actions .store-btn { width: 100%; }
+    .hub-row { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 26px 0; }
+    .hub-row__mark { padding-top: 0; }
+}

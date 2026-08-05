@@ -12,8 +12,8 @@
 .svc {
     background: #fff;
     color: #3f4657;
-    /* The header is absolutely positioned and 138px tall. */
-    padding-top: 138px;
+    /* The header is in the flow, so no top padding is owed to it. */
+    padding-top: 0;
 }
 
 /* ── Shared small parts ─────────────────────────────────────────────────── */
@@ -723,7 +723,7 @@
 }
 
 @media (max-width: 767px) {
-    .svc { padding-top: 96px; }
+    .svc { padding-top: 0; }
     .svc-title { font-size: 27px; line-height: 36px; }
     .svc-h2 { font-size: 22px; line-height: 31px; }
     .svc-hero { padding: 36px 0 44px; }
