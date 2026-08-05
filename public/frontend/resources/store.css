@@ -526,17 +526,137 @@
 .tpl-card__link:hover .tpl-card__hint,
 .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); }
 
-/* ── Category description ───────────────────────────────────────────────── */
+/* ── Category article, with a read-more ─────────────────────────────────── */
 
-.store-about { padding: 44px 0 0; }
-.store-about__body {
-    max-width: 74ch;
-    color: var(--ink-dim);
-    font-size: 15px;
-    line-height: 1.75;
+.store-about {
+    padding: 62px 0 10px;
+    /* A hairline above it separates the article from the last shelf without adding
+       another band of colour. */
+    border-top: 1px solid var(--line);
+    margin-top: 46px;
 }
-.store-about__body :is(h2, h3) { color: var(--ink); font-family: 'Be Vietnam Pro', sans-serif; }
+
+.store-about__inner {
+    position: relative;
+    max-width: 78ch;
+}
+
+.store-about__title {
+    font-size: clamp(1.35rem, 2.1vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin: 0 0 22px;
+}
+
+.store-about__body {
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    line-height: 1.78;
+    /* Animated by the script. Kept off the shorthand so a resize can hand back
+       control by setting max-height: none. */
+    transition: max-height .42s cubic-bezier(.22, .8, .3, 1);
+}
+
+.store-about__body > :first-child { margin-top: 0; }
+
+.store-about__body .lead {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 0 0 26px;
+}
+
+.store-about__body h2 {
+    font-size: 17.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -.01em;
+    margin: 34px 0 12px;
+    /* A short accent rule instead of a heavier weight — the article is long and
+       needs scannable anchors more than it needs contrast. */
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+    line-height: 1.35;
+}
+
+.store-about__body h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 22px 0 6px;
+}
+
+.store-about__body p { margin: 0 0 14px; }
+
+.store-about__body ul {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+}
+.store-about__body li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 9px;
+}
+.store-about__body li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: .62em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--value);
+}
+
 .store-about__body a { color: var(--value); }
+
+/* Collapsed state: clip the article and fade its last lines into the canvas so it is
+   obvious the text continues rather than simply ending mid-sentence. */
+.store-about.is-clamped .store-about__body {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 100%);
+}
+.store-about.is-open .store-about__body {
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+.store-about__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+    padding: 11px 24px;
+    border: 1px solid rgba(244, 246, 255, .2);
+    border-radius: 999px;
+    background: rgba(244, 246, 255, .05);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.store-about__more::after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform .28s cubic-bezier(.22, .8, .3, 1);
+}
+.store-about.is-open .store-about__more::after {
+    transform: translateY(1px) rotate(-135deg);
+}
+.store-about__more:hover {
+    background: rgba(131, 59, 255, .16);
+    border-color: rgba(131, 59, 255, .55);
+    transform: translateY(-1px);
+}
+.store-about__more:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
 
 /* ── Small screens ──────────────────────────────────────────────────────── */
 
@@ -562,7 +682,8 @@
     .store-hero__wall-grid { animation: none; }
     .store-hero__frame { transition: none; }
     .store-hero__frame:hover { transform: none; }
-    .store-btn, .tpl-card__link, .tpl-card__hint { transition: none; }
+    .store-btn, .tpl-card__link, .tpl-card__hint,
+    .store-about__body, .store-about__more, .store-about__more::after { transition: none; }
     .store-btn:hover, .tpl-card__link:hover, .tpl-card__link:focus-visible { transform: none; }
     .tpl-card__link:hover .tpl-card__hint,
     .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); }

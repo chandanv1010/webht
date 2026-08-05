@@ -189,10 +189,35 @@
         @endforeach
     @endif
 
-    @if (($rootPivot->description ?? '') !== '')
-        <section class="store-about">
+    {{-- ── Category copy ─────────────────────────────────────────── --}}
+    @php
+        // Show the copy for whatever the visitor is actually looking at: the selected
+        // category, or the store itself when nothing is filtered.
+        $aboutPivot = $rootPivot;
+        $aboutTitle = $rootPivot->name ?? 'Kho giao diện';
+
+        if ($storeActiveCategory > 0) {
+            $activeCat = $storeCategories->firstWhere('id', $storeActiveCategory);
+            if ($activeCat) {
+                $catPivot = $activeCat->languages->first()?->pivot;
+                if (($catPivot->description ?? '') !== '') {
+                    $aboutPivot = $catPivot;
+                    $aboutTitle = $catPivot->name;
+                }
+            }
+        }
+    @endphp
+
+    @if (($aboutPivot->description ?? '') !== '')
+        {{-- Rendered expanded. The script collapses it afterwards, so with JavaScript
+             off — and for anything reading the page as text — the whole article is
+             present rather than hidden behind a button. --}}
+        <section class="store-about" data-readmore>
             <div class="uk-container uk-container-center">
-                <div class="store-about__body">{!! $rootPivot->description !!}</div>
+                <div class="store-about__inner">
+                    <h2 class="store-about__title">{{ $aboutTitle }}</h2>
+                    <div class="store-about__body">{!! $aboutPivot->description !!}</div>
+                </div>
             </div>
         </section>
     @endif
@@ -231,6 +256,62 @@
         track.addEventListener('scroll', syncEdges, { passive: true });
         window.addEventListener('resize', syncEdges);
         syncEdges();
+    });
+    // Read-more on the category article. The markup ships expanded and is collapsed
+    // here, so the text is always in the document for search engines and for anyone
+    // without JavaScript.
+    document.querySelectorAll('[data-readmore]').forEach(function (block) {
+        var body = block.querySelector('.store-about__body');
+        if (!body) return;
+
+        var COLLAPSED = 250;
+        // Nothing to collapse if the article is already short.
+        if (body.scrollHeight <= COLLAPSED + 80) return;
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'store-about__more';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-controls', body.id || (body.id = 'store-about-body'));
+
+        function label() {
+            btn.textContent = block.classList.contains('is-open') ? 'Thu gọn' : 'Xem thêm';
+        }
+
+        function collapse() {
+            block.classList.add('is-clamped');
+            block.classList.remove('is-open');
+            body.style.maxHeight = COLLAPSED + 'px';
+            btn.setAttribute('aria-expanded', 'false');
+            label();
+        }
+
+        function expand() {
+            block.classList.add('is-open');
+            // Animate to the measured height, then release the cap so the block can
+            // still reflow if the window is resized.
+            body.style.maxHeight = body.scrollHeight + 'px';
+            btn.setAttribute('aria-expanded', 'true');
+            label();
+            body.addEventListener('transitionend', function once(e) {
+                if (e.propertyName !== 'max-height') return;
+                if (block.classList.contains('is-open')) body.style.maxHeight = 'none';
+                body.removeEventListener('transitionend', once);
+            });
+        }
+
+        btn.addEventListener('click', function () {
+            if (block.classList.contains('is-open')) {
+                // Pin the current height first, or the transition has nothing to run from.
+                body.style.maxHeight = body.scrollHeight + 'px';
+                requestAnimationFrame(collapse);
+            } else {
+                expand();
+            }
+        });
+
+        block.querySelector('.store-about__inner').appendChild(btn);
+        collapse();
     });
 </script>
 @endsection
