@@ -442,9 +442,15 @@ class SeedDemoContent extends Command
     }
 
     /**
+     * A homepage preview per template.
+     *
      * The dump references uploaded .webp thumbnails that are not in the repo, so all
-     * 15 template cards rendered a broken image. Generate an SVG poster per template
-     * — a stylised dashboard mock in the site palette — and point the rows at it.
+     * cards rendered a broken image. These are drawn mocks rather than screenshots —
+     * see App\Support\TemplatePoster for why — and each one uses the layout its
+     * category implies, so a shop template looks like a shop.
+     *
+     * A real screenshot at public/userfiles/image/template-cover/<canonical>.(jpg|png|webp)
+     * always wins, so covers can be dropped in later without touching this command.
      */
     private function seedProductPosters(): void
     {
@@ -453,68 +459,59 @@ class SeedDemoContent extends Command
             mkdir($dir, 0755, true);
         }
 
-        $accents = ['#833bff', '#fc746c', '#35d0ba', '#f5c451', '#2f80ed', '#ac1de1'];
+        $coverDir = public_path('userfiles/image/template-cover');
+        if (!is_dir($coverDir)) {
+            mkdir($coverDir, 0755, true);
+        }
+
+        // Which homepage shape each category should be drawn as.
+        $archetypeByCategory = [
+            'website-ban-hang' => 'ecommerce',
+            'website-doanh-nghiep' => 'corporate',
+            'landing-page' => 'landing',
+            'website-bat-dong-san' => 'realestate',
+            'giao-duc' => 'education',
+            'mau-quan-tri-bang-dieu-khien' => 'admin',
+        ];
+
+        $accents = ['#833bff', '#2f80ed', '#fc746c', '#35d0ba', '#f5a623', '#ac1de1', '#0f9d58', '#e0457b'];
 
         $products = DB::table('products')
             ->join('product_language as l', 'l.product_id', '=', 'products.id')
             ->where('l.language_id', 1)
             ->orderBy('products.id')
-            ->get(['products.id', 'l.name']);
+            ->get(['products.id', 'products.product_catalogue_id', 'l.name', 'l.canonical']);
 
+        $catCanonical = DB::table('product_catalogue_language')
+            ->where('language_id', 1)
+            ->pluck('canonical', 'product_catalogue_id');
+
+        $usedReal = 0;
         foreach ($products as $i => $product) {
-            $accent = $accents[$i % count($accents)];
+            $real = collect(['jpg', 'jpeg', 'png', 'webp'])
+                ->map(fn ($ext) => $product->canonical.'.'.$ext)
+                ->first(fn ($f) => is_file($coverDir.'/'.$f));
+
+            if ($real !== null) {
+                DB::table('products')->where('id', $product->id)
+                    ->update(['image' => '/userfiles/image/template-cover/'.$real]);
+                $usedReal++;
+                continue;
+            }
+
+            $archetype = $archetypeByCategory[$catCanonical[$product->product_catalogue_id] ?? ''] ?? 'corporate';
             $file = 'poster-'.$product->id.'.svg';
-            file_put_contents($dir.'/'.$file, $this->posterSvg($product->name, $accent, $i));
+
+            file_put_contents(
+                $dir.'/'.$file,
+                \App\Support\TemplatePoster::svg($product->name, $archetype, $accents[$i % count($accents)], $i)
+            );
 
             DB::table('products')->where('id', $product->id)
                 ->update(['image' => '/userfiles/image/demo-poster/'.$file]);
         }
 
-        $this->line('  posters    '.count($products).' file(s) in /userfiles/image/demo-poster');
-    }
-
-    private function posterSvg(string $title, string $accent, int $seed): string
-    {
-        // Sidebar + topbar + content blocks: reads as an admin dashboard at thumbnail
-        // size, which is what every template in this store actually is.
-        // Text rows occupy 150-222, the bar chart sits on a 366 baseline. Keep the two
-        // bands apart — an earlier version spaced the rows 46px and the tallest bar
-        // 74px, so the third row ran straight through the first bar.
-        $rows = '';
-        for ($r = 0; $r < 3; $r++) {
-            $y = 150 + $r * 30;
-            $w = [420, 330, 380][($seed + $r) % 3];
-            $rows .= '<rect x="248" y="'.$y.'" width="'.$w.'" height="12" rx="6" fill="#020637" opacity="'.(0.16 - $r * 0.03).'"/>';
-        }
-
-        $cards = '';
-        $baseline = 366;
-        for ($c = 0; $c < 3; $c++) {
-            $x = 248 + $c * 148;
-            $h = [62, 88, 48][($seed + $c) % 3];
-            $cards .= '<rect x="'.$x.'" y="'.($baseline - $h).'" width="120" height="'.$h.'" rx="8" fill="'.$accent.'" opacity="'.(0.85 - $c * 0.22).'"/>';
-        }
-        $cards .= '<rect x="248" y="'.$baseline.'" width="420" height="2" rx="1" fill="#020637" opacity="0.12"/>';
-
-        $safeTitle = e(mb_strimwidth($title, 0, 46, '…'));
-
-        return <<<SVG
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450" role="img" aria-label="{$safeTitle}">
-  <rect width="720" height="450" fill="#eef3f7"/>
-  <rect x="24" y="24" width="672" height="402" rx="18" fill="#ffffff"/>
-  <rect x="24" y="24" width="672" height="46" rx="18" fill="#020637" opacity="0.92"/>
-  <circle cx="56" cy="47" r="6" fill="#fc746c"/><circle cx="76" cy="47" r="6" fill="#f5c451"/><circle cx="96" cy="47" r="6" fill="#35d0ba"/>
-  <rect x="24" y="70" width="200" height="356" fill="{$accent}" opacity="0.1"/>
-  <rect x="52" y="102" width="120" height="12" rx="6" fill="{$accent}" opacity="0.9"/>
-  <rect x="52" y="134" width="96" height="10" rx="5" fill="#020637" opacity="0.16"/>
-  <rect x="52" y="158" width="140" height="10" rx="5" fill="#020637" opacity="0.16"/>
-  <rect x="52" y="182" width="112" height="10" rx="5" fill="#020637" opacity="0.16"/>
-  <rect x="248" y="102" width="180" height="20" rx="10" fill="{$accent}"/>
-  {$rows}
-  {$cards}
-  <text x="52" y="404" font-family="Manrope, Arial, sans-serif" font-size="17" font-weight="700" fill="#020637" opacity="0.55">{$safeTitle}</text>
-</svg>
-SVG;
+        $this->line('  posters    '.(count($products) - $usedReal).' mock, '.$usedReal.' ảnh thật');
     }
 
     private function clean(): int
