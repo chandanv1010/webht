@@ -49,6 +49,23 @@
     }
 @endphp
 
+{{-- Publishes the header's height as --header-h so a section below can fill exactly the
+     rest of the screen. Measured rather than hard-coded: the slogan row disappears when
+     the setting is empty, and the value has to follow. --}}
+<script>
+(function () {
+    function measure() {
+        var el = document.getElementById('header');
+        var h = el && el.offsetParent !== null ? el.getBoundingClientRect().height : 0;
+        document.documentElement.style.setProperty('--header-h', Math.round(h) + 'px');
+    }
+    // Once now for first paint, again on load in case a web font changes the row height.
+    document.addEventListener('DOMContentLoaded', measure);
+    window.addEventListener('load', measure);
+    window.addEventListener('resize', measure);
+})();
+</script>
+
 <header id="header" class="site-header uk-visible-large">
 
     {{-- ── Slogan and social ─────────────────────────────────────── --}}

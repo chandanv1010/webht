@@ -3456,6 +3456,15 @@ button,
 .hero { position: relative; overflow: hidden; background: #f4f7fc; }
 .hero.is-dark { background: #071129; }
 
+/* On a desktop the hero and the header together fill exactly one screen, so both slides
+   are the same height whatever each one holds — the two were equal in pixels already, but
+   their content blocks were not, which is what read as uneven.
+   min-height, not height: a long headline at a small window still grows rather than
+   spilling out, and the rule stands down on short screens where 100vh would crush it. */
+@media (min-width: 1024px) and (min-height: 620px) {
+    .hero__slides { min-height: calc(100vh - var(--header-h, 111px)); }
+}
+
 /* Both slides occupy the same grid cell, so the section is as tall as the taller one and
    neither has to change `position` when it becomes active. The old rule swapped
    absolute→relative on change, which is a hard cut and a layout jump — no transition can
@@ -3644,6 +3653,8 @@ button,
 
 .hero__orbit {
     position: relative;
+    /* Matched to the showcase on the other slide so the two halves weigh the same. */
+    max-height: 460px;
     /* width:100% is load-bearing. A grid item stretches by default, but margin-left:auto
        cancels that, and with only absolutely-positioned children left the box collapsed to
        0x0 — every bubble stacked on one point and the rings were invisible. */
