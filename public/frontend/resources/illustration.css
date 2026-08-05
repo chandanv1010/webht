@@ -316,3 +316,31 @@
 }
 /* Inside the fixed-height support boxes the cap would fight the box; let those be. */
 .lottier-wraper .illus { max-width: none; }
+
+/* ===========================================================================
+   Lottie.
+
+   The animation is mounted over the inline SVG rather than replacing it, so the
+   drawing is on screen from the first paint and the swap is invisible. If the JSON
+   or the player fails, the SVG is simply never hidden.
+   =========================================================================== */
+
+.illus { position: relative; }
+
+.illus__anim {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity .4s ease;
+}
+.illus__anim svg { width: 100% !important; height: 100% !important; display: block; }
+
+.illus__fallback { transition: opacity .4s ease; }
+
+/* Only once the animation has parsed. */
+.illus--animated .illus__anim { opacity: 1; }
+.illus--animated .illus__fallback { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+    .illus__anim, .illus__fallback { transition: none; }
+}

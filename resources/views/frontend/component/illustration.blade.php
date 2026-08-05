@@ -17,11 +17,21 @@
     $name = $name ?? 'build';
 @endphp
 
+@php
+    // A real Lottie animation when one exists for this role, drawn by the self-hosted
+    // player. The inline SVG below stays as the fallback and is what shows if the JSON is
+    // missing, the player fails, or JavaScript is off — the same failure that left holes
+    // in these pages when lottie.host went away is not repeatable.
+    $lottiePath = 'frontend/resources/lottie/'.$name.'.json';
+    $hasLottie = is_file(public_path($lottiePath));
+@endphp
+
 {{-- Colours live in illustration.css, not in gradient defs here: an <svg> included
      many times per page would need a unique gradient id each time, and flat fills
      read better against the line-art anyway. --}}
-<div class="illus illus--{{ $name }}" aria-hidden="true">
-<svg viewBox="0 0 480 360" role="presentation" focusable="false">
+<div class="illus illus--{{ $name }}" aria-hidden="true"
+     @if ($hasLottie) data-lottie="{{ asset($lottiePath) }}" @endif>
+<svg viewBox="0 0 480 360" role="presentation" focusable="false" class="illus__fallback">
     @switch($name)
 
         {{-- Website being built: chrome, blocks landing one after another, cursor. --}}

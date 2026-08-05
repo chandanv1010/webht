@@ -20,6 +20,9 @@
         {{-- Pulsing placeholders for images that arrive after paint. --}}
         @include('frontend.component.media-skeleton')
 
+        {{-- Self-hosted Lottie, with the inline SVG as its fallback. --}}
+        @include('frontend.component.lottie')
+
         @include('frontend.component.script')
     </body>
 </html>

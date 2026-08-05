@@ -3271,14 +3271,18 @@ em {
 button.button,
 button.btn-support-button,
 button.text-readmore {
-    /* No border reset here: the outline-style slide buttons declare their own border, and
-       this block loads last so a reset would win over them. */
-    background-color: transparent;
+    /* Font and cursor only. No border or background reset: these classes carry their own,
+       and this block loads last so a reset would win over them — which is how the support
+       button lost its fill and became white text on white. */
     font-family: inherit;
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
 }
+
+/* The one place a transparent fill is right: the outline slide button, which declares a
+   border and no background of its own. */
+.slide-4-button-group button { background-color: transparent; }
 
 
 /* ===========================================================================
