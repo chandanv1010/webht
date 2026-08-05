@@ -164,7 +164,9 @@ class ProductCatalogueController extends FrontendController
             'meta_keyword' => '',
             'meta_description' => '',
             'meta_image' => '',
-            'canonical' => write_url('tim-kiem')
+            // No .html suffix: the search route is /tim-kiem, so the default suffix
+            // made the canonical point at a 404.
+            'canonical' => write_url('tim-kiem', true, false)
         ];
 
         if(Agent::isMobile()){
@@ -198,7 +200,9 @@ class ProductCatalogueController extends FrontendController
             'meta_keyword' => '',
             'meta_description' => '',
             'meta_image' => '',
-            'canonical' => write_url('tim-kiem')
+            // No .html suffix: the search route is /tim-kiem, so the default suffix
+            // made the canonical point at a 404.
+            'canonical' => write_url('tim-kiem', true, false)
         ];
         return view('frontend.product.catalogue.search', compact(
             'config',

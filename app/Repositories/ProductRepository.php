@@ -49,6 +49,15 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         )
         ->join('product_language as tb2', 'tb2.product_id', '=','products.id')
         ->with([
+            // languages and product_catalogues.languages are eager-loaded too: the
+            // result cards read $product->languages->first() and the catalogue name,
+            // which without this fired two extra queries per row.
+            'languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
+            'product_catalogues.languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
             'product_catalogues',
             'product_variants' => function ($query) use ($language_id) {
                 $query->with(['attributes' => function ($query) use ($language_id) {
@@ -62,7 +71,10 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         ->where('tb2.language_id', '=', $language_id)
         ->where('products.publish', '=', 2)
         ->where('tb2.name', 'LIKE', '%'.$keyword.'%')
-        ->paginate(21)->withQueryString()->withPath(config('app.url'). 'tim-kiem');
+        // rtrim + explicit slash: concatenating straight onto app.url produced
+        // "http://example.comtim-kiem" in every pagination link when APP_URL has no
+        // trailing slash.
+        ->paginate(21)->withQueryString()->withPath(rtrim(config('app.url'), '/').'/tim-kiem');
     }
 
     public function findByIds($ids, $language_id){
@@ -93,6 +105,15 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         )
         ->join('product_language as tb2', 'tb2.product_id', '=','products.id')
         ->with([
+            // languages and product_catalogues.languages are eager-loaded too: the
+            // result cards read $product->languages->first() and the catalogue name,
+            // which without this fired two extra queries per row.
+            'languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
+            'product_catalogues.languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
             'product_catalogues',
             'product_variants' => function ($query) use ($language_id) {
                 $query->with(['attributes' => function ($query) use ($language_id) {
@@ -140,6 +161,15 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         )
         ->join('product_language as tb2', 'tb2.product_id', '=','products.id')
         ->with([
+            // languages and product_catalogues.languages are eager-loaded too: the
+            // result cards read $product->languages->first() and the catalogue name,
+            // which without this fired two extra queries per row.
+            'languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
+            'product_catalogues.languages' => function ($query) use ($language_id) {
+                $query->where('language_id', '=', $language_id);
+            },
             'product_catalogues',
             'product_variants' => function ($query) use ($language_id) {
                 $query->with(['attributes' => function ($query) use ($language_id) {
