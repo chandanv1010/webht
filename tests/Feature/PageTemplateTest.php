@@ -47,53 +47,87 @@ class PageTemplateTest extends TestCase
     }
 
     /**
-     * Each service is its own landing page now, following the layout of the hosting page
-     * the client asked to keep: hero, three promises, the offer as cards, an enquiry.
-     * The earlier post-driven article layout is gone.
+     * Each service has its own layout, built around what its own decision turns on. They
+     * shared one template at first and came out indistinguishable, which is the thing
+     * these assertions exist to catch: each page is checked for the structure only it has.
      */
-    public function test_a_service_page_renders_its_landing(): void
+    public function test_each_service_landing_has_its_own_layout(): void
     {
-        $res = $this->get('/cham-soc-website.html');
+        $expected = [
+            // bespoke work: a process spine and an FAQ
+            'thiet-ke-theo-yeu-cau' => ['svc--process', 'svc-track', 'svc-acc'],
+            // ready-made: real templates on screen and a day-by-day strip
+            'thiet-ke-website-theo-mau-co-san' => ['svc--gallery', 'svc-tile', 'svc-strip'],
+            // maintenance: the uptime record, the failure list, a feature matrix
+            'cham-soc-website' => ['svc--care', 'svc-status', 'svc-fault', 'svc-table--matrix'],
+            // seo: the refusal, and the month-by-month chart
+            'dich-vu-seo' => ['svc--seo', 'svc-vow', 'svc-curve'],
+        ];
 
-        $res->assertStatus(200);
-        $res->assertSee('service-landing', false);
-        $res->assertSee('hosting-element-title', false);
-        // The offer, and a button that opens the shared enquiry popup rather than a link
-        // to somewhere else.
-        $res->assertSee('hosting-item', false);
-        $res->assertSee('data-lead-open', false);
-        // Leftovers from the furniture theme.
-        $res->assertDontSee('showroom-system', false);
-    }
-
-    /** All four services, plus the two the footer menu lists, have to render. */
-    public function test_every_service_landing_resolves(): void
-    {
-        foreach ([
-            'thiet-ke-theo-yeu-cau',
-            'thiet-ke-website-theo-mau-co-san',
-            'cham-soc-website',
-            'dich-vu-seo',
-        ] as $canonical) {
+        foreach ($expected as $canonical => $markers) {
             $res = $this->get('/'.$canonical.'.html');
             $res->assertStatus(200);
-            $res->assertSee('service-landing', false);
+
+            foreach ($markers as $marker) {
+                $res->assertSee($marker, false);
+            }
+        }
+    }
+
+    /** No two of them share a layout: each marker appears on exactly one page. */
+    public function test_the_service_layouts_are_not_shared(): void
+    {
+        $html = [];
+        foreach (['thiet-ke-theo-yeu-cau', 'thiet-ke-website-theo-mau-co-san',
+                  'cham-soc-website', 'dich-vu-seo'] as $canonical) {
+            $html[$canonical] = $this->get('/'.$canonical.'.html')->getContent();
         }
 
-        // The hosting page keeps its own hand-built view.
+        foreach (['svc-track', 'svc-tile', 'svc-status', 'svc-vow'] as $marker) {
+            $pages = array_keys(array_filter($html, fn ($h) => str_contains($h, $marker)));
+            $this->assertCount(1, $pages, "$marker appears on ".count($pages).' pages, expected 1');
+        }
+    }
+
+    /** Every page still opens the shared enquiry popup. */
+    public function test_each_service_landing_opens_the_popup(): void
+    {
+        foreach (['thiet-ke-theo-yeu-cau', 'thiet-ke-website-theo-mau-co-san',
+                  'cham-soc-website', 'dich-vu-seo'] as $canonical) {
+            $res = $this->get('/'.$canonical.'.html');
+            $res->assertStatus(200);
+            $res->assertSee('data-lead-open', false);
+        }
+    }
+
+    /** The hosting page keeps the hand-built view the client asked to keep. */
+    public function test_hosting_keeps_its_own_view(): void
+    {
         $res = $this->get('/dich-vu-hosting.html');
+
         $res->assertStatus(200);
         $res->assertSee('panel-search-domain', false);
+        $res->assertSee('hosting-element-title', false);
+        // Not one of the four new layouts.
+        $res->assertDontSee('svc--process', false);
+        $res->assertDontSee('svc--gallery', false);
     }
 
     /** Every landing states a price. A service page with no number is a brochure. */
-    public function test_a_service_landing_states_prices(): void
+    public function test_every_service_landing_states_prices(): void
     {
-        $res = $this->get('/cham-soc-website.html');
-
-        $res->assertStatus(200);
-        $res->assertSee('600.000đ', false);
-        $res->assertSee('3.500.000đ', false);
+        foreach ([
+            'cham-soc-website' => ['600.000đ', '3.500.000đ'],
+            'thiet-ke-website-theo-mau-co-san' => ['4.500.000đ', '12.000.000đ'],
+            'thiet-ke-theo-yeu-cau' => ['25–40 triệu'],
+            'dich-vu-seo' => ['6.000.000đ'],
+        ] as $canonical => $prices) {
+            $res = $this->get('/'.$canonical.'.html');
+            $res->assertStatus(200);
+            foreach ($prices as $price) {
+                $res->assertSee($price, false);
+            }
+        }
     }
 
     public function test_contact_page_has_a_working_form(): void
@@ -106,9 +140,11 @@ class PageTemplateTest extends TestCase
         $res->assertSee('name="phone"', false);
         $res->assertSee('name="email"', false);
         $res->assertSee('name="content"', false);
-        // The old page's furniture leftovers.
-        $res->assertDontSee('showroom-item', false);
-        $res->assertDontSee('news-outstanding', false);
+        // The old page's furniture leftovers. Asserted on the markup, not the bare word:
+        // the media-skeleton script names .showroom-item among the containers it watches
+        // for the legacy views that still have one.
+        $res->assertDontSee('class="showroom-item"', false);
+        $res->assertDontSee('class="news-outstanding"', false);
     }
 
     /** The header the client asked for: slogan on top, search as its own field. */

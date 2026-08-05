@@ -17,6 +17,9 @@
              so a new CTA never needs its own form. --}}
         @include('frontend.component.lead-popup')
 
+        {{-- Pulsing placeholders for images that arrive after paint. --}}
+        @include('frontend.component.media-skeleton')
+
         @include('frontend.component.script')
     </body>
 </html>

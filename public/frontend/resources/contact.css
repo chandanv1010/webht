@@ -105,7 +105,7 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
 
 .contact-formwrap__title {
     margin: 0 0 10px;
-    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
     font-weight: 700;
     letter-spacing: -.02em;
 }

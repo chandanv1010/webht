@@ -355,7 +355,7 @@ ul li,ol li{
     border-radius: 50px;
     border: 1px solid #e2e8f3;
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: .01em;
     color: #031d5b;
     white-space: nowrap;
@@ -516,20 +516,20 @@ ul li,ol li{
 }
 .slide-1-description .overlay-title{
     font-family: var(--second-font);
-    line-height:160px;
+    line-height: 112px;
     text-transform: uppercase;
     margin-bottom:20px;
 }
 .slide-1-description .overlay-title h2{
     text-transform: uppercase;
     color:#fff;
-    font-size: 150px;
+    font-size: 46px;
 }
 .slide-1-description .title{
     transition: background .3s, border .3s, border-radius .3s, box-shadow .3s, transform var(--e-transform-transition-duration, .4s);
     text-align: left;
-    font-size:65px;
-    line-height:70px;
+    font-size: 30px;
+    line-height: 49px;
     font-family: var(--second-font);
     font-weight: 600;
     margin-bottom:30px;
@@ -736,8 +736,8 @@ ul li,ol li{
 }
 .slide-2-description .main-title{
     font-family: 'Manrope';
-    font-size:45px;
-    line-height:50px;
+    font-size: 30px;
+    line-height: 35px;
     color:#fff;
     font-weight: 700;
     margin-bottom:40px;
@@ -1004,8 +1004,8 @@ ul li,ol li{
 
 .slide-5-description .main-title{
    font-family: 'Manrope';
-    font-size: 40px;
-    line-height: 56px;
+    font-size: 26px;
+    line-height: 39px;
     font-weight: 700;
 }
 .slide-5-description .main-title span{
@@ -1455,9 +1455,9 @@ ul li,ol li{
 .main-heading{
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    font-size: 40px;
+    font-size: 26px;
     color: #21293d;
-    line-height: 50px;
+    line-height: 35px;
     letter-spacing: 0;
     font-style: normal;
     margin-bottom:25px;
@@ -1491,7 +1491,7 @@ ul li,ol li{
     float:left;
     background: #21293d;
     text-align: center;
-    line-height:100px;
+    line-height: 70px;
     border-radius: 5px;
 }
 .intro-item .icon img{
@@ -1526,7 +1526,7 @@ ul li,ol li{
     width: 42px;
     height: 42px;
     font-size: 15px;
-    line-height: 42px;
+    line-height: 32px;
     z-index: 3;
     position: relative;
     color:#fea82b;
@@ -1684,10 +1684,10 @@ ul li,ol li{
 .panel-provider .panel-head .heading-3 > *{
     color:#fff;
     text-transform: uppercase;
-    font-size:35px;
+    font-size: 26px;
     font-family: 'Manrope';
     font-weight: 700;
-    line-height: 60px;
+    line-height: 42px;
 }
 .service-item-1{
     cursor: pointer;
@@ -1804,8 +1804,8 @@ ul li,ol li{
 }
 .panel-customer .panel-head .heading-10 > *{
     font-family: 'Manrope';
-    font-size:125px;
-    line-height:125px;
+    font-size: 29px;
+    line-height: 88px;
     color:transparent;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-width: 2px;
@@ -1907,8 +1907,8 @@ ul li,ol li{
 
 .heading-9 > span{
     font-weight: 700;
-    font-size: 46px;
-    line-height: 56px;
+    font-size: 30px;
+    line-height: 39px;
     letter-spacing: 0;
     color: #00354c;
     text-transform: none;
@@ -1928,8 +1928,8 @@ ul li,ol li{
     border-radius: 10px;
 }
 .support-item .title{
-    font-size: 30px;
-    line-height: 40px;
+    font-size: 26px;
+    line-height: 32px;
     font-weight: 700;
     color:#00354c;
     margin-bottom:20px;
@@ -1997,8 +1997,8 @@ ul li,ol li{
 }
 .panel-partner .panel-head .heading-10 > *{
     font-weight: 700;
-    font-size: 46px;
-    line-height: 56px;
+    font-size: 30px;
+    line-height: 39px;
     letter-spacing: 0;
     color: #00354c;
     text-transform: none;
@@ -2051,10 +2051,10 @@ ul li,ol li{
 .footer-support .hotline {
     color: #18181a;
     font-size: 26px;
-    line-height: 45px;
+    line-height: 32px;
     text-align: center;
 }
-.footer-support .hotline {font-size: 32px}
+.footer-support .hotline {font-size: 26px}
 .footer-support .hotline a {color: #18181a;}
 .footer-support .description {
     margin: 15px 0 35px 0;
@@ -2079,7 +2079,7 @@ ul li,ol li{
     -ms-transform: translate(0, -50%);
     -o-transform: translate(0, -50%);
     transform: translate(0, -50%);
-    font-size: 35px;
+    font-size: 26px;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -2190,8 +2190,8 @@ ul li,ol li{
         padding-top:80px !important;
     }
     .slide-1-description .title{
-        font-size:29px;
-        line-height:38px;
+        font-size: 26px;
+        line-height: 32px;
     }
     .homepage-pricing{
         padding-top:50px;
@@ -2211,8 +2211,8 @@ ul li,ol li{
         height:700px;
     }
     .panel-customer .panel-head .heading-10 > *{
-        font-size:50px;
-        line-height:55px;
+        font-size: 26px;
+        line-height: 38px;
     }
     .panel-customer .swiper-container{
         padding:0;
@@ -2228,7 +2228,7 @@ ul li,ol li{
     }
     .footer-lower .footer-heading,
     .footer-support .footer-heading{
-        line-height: 35px
+        line-height: 32px
     }
     .panel-whyus lottie-player{
         transform: scale(1);
@@ -2254,23 +2254,23 @@ ul li,ol li{
 
 }
 .about-banner .main-title{
-    font-size:64px;
+    font-size: 30px;
     color:#fff;
     text-transform: uppercase;
     font-weight: 300;
     font-family: 'Manrope';
     margin-bottom:25px;
-    line-height:64px;
+    line-height: 45px;
 }
 .about-banner .sub-title > span,
 .about-banner .main-title > span{
     font-weight: 700;
 }
 .about-banner .sub-title {
-    font-size: 50px;
+    font-size: 26px;
     font-weight: 300;
     color:#fff;
-    line-height:64px;
+    line-height: 45px;
      font-family: 'Manrope';
 }
 .about-button-group{
@@ -2323,7 +2323,7 @@ ul li,ol li{
 .about-service-item .icon{
    width: 65px;
     height: 65px;
-    line-height: 65px;
+    line-height: 46px;
     text-align: center;
     margin-bottom: 28px;
     color: #fff;
@@ -2389,9 +2389,9 @@ ul li,ol li{
 }
 .panel-best-choose .title{
     font-family: 'Manrope', sans-serif;
-    font-weight: 800;
-    font-size: 35px;
-    line-height: 44px;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
     letter-spacing: 0;
     color: #18222e;
     text-transform: none;
@@ -2468,15 +2468,15 @@ ul li,ol li{
 .hosting-element-title{
     font-family: 'Manrope', sans-serif;
     font-weight: 600;
-    font-size: 48px;
-    line-height: 58px;
+    font-size: 32px;
+    line-height: 41px;
     letter-spacing: 0;
     color: #031d5b;
     text-transform: none;
     font-style: normal;
-    font-size: 95px;
+    font-size: 34px;
     font-weight: 400;
-    line-height: 100px;
+    line-height: 70px;
     margin-bottom:25px;
     position: relative;
     z-index: 5;
@@ -2528,9 +2528,9 @@ em {
     margin-bottom:30px;
 }
 .panel-search-domain .heading{
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 300;
-    line-height: 40px;
+    line-height: 32px;
     color:#fff;
 }
 .panel-search-domain form{
@@ -2598,8 +2598,8 @@ em {
 .best-item .title{
     font-size: 22px;
     margin-bottom:20px;
-    line-height: 36px;
-    font-weight: 900;
+    line-height: 32px;
+    font-weight: 700;
     margin-bottom: 8px;
     color: #031d5b;
 }
@@ -2626,8 +2626,8 @@ em {
 .panel-best .heading-9 > span{
     font-family: 'Manrope', sans-serif;
     font-weight: 600;
-    font-size: 48px;
-    line-height: 58px;
+    font-size: 32px;
+    line-height: 41px;
     letter-spacing: 0;
     color: #031d5b;
     text-transform: none;
@@ -2679,7 +2679,7 @@ em {
 }
 .host-intro-container .panel-head .heading-9 > span{
     font-family: 'Manrope';
-    font-weight: 900;
+    font-weight: 700;
 }
 .host-intro-container .panel-head .description{
     font-size:16px;
@@ -2716,8 +2716,8 @@ em {
 .heading-11 > span{
     font-family: 'Manrope', sans-serif;
     font-weight: 600;
-    font-size: 48px;
-    line-height: 58px;
+    font-size: 32px;
+    line-height: 41px;
     letter-spacing: 0;
     color: #fff;
     text-transform: none;
@@ -2776,8 +2776,8 @@ em {
     font-family: 'Manrope';
 }
 .panel-host-pricing .head .price{
-    font-size: 60px;
-    line-height: 60px;
+    font-size: 29px;
+    line-height: 42px;
     color:#1c6cdc;
     font-family: 'Manrope';
     font-weight: 700;
@@ -2835,9 +2835,9 @@ em {
         display: none;
     }
     .hosting-element-title{
-        font-size: 50px;
+        font-size: 26px;
         font-weight: 400;
-        line-height: 76px;
+        line-height: 53px;
     }
     .hosting-content{
         margin:0;
@@ -2853,7 +2853,7 @@ em {
         margin-bottom:25px;
     }
     .heading-11 > span{
-        font-size:36px;
+        font-size: 26px;
     }
     .hosting-item{
         margin-bottom:25px !important;
@@ -2880,7 +2880,7 @@ em {
     z-index: 5;
     margin-bottom: 14px;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: .18em;
     text-transform: uppercase;
     color: #1c6cdc;
@@ -2889,11 +2889,11 @@ em {
 /* The hosting hero sets 95px, which is right for two short English words and far too
    large for a Vietnamese sentence. */
 .service-landing .hosting-element-title {
-    font-size: 54px;
-    line-height: 64px;
+    font-size: 27px;
+    line-height: 45px;
     font-weight: 500;
 }
-.service-landing .hosting-element-title strong { font-weight: 800; }
+.service-landing .hosting-element-title strong { font-weight: 700; }
 
 .service-hero-actions {
     position: relative;
@@ -2998,12 +2998,12 @@ em {
     background: #1c6cdc;
     color: #fff;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
 }
 .svc-step__when {
     margin-bottom: 8px;
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: #ee3d51;
@@ -3039,11 +3039,11 @@ em {
 
 @media (max-width: 1023px) {
     .service-landing .hosting-content { margin-left: 0; }
-    .service-landing .hosting-element-title { font-size: 40px; line-height: 50px; }
+    .service-landing .hosting-element-title { font-size: 26px; line-height: 35px; }
 }
 
 @media (max-width: 767px) {
-    .service-landing .hosting-element-title { font-size: 32px; line-height: 42px; }
+    .service-landing .hosting-element-title { font-size: 26px; line-height: 32px; }
     .service-hero-actions .svc-btn { width: 100%; }
     .panel-steps { padding: 46px 0 10px; }
 }
@@ -3120,7 +3120,7 @@ em {
     margin: 0 0 10px;
     padding-right: 34px;
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: #1c6cdc;
@@ -3131,7 +3131,7 @@ em {
     margin: 0 0 8px;
     padding-right: 20px;
     font-size: 24px;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 32px;
     color: #031d5b;
 }
@@ -3201,41 +3201,68 @@ em {
 }
 
 /* ===========================================================================
-   Skeleton loading — a calm placeholder for anything that arrives after paint
-   (template covers, iframe previews, lazy images).
+   Skeleton loading.
+
+   A soft pulse on a muted block, the way shadcn does it — not a sweeping highlight.
+   The sweep read as something happening; a pulse reads as something waiting, which is
+   the truth, and it does not compete with the page for attention.
    =========================================================================== */
 
 .skel {
     position: relative;
     overflow: hidden;
-    background: rgba(3, 29, 91, .07);
+    background-color: rgba(3, 29, 91, .08);
+    border-radius: 8px;
+    animation: skel-pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
 }
-.skel::after {
-    content: '';
+/* On the dark pages the muted block has to be lighter than the canvas, not darker. */
+.store .skel,
+.skel--dark { background-color: rgba(244, 246, 255, .08); }
+
+@keyframes skel-pulse {
+    50% { opacity: .55; }
+}
+
+/* Media that is still loading: the container pulses, the image fades in once decoded, so
+   a slow screenshot never shows as a half-drawn picture or a broken-image glyph. */
+[data-skel-media] { position: relative; }
+[data-skel-media] > img,
+[data-skel-media] > iframe {
+    opacity: 0;
+    transition: opacity .45s cubic-bezier(.4, 0, .2, 1);
+}
+[data-skel-media].is-ready { animation: none; background-color: transparent; }
+[data-skel-media].is-ready > img,
+[data-skel-media].is-ready > iframe { opacity: 1; }
+
+/* An image that never arrives leaves the block in place rather than a broken glyph. */
+[data-skel-media].is-failed > img { display: none; }
+[data-skel-media].is-failed {
+    animation: none;
+    background-color: rgba(3, 29, 91, .06);
+}
+.store [data-skel-media].is-failed { background-color: rgba(244, 246, 255, .05); }
+[data-skel-media].is-failed::after {
+    content: 'Ảnh chưa tải được';
     position: absolute;
     inset: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, .55) 50%, transparent 100%);
-    animation: skel-sweep 1.35s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: rgba(3, 29, 91, .4);
 }
-/* On the dark pages the sweep has to be light-on-dark or it reads as a hole. */
-.store .skel { background: rgba(244, 246, 255, .06); }
-.store .skel::after {
-    background: linear-gradient(90deg, transparent 0, rgba(244, 246, 255, .1) 50%, transparent 100%);
-}
-.skel.is-done::after { animation: none; opacity: 0; }
+.store [data-skel-media].is-failed::after { color: rgba(244, 246, 255, .35); }
 
-@keyframes skel-sweep {
-    to { transform: translateX(100%); }
-}
-
-/* Text-shaped skeletons, for cards whose copy loads with the page but whose media
-   does not: the block keeps the card's height stable instead of letting it jump. */
+/* Text-shaped skeletons, for a card whose copy is present but whose media is not: the
+   block keeps the card's height stable instead of letting it jump. */
 .skel-line { height: 12px; border-radius: 6px; margin-bottom: 8px; }
 .skel-line:last-child { width: 60%; margin-bottom: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-    .skel::after { animation: none; }
+    .skel { animation: none; }
+    [data-skel-media] > img,
+    [data-skel-media] > iframe { transition: none; }
 }
 
 /* Several slide CTAs are now <button> rather than <a href=""> — they open the enquiry

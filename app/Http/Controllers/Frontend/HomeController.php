@@ -157,10 +157,12 @@ class HomeController extends FrontendController
     }
 
     /**
-     * One landing page per service. They share the layout the hosting page established —
-     * hero, three promises, the offer as cards, a closing enquiry — and differ only in
-     * content, which lives in config/apps/services.php so the copy is editable without
-     * touching four near-identical Blade files.
+     * One landing page per service, each with its own layout.
+     *
+     * They shared a template at first and the four pages came out indistinguishable. Each
+     * now has its own view, built around the thing that decision actually turns on: a
+     * process for bespoke work, a gallery for ready-made, a failure list for maintenance,
+     * a month-by-month timeline for SEO. Shared copy stays in config/apps/services.php.
      */
     public function service(string $key)
     {
@@ -175,7 +177,10 @@ class HomeController extends FrontendController
             $this->language
         );
 
+        // The four landings share one stylesheet; the hosting page keeps style.css alone.
         $config = $this->config();
+        $config['css'][] = 'frontend/resources/service.css';
+
         $system = $this->system;
         $language = $this->language;
 
@@ -191,14 +196,32 @@ class HomeController extends FrontendController
             ['keyword' => 'feedback', 'object' => true],
         ], $this->language);
 
-        return view('frontend.homepage.home.service', compact(
+        // The ready-made page is a gallery, so it needs real templates rather than a
+        // description of them. Only that page pays for the query.
+        $templates = collect();
+        if ($key === 'template') {
+            $templates = \App\Models\Product::query()
+                ->with(['languages' => fn ($q) => $q->where('language_id', $this->language)])
+                ->where('publish', 2)
+                ->whereNotNull('image')
+                ->where('image', '!=', '')
+                ->orderByDesc('id')
+                ->limit(8)
+                ->get();
+        }
+
+        // One view per service, not one shared template: each page is laid out around
+        // what its own decision hinges on — a process, a gallery, a failure list, a
+        // timeline — so they stop reading as four copies of the same brochure.
+        return view('frontend.homepage.home.services.'.$key, compact(
             'config',
             'seo',
             'system',
             'language',
             'slides',
             'widgets',
-            'service'
+            'service',
+            'templates'
         ));
     }
 
