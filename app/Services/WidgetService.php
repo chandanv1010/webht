@@ -151,20 +151,27 @@ class WidgetService extends BaseService implements WidgetServiceInterface
         // SINGLE QUERY 1: Get all widgets
         $widgets = $this->getWidgetsQuery($keywords);
         
-        if ($widgets->isEmpty()) {
-            return static::$widgetCache[$cacheKey] = [];
-        }
-        
-        $widgetsByModel = $widgets->groupBy('model');
         $result = [];
 
-        
-        foreach ($widgetsByModel as $model => $modelWidgets) {
-            $modelResult = $this->processWidgetsByModel($model, $modelWidgets, $paramsMap, $language);
-            $result = array_merge($result, $modelResult);
+        if ($widgets->isNotEmpty()) {
+            foreach ($widgets->groupBy('model') as $model => $modelWidgets) {
+                $modelResult = $this->processWidgetsByModel($model, $modelWidgets, $paramsMap, $language);
+                $result = array_merge($result, $modelResult);
+            }
         }
 
-        
+        // Always return a key for every keyword that was asked for, null when the
+        // widget is missing, unpublished, or points at content that no longer
+        // exists. Views written as `@if($widgets['news-feature'])` read the key to
+        // test it, so an absent key raised "Undefined array key" and took the whole
+        // page down with a 500 — one deleted post was enough to kill a page.
+        // Returning null keeps both that pattern and isset() working.
+        foreach ($keywords as $keyword) {
+            if (!array_key_exists($keyword, $result)) {
+                $result[$keyword] = null;
+            }
+        }
+
         return static::$widgetCache[$cacheKey] = $result;
     }
     
