@@ -40,28 +40,54 @@
     {{-- ── Billboard ─────────────────────────────────────────────── --}}
     @if ($storeFeatured)
         <section class="store-hero">
-            <div class="store-hero__media" aria-hidden="true">
-                <img src="{{ image($storeFeatured->image) }}" alt="" width="720" height="450">
+            {{-- The mosaic is the whole catalogue at once, dimmed and drifting. It is
+                 the literal reading of "a world of websites" — you see the scale of
+                 the store before you have scrolled a pixel. Duplicated once so the
+                 vertical drift has somewhere to go without a visible seam. --}}
+            <div class="store-hero__wall" aria-hidden="true">
+                <div class="store-hero__wall-grid">
+                    @foreach ($storePosters as $poster)
+                        <img src="{{ image($poster) }}" alt="" loading="lazy" width="1200" height="750">
+                    @endforeach
+                    @foreach ($storePosters as $poster)
+                        <img src="{{ image($poster) }}" alt="" loading="lazy" width="1200" height="750">
+                    @endforeach
+                </div>
             </div>
 
-            <div class="uk-container uk-container-center store-hero__inner">
-                <p class="store-hero__eyebrow">{{ $rootPivot->name ?? 'Kho giao diện' }}</p>
-                <h1 class="store-hero__title">{{ $featuredName }}</h1>
+            {{-- The grid lives on an inner div, not on .uk-container: UIkit gives that
+                 class ::before/::after for clearfix, and pseudo-elements become grid
+                 items — they took the first cells and pushed the text into column two
+                 and the frame onto a second row. --}}
+            <div class="uk-container uk-container-center">
+                <div class="store-hero__inner">
+                <div class="store-hero__text">
+                    <p class="store-hero__eyebrow">{{ $rootPivot->name ?? 'Kho giao diện' }} · {{ $storeTotal }} mẫu</p>
+                    <h1 class="store-hero__title">{{ $featuredName }}</h1>
 
-                @if ($featuredDesc !== '')
-                    <p class="store-hero__desc">{{ \Illuminate\Support\Str::limit(strip_tags($featuredDesc), 160) }}</p>
-                @endif
+                    @if ($featuredDesc !== '')
+                        <p class="store-hero__desc">{{ \Illuminate\Support\Str::limit(strip_tags($featuredDesc), 170) }}</p>
+                    @endif
 
-                <p class="store-hero__meta">
-                    <span class="store-hero__price">
-                        @if ($featuredPrice === 0) Miễn phí @else {{ convert_price($featuredPrice, true) }}đ @endif
-                    </span>
-                    <span class="store-hero__count">{{ $storeTotal }} mẫu đang có</span>
-                </p>
+                    <p class="store-hero__meta">
+                        <span class="store-hero__price">
+                            @if ($featuredPrice === 0) Miễn phí @else {{ convert_price($featuredPrice, true) }}đ @endif
+                        </span>
+                        <span class="store-hero__count">Bàn giao 5–7 ngày · Kèm mã nguồn</span>
+                    </p>
 
-                <div class="store-hero__actions">
-                    <a class="store-btn store-btn--primary" href="{{ $featuredHref }}">Xem mẫu này</a>
-                    <a class="store-btn store-btn--ghost" href="{{ write_url('lien-he') }}">Nhận tư vấn chọn mẫu</a>
+                    <div class="store-hero__actions">
+                        <a class="store-btn store-btn--primary" href="{{ $featuredHref }}">Xem mẫu này</a>
+                        <a class="store-btn store-btn--ghost" href="{{ write_url('lien-he') }}">Nhận tư vấn chọn mẫu</a>
+                    </div>
+                </div>
+
+                {{-- The featured template shown as what it is: a website, in a frame. --}}
+                {{-- No browser bar of our own here: the poster already draws one, and
+                     two stacked chrome strips read as a bug. --}}
+                <a class="store-hero__frame" href="{{ $featuredHref }}" aria-label="{{ $featuredName }}">
+                    <img src="{{ image($storeFeatured->image) }}" alt="{{ $featuredName }}" width="1200" height="750">
+                </a>
                 </div>
             </div>
         </section>

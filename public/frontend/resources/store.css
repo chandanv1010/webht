@@ -52,35 +52,80 @@
     position: relative;
     /* .pc-header is position:absolute and 144px tall, so it floats over the top of
        this section. Clear it, or the billboard title sits behind the logo. */
-    padding: calc(144px + 54px) 0 76px;
+    padding: calc(144px + 60px) 0 84px;
+    /* Deliberately tall. The brief asked for the store to feel overwhelming, and a
+       short band of text over a faded image does the opposite. */
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
     isolation: isolate;
+    overflow: hidden;
 }
 
-/* The featured poster is the atmosphere, not a picture: blown up, pushed right,
-   and faded into the canvas so the headline stays readable over it. */
-.store-hero__media {
+/* ── The wall: every poster in the store, dimmed, drifting ──────────────── */
+
+.store-hero__wall {
     position: absolute;
-    inset: 0 0 0 auto;
-    width: min(64%, 900px);
-    z-index: -1;
-}
-.store-hero__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left center;
+    inset: -6% -4%;
+    z-index: -2;
+    /* Fade to the canvas on every edge so the grid has no hard boundary and the
+       headline always has something dark to sit on. */
+    mask-image:
+        radial-gradient(115% 95% at 78% 42%, #000 0%, rgba(0, 0, 0, .55) 46%, transparent 78%);
+    -webkit-mask-image:
+        radial-gradient(115% 95% at 78% 42%, #000 0%, rgba(0, 0, 0, .55) 46%, transparent 78%);
     opacity: .5;
 }
-.store-hero__media::after {
+
+.store-hero__wall-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    transform: rotate(-9deg) scale(1.35);
+    animation: store-wall-drift 68s linear infinite;
+    will-change: transform;
+}
+.store-hero__wall-grid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    filter: saturate(.7) brightness(.72);
+}
+@keyframes store-wall-drift {
+    from { transform: rotate(-9deg) scale(1.35) translateY(0); }
+    /* Half the duplicated grid, so it loops without a visible jump. */
+    to   { transform: rotate(-9deg) scale(1.35) translateY(-50%); }
+}
+
+/* A second scrim over the wall keeps text contrast independent of which posters
+   happen to land behind it. */
+.store-hero::before {
     content: '';
     position: absolute;
     inset: 0;
+    z-index: -1;
     background:
-        linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .82) 34%, rgba(5, 6, 26, .25) 100%),
-        linear-gradient(0deg, var(--canvas) 0%, rgba(5, 6, 26, 0) 42%);
+        linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .93) 30%, rgba(5, 6, 26, .55) 62%, rgba(5, 6, 26, .72) 100%),
+        linear-gradient(0deg, var(--canvas) 0%, rgba(5, 6, 26, 0) 34%);
 }
 
-.store-hero__inner { position: relative; max-width: 720px; }
+.store-hero__inner::before,
+.store-hero__inner::after { display: none; }
+
+.store-hero__inner {
+    position: relative;
+    display: grid;
+    /* Belt and braces: if this ever lands on a clearfix container again, its
+       pseudo-elements must not become grid items. */
+    grid-template-rows: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: 54px;
+    width: 100%;
+}
+
+.store-hero__text { max-width: 560px; }
 
 .store-hero__eyebrow {
     font-size: 12px;
@@ -88,40 +133,60 @@
     letter-spacing: .16em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin: 0 0 14px;
+    margin: 0 0 16px;
 }
 
 .store-hero__title {
-    font-size: clamp(2.1rem, 4.6vw, 3.9rem);
+    font-size: clamp(2.3rem, 4vw, 3.6rem);
     font-weight: 800;
-    line-height: 1.04;
+    line-height: 1.05;
     letter-spacing: -.03em;
     margin: 0 0 18px;
 }
 
 .store-hero__desc {
-    font-size: 16px;
+    font-size: 16.5px;
     line-height: 1.65;
     color: var(--ink-dim);
-    margin: 0 0 22px;
-    max-width: 58ch;
+    margin: 0 0 24px;
+    max-width: 52ch;
 }
 
 .store-hero__meta {
     display: flex;
     align-items: baseline;
-    gap: 18px;
-    margin: 0 0 28px;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 0 0 30px;
 }
 .store-hero__price {
     font-family: 'Outfit', sans-serif;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--value);
 }
 .store-hero__count { font-size: 13px; color: var(--ink-faint); }
 
 .store-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ── Featured template, framed as a browser ─────────────────────────────── */
+
+.store-hero__frame {
+    display: block;
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #101433;
+    border: 1px solid rgba(244, 246, 255, .16);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, .6);
+    transition: transform .3s cubic-bezier(.2, .8, .3, 1), box-shadow .3s ease;
+}
+.store-hero__frame:hover { transform: translateY(-6px); box-shadow: 0 52px 110px rgba(0, 0, 0, .7); }
+.store-hero__frame:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
+
+
+.store-hero__frame img { width: 100%; height: auto; display: block; }
+.store-hero__frame { max-width: 660px; margin-left: auto; }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
 
@@ -215,7 +280,7 @@
 
 /* ── Shelves ────────────────────────────────────────────────────────────── */
 
-.store-shelf { position: relative; padding: 34px 0 8px; }
+.store-shelf { position: relative; padding: 40px 0 10px; }
 
 .store-shelf__head {
     display: flex;
@@ -225,7 +290,7 @@
     margin-bottom: 16px;
 }
 .store-shelf__title {
-    font-size: 19px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: -.01em;
     margin: 0;
@@ -244,7 +309,7 @@
 .store-shelf__track {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 248px;
+    grid-auto-columns: 320px;
     gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x proximity;
@@ -255,11 +320,14 @@
 .store-shelf__track::-webkit-scrollbar { display: none; }
 .store-shelf__track > * { scroll-snap-align: start; }
 
+/* Three per row, not four or five. These are homepage previews, not film posters —
+   at a quarter of the container you cannot read the layout, which is the only thing
+   a visitor is actually shopping for. Fewer, larger, and the shelf scrolls. */
 @media (min-width: 960px) {
-    .store-shelf__track { grid-auto-columns: calc((100% - 3 * 16px) / 4); }
+    .store-shelf__track { grid-auto-columns: calc((100% - 2 * 18px) / 3); gap: 18px; }
 }
-@media (min-width: 1400px) {
-    .store-shelf__track { grid-auto-columns: calc((100% - 4 * 16px) / 5); }
+@media (min-width: 1500px) {
+    .store-shelf__track { grid-auto-columns: calc((100% - 3 * 18px) / 4); }
 }
 
 .store-shelf__nav {
@@ -311,8 +379,8 @@
 
 .store-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
     padding-bottom: 16px;
 }
 
@@ -439,21 +507,28 @@
 
 /* ── Small screens ──────────────────────────────────────────────────────── */
 
+@media (max-width: 959px) {
+    .store-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+    .store-hero__text { max-width: none; }
+}
+
 @media (max-width: 767px) {
-    .store-hero { padding: 56px 0 44px; }
-    .store-hero__media { width: 100%; }
-    .store-hero__media::after {
+    .store-hero { padding: calc(96px + 30px) 0 48px; min-height: 0; }
+    .store-hero__wall-grid { grid-template-columns: repeat(4, 1fr); animation-duration: 90s; }
+    .store-hero::before {
         background:
-            linear-gradient(180deg, rgba(5, 6, 26, .55) 0%, var(--canvas) 72%),
-            linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .3) 100%);
+            linear-gradient(180deg, rgba(5, 6, 26, .78) 0%, rgba(5, 6, 26, .9) 60%, var(--canvas) 100%);
     }
     .store-filter__sort { margin-left: 0; width: 100%; }
-    .store-shelf__track { grid-auto-columns: 216px; }
+    .store-shelf__track { grid-auto-columns: 264px; }
     /* Arrow buttons are pointless next to a thumb — touch already scrolls. */
     .store-shelf__nav { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .store-hero__wall-grid { animation: none; }
+    .store-hero__frame { transition: none; }
+    .store-hero__frame:hover { transform: none; }
     .store-btn, .tpl-card__link, .tpl-card__hint { transition: none; }
     .store-btn:hover, .tpl-card__link:hover, .tpl-card__link:focus-visible { transform: none; }
     .tpl-card__link:hover .tpl-card__hint,

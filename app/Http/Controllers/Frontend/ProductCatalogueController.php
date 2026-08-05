@@ -200,6 +200,10 @@ class ProductCatalogueController extends FrontendController
             'storeResults' => $templates,
             'storeFeatured' => $templates->first(),
             'storeTotal' => $templates->count(),
+            // Every poster in the store, for the mosaic wall behind the billboard.
+            // It is the literal answer to "a world of websites": the whole catalogue
+            // is visible at once, dimmed, before you have scrolled anywhere.
+            'storePosters' => $templates->pluck('image')->filter()->values(),
         ];
     }
 
