@@ -1,7 +1,7 @@
 @extends('frontend.homepage.layout')
 
 @section('content')
-    @include('frontend.component.slide')
+    @include('frontend.component.hero')
     @include('frontend.component.service')
     <div class="panel-provider">
         <div class="uk-container uk-container-center">

@@ -106,6 +106,9 @@ Route::get('dich-vu.html', [HomeController::class, 'serviceHub'])->name('home.se
 // href="" — nothing on it played.
 Route::get('video.html', [HomeController::class, 'video'])->name('home.video');
 
+// Bảng giá. It resolved to a Post with a short list in it.
+Route::get('bang-gia.html', [HomeController::class, 'pricing'])->name('home.pricing');
+
 Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler.index');
 
 Route::get('/thumb', [App\Http\Controllers\ImageResizerController::class, 'resize'])

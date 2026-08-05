@@ -10,8 +10,8 @@
 
      #05061a  canvas        (deeper than the brand navy so navy can sit on top)
      #0d1030  raised surface
-     #833bff  primary accent  ─ same gradient as the site's buttons
-     #ac1de1  primary accent end
+     #0573ff  primary accent  ─ same gradient as the site's buttons
+     #0596ff  primary accent end
      #35d0ba  value / free
      #fc746c  warm accent
 
@@ -27,8 +27,8 @@
     --ink: #f4f6ff;
     --ink-dim: rgba(244, 246, 255, .62);
     --ink-faint: rgba(244, 246, 255, .38);
-    --accent: #833bff;
-    --accent-end: #ac1de1;
+    --accent: #0573ff;
+    --accent-end: #0596ff;
     --value: #35d0ba;
 
     background: var(--canvas);
@@ -265,7 +265,7 @@
 .store-btn--primary {
     background: var(--accent);
     color: #fff;
-    box-shadow: 0 10px 30px rgba(131, 59, 255, .32);
+    box-shadow: 0 10px 30px rgba(5, 115, 255, .32);
 }
 .store-btn--ghost {
     background: rgba(244, 246, 255, .07);
@@ -503,7 +503,7 @@
 .tpl-card__link:hover,
 .tpl-card__link:focus-visible {
     transform: translateY(-6px) scale(1.03);
-    border-color: rgba(131, 59, 255, .55);
+    border-color: rgba(5, 115, 255, .55);
     box-shadow: 0 22px 50px rgba(0, 0, 0, .55);
     z-index: 4;
 }
@@ -711,8 +711,8 @@
     transform: translateY(1px) rotate(-135deg);
 }
 .store-about__more:hover {
-    background: rgba(131, 59, 255, .16);
-    border-color: rgba(131, 59, 255, .55);
+    background: rgba(5, 115, 255, .16);
+    border-color: rgba(5, 115, 255, .55);
     transform: translateY(-1px);
 }
 .store-about__more:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
@@ -816,7 +816,7 @@
     align-items: center;
     padding: 38px;
     border-radius: 20px;
-    border: 1px solid rgba(131, 59, 255, .3);
+    border: 1px solid rgba(5, 115, 255, .3);
     /* A single warm pool of colour, so the one thing we want on this page stands out
        from everything above it without another bright band. */
     /* Flat panel with a coloured edge rather than a wash: the page had a glow on the
@@ -851,8 +851,8 @@
 .tpl-form input::placeholder { color: var(--ink-faint); }
 .tpl-form input:focus {
     outline: none;
-    border-color: rgba(131, 59, 255, .7);
-    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
+    border-color: rgba(5, 115, 255, .7);
+    box-shadow: 0 0 0 3px rgba(5, 115, 255, .18);
 }
 .tpl-form button { width: 100%; }
 

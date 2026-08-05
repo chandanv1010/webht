@@ -11,11 +11,6 @@
     $aDesc = plain_text($pv->description ?? '');
     $aImage = trim((string) $post->image);
     $aCat = $post->post_catalogues->first()?->languages->first()?->pivot->name ?? '';
-
-    // A stable accent per article, so a wall of image-less cards still has rhythm
-    // instead of being one flat colour.
-    $accents = ['#833bff', '#2f80ed', '#fc746c', '#35d0ba', '#f5a623', '#e0457b'];
-    $accent = $accents[$post->id % count($accents)];
 @endphp
 
 <article class="art-card">
@@ -27,8 +22,7 @@
         @else
             {{-- No image: set the title in the panel rather than showing a broken frame
                  or a grey placeholder. The article has a headline; use it. --}}
-            <span class="art-card__media art-card__media--type"
-                  style="--art-accent: {{ $accent }}">
+            <span class="art-card__media art-card__media--type">
                 <span class="art-card__type">{{ \Illuminate\Support\Str::limit($aName, 64) }}</span>
             </span>
         @endif

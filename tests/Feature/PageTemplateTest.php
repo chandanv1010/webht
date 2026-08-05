@@ -200,6 +200,38 @@ class PageTemplateTest extends TestCase
         }
     }
 
+    /** Bảng giá is three packages with real numbers, not a post with a list. */
+    public function test_pricing_page_shows_the_packages(): void
+    {
+        $res = $this->get('/bang-gia.html');
+
+        $res->assertStatus(200);
+        $res->assertSee('pri-card', false);
+
+        foreach (config('apps.pricing.packages') as $pkg) {
+            $res->assertSee($pkg['name'], false);
+            $res->assertSee($pkg['price'], false);
+        }
+
+        // Every button opens the shared popup, carrying its package name.
+        $res->assertSee('data-lead-subject="Bảng giá — gói', false);
+    }
+
+    /** The home hero is two slides with arrows, not the old five-slide carousel. */
+    public function test_home_hero_has_two_slides_and_arrows(): void
+    {
+        $res = $this->get('/');
+
+        $res->assertStatus(200);
+        $res->assertSee('data-hero-slide', false);
+        $res->assertSee('data-hero-prev', false);
+        $res->assertSee('data-hero-next', false);
+        // The count in the headline is read from the database, not typed in.
+        $res->assertSee(\App\Models\Product::where('publish', 2)->count().'+', false);
+        // The old carousel and its dead CTA.
+        $res->assertDontSee('panel-slide', false);
+    }
+
     /** The video page plays. The old one linked its thumbnails to href="". */
     public function test_video_page_has_playable_cards(): void
     {

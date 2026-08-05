@@ -31,7 +31,7 @@
     background: var(--raised);
     transition: border-color .2s ease, transform .2s ease;
 }
-.contact-channel:hover { border-color: rgba(131, 59, 255, .45); transform: translateY(-3px); }
+.contact-channel:hover { border-color: rgba(5, 115, 255, .45); transform: translateY(-3px); }
 
 .contact-channel__icon {
     display: flex;
@@ -41,8 +41,8 @@
     height: 40px;
     margin-bottom: 16px;
     border-radius: 11px;
-    background: rgba(131, 59, 255, .16);
-    color: #b98cff;
+    background: rgba(5, 115, 255, .16);
+    color: #7fb4ff;
 }
 .contact-channel__icon svg { width: 21px; height: 21px; }
 
@@ -72,7 +72,7 @@
     /* Long addresses must wrap inside the card rather than push it wider. */
     overflow-wrap: anywhere;
 }
-a.contact-channel__value:hover { color: #b98cff; }
+a.contact-channel__value:hover { color: #7fb4ff; }
 a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
 
 .contact-channel--place .contact-channel__value { font-size: 14.5px; font-weight: 600; line-height: 1.55; }
@@ -98,7 +98,7 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
 .contact-formwrap {
     padding: 34px;
     border-radius: 20px;
-    border: 1px solid rgba(131, 59, 255, .28);
+    border: 1px solid rgba(5, 115, 255, .28);
     /* Flat, with the accent carried by the border instead of a wash. */
     background: var(--raised);
 }
@@ -164,8 +164,8 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
 .contact-field select:focus,
 .contact-field textarea:focus {
     outline: none;
-    border-color: rgba(131, 59, 255, .7);
-    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
+    border-color: rgba(5, 115, 255, .7);
+    box-shadow: 0 0 0 3px rgba(5, 115, 255, .18);
 }
 
 /* Scoped past .tpl-form button's width:100% — a full-bleed button reads as the end of
@@ -249,8 +249,8 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(131, 59, 255, .2);
-    color: #c3a3ff;
+    background: rgba(5, 115, 255, .2);
+    color: #8ec2ff;
     font-size: 12px;
     font-weight: 700;
 }

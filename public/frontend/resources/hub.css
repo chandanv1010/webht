@@ -105,7 +105,7 @@
 }
 .hub-row__title { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -.015em; }
 .hub-row__title a { color: var(--ink); text-decoration: none; }
-.hub-row__title a:hover { color: #c3a3ff; }
+.hub-row__title a:hover { color: #8ec2ff; }
 .hub-row__title a:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
 
 .hub-row__price {
@@ -159,7 +159,7 @@
     text-decoration: none;
 }
 .hub-row__go::after { content: ' →'; }
-.hub-row__go:hover { color: #c3a3ff; }
+.hub-row__go:hover { color: #8ec2ff; }
 .hub-row__when { font-size: 13.5px; color: var(--ink-faint); }
 
 /* ── The row's own schematic ────────────────────────────────────────────── */
@@ -222,7 +222,7 @@
 }
 .hub-table tbody th { font-weight: 500; color: var(--ink-dim); }
 .hub-table tbody td a { font-weight: 700; color: var(--ink); text-decoration: none; }
-.hub-table tbody td a:hover { color: #c3a3ff; }
+.hub-table tbody td a:hover { color: #8ec2ff; }
 .hub-table tbody tr:hover th { color: var(--ink); }
 
 /* ── Narrow ─────────────────────────────────────────────────────────────── */

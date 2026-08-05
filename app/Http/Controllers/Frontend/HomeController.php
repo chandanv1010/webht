@@ -58,7 +58,40 @@ class HomeController extends FrontendController
         ];
 
         $language = $this->language;
-  
+
+        // Counted, not typed: a number on a hero that nobody can check is worth less than
+        // no number at all.
+        $templateCount = \App\Models\Product::where('publish', 2)->count();
+        $heroStats = [
+            ['value' => $templateCount.'+', 'label' => 'mẫu trong kho giao diện'],
+            ['value' => '5', 'label' => 'nhóm dịch vụ'],
+            ['value' => '12', 'label' => 'tháng bảo hành'],
+        ];
+
+        // The way most people enter a library: by their own industry.
+        $heroCategories = \App\Models\ProductCatalogue::query()
+            ->with(['languages' => fn ($q) => $q->where('language_id', $this->language)])
+            ->where('publish', 2)
+            ->where('parent_id', '!=', 0)
+            ->orderBy('order')
+            ->limit(6)
+            ->get()
+            ->map(fn ($c) => [
+                'name' => $c->short_name ?: ($c->languages->first()?->pivot->name ?? ''),
+                'canonical' => $c->languages->first()?->pivot->canonical ?? '',
+            ])
+            ->filter(fn ($c) => $c['name'] !== '' && $c['canonical'] !== '')
+            ->values()
+            ->all();
+
+        $heroCovers = \App\Models\Product::query()
+            ->where('publish', 2)
+            ->whereNotNull('image')
+            ->where('image', '!=', '')
+            ->orderByDesc('id')
+            ->limit(12)
+            ->pluck('image');
+
         $schema = $this->schema($seo);
         
         $ishome = true;
@@ -74,7 +107,10 @@ class HomeController extends FrontendController
             'system',
             'language',
             'ishome',
-            'schema'
+            'schema',
+            'heroStats',
+            'heroCategories',
+            'heroCovers'
         ));
     }
 
@@ -376,6 +412,34 @@ class HomeController extends FrontendController
 
         return view('frontend.homepage.home.video', compact(
             'config', 'seo', 'system', 'language', 'featuredVideoId', 'dark'
+        ));
+    }
+
+    /**
+     * Bảng giá.
+     *
+     * It resolved to a Post whose body was a short list. The packages now live in
+     * config/apps/pricing.php, which keeps the numbers in one place and out of the markup.
+     */
+    public function pricing()
+    {
+        $config = $this->config();
+        $config['css'][] = 'frontend/resources/pricing.css';
+
+        $system = $this->system;
+        $language = $this->language;
+        $pricing = config('apps.pricing');
+
+        $seo = [
+            'meta_title' => 'Bảng giá thiết kế website — ba gói, giá công khai | HT Việt Nam',
+            'meta_keyword' => 'bảng giá thiết kế website, giá làm website',
+            'meta_description' => 'Ba gói từ 4,5 triệu đến 11,9 triệu, đã gồm hosting và tên miền năm đầu. Kèm danh sách những khoản tính thêm, nói trước thay vì để bạn phát hiện sau.',
+            'meta_image' => $this->system['seo_meta_images'],
+            'canonical' => write_url('bang-gia'),
+        ];
+
+        return view('frontend.homepage.home.pricing', compact(
+            'config', 'seo', 'system', 'language', 'pricing'
         ));
     }
 

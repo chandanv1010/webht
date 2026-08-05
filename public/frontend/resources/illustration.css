@@ -3,7 +3,7 @@
 
    One visual system: everything is drawn as a schematic browser frame or
    wireframe block, because this is a company that builds websites. Palette taken
-   from the live site — navy #020637 structure, violet #833bff primary,
+   from the live site — navy #020637 structure, violet #0573ff primary,
    coral #fc746c and teal #35d0ba accents.
 
    Every animation is ambient and looping. Nothing moves more than a few pixels,
@@ -61,7 +61,7 @@
    *to* it. A keyframe that ended at a literal opacity:1 would override these and
    turn every muted grey block solid navy. */
 .illus .il-block      { --o: .13; fill: #020637; opacity: var(--o); }
-.illus .il-block--v   { --o: .85; fill: #833bff; }
+.illus .il-block--v   { --o: .85; fill: #0573ff; }
 .illus .il-block--w   { --o: .9;  fill: #fc746c; }
 .illus .il-block--onv { --o: .75; fill: #fff; }
 
@@ -129,7 +129,7 @@
 /* --- contact: bubbles rise ---------------------------------------------- */
 
 .illus .il-bubble      { fill: #fff; stroke: #020637; stroke-width: 2.5; opacity: .95; }
-.illus .il-bubble--v   { fill: #833bff; stroke: none; }
+.illus .il-bubble--v   { fill: #0573ff; stroke: none; }
 .illus .il-tick        { fill: #35d0ba; }
 
 @keyframes il-float {
@@ -160,7 +160,7 @@
     stroke-linecap: round; opacity: .1;
 }
 .illus .il-arc {
-    fill: none; stroke: #833bff; stroke-width: 16; stroke-linecap: round;
+    fill: none; stroke: #0573ff; stroke-width: 16; stroke-linecap: round;
     stroke-dasharray: 384; stroke-dashoffset: 384;
 }
 @keyframes il-arc {
@@ -196,7 +196,7 @@
 
 .illus .il-link   { fill: none; stroke: #020637; stroke-width: 2; opacity: .2; stroke-dasharray: 5 6; }
 .illus .il-avatar { fill: #020637; opacity: .1; }
-.illus .il-avatar--v { fill: #833bff; opacity: 1; }
+.illus .il-avatar--v { fill: #0573ff; opacity: 1; }
 .illus .il-avatar--w { fill: #fc746c; opacity: 1; }
 .illus .il-head   { fill: #fff; opacity: .95; }
 .illus .il-body   { fill: #fff; opacity: .95; }
@@ -213,7 +213,7 @@
 
 .illus .il-rail      { stroke: #020637; stroke-width: 6; opacity: .12; stroke-linecap: round; }
 .illus .il-rail-fill {
-    stroke: #833bff; stroke-width: 6; stroke-linecap: round;
+    stroke: #0573ff; stroke-width: 6; stroke-linecap: round;
     stroke-dasharray: 288; stroke-dashoffset: 288;
 }
 @keyframes il-rail {
@@ -224,8 +224,8 @@
 .illus--process .il-rail-fill { animation: il-rail 6s ease-in-out infinite; }
 
 .illus .il-step-ring    { fill: #020637; opacity: .12; }
-.illus .il-step-ring--v { fill: #833bff; opacity: 1; }
-.illus .il-pulse        { fill: none; stroke: #833bff; stroke-width: 3; }
+.illus .il-step-ring--v { fill: #0573ff; opacity: 1; }
+.illus .il-pulse        { fill: none; stroke: #0573ff; stroke-width: 3; }
 @keyframes il-pulse {
     0%       { transform: scale(1); opacity: .7; }
     100%     { transform: scale(1.7); opacity: 0; }
@@ -238,7 +238,7 @@
 /* --- email: letter lifts out of the envelope ---------------------------- */
 
 .illus .il-mail-flap  { fill: none; stroke: #020637; stroke-width: 2.5; opacity: .35; }
-.illus .il-mail-front { fill: #833bff; }
+.illus .il-mail-front { fill: #0573ff; }
 .illus .il-letter-card { stroke: #020637; stroke-width: 2.5; }
 
 @keyframes il-letter {
@@ -251,11 +251,11 @@
 /* --- support: the line stays open --------------------------------------- */
 
 .illus .il-band    { fill: none; stroke: #020637; stroke-width: 12; stroke-linecap: round; opacity: .9; }
-.illus .il-cup--v  { fill: #833bff; }
+.illus .il-cup--v  { fill: #0573ff; }
 .illus .il-mic     { fill: none; stroke: #020637; stroke-width: 5; opacity: .8; stroke-linecap: round; }
 .illus .il-mic-tip { fill: #fc746c; }
 
-.illus .il-ring { fill: none; stroke: #833bff; stroke-width: 2.5; }
+.illus .il-ring { fill: none; stroke: #0573ff; stroke-width: 2.5; }
 @keyframes il-ring {
     0%   { transform: scale(.55); opacity: .55; }
     100% { transform: scale(1.06); opacity: 0; }
@@ -271,8 +271,8 @@
 
 /* --- domain: the lens sweeps the globe ---------------------------------- */
 
-.illus .il-globe    { fill: #833bff; opacity: .1; }
-.illus .il-meridian { fill: none; stroke: #833bff; stroke-width: 2; opacity: .45; }
+.illus .il-globe    { fill: #0573ff; opacity: .1; }
+.illus .il-meridian { fill: none; stroke: #0573ff; stroke-width: 2; opacity: .45; }
 .illus .il-lens     { fill: #fff; fill-opacity: .55; stroke: #020637; stroke-width: 6; }
 .illus .il-handle   { fill: none; stroke: #020637; stroke-width: 10; stroke-linecap: round; }
 

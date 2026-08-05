@@ -162,7 +162,7 @@ ul li,ol li{
 
 /* Violet, and thin. It carries one sentence and a row of small links; anything taller
    pushes the menu and the page's own first line further down for no gain. */
-.site-header__upper { background: #4c1d95; padding: 0; }
+.site-header__upper { background: #0459cc; padding: 0; }
 .site-header__upper-row {
     display: flex;
     align-items: center;
@@ -257,9 +257,9 @@ ul li,ol li{
 .site-search-open svg,
 .mobile-search svg { width: 18px; height: 18px; }
 .site-search-open:hover,
-.mobile-search:hover { border-color: #4c1d95; color: #4c1d95; }
+.mobile-search:hover { border-color: #0459cc; color: #0459cc; }
 .site-search-open:focus-visible,
-.mobile-search:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+.mobile-search:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
 .mobile-search { width: 38px; height: 38px; margin-right: 8px; }
 
 /* ── The one call to action ─────────────────────────────────────────────── */
@@ -285,7 +285,7 @@ ul li,ol li{
     background-image: linear-gradient(90deg, #ff5f1f 0%, #d93c1d 100%);
     box-shadow: 0 8px 22px rgba(238, 77, 45, .3);
 }
-.site-header__cta:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+.site-header__cta:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
 
 @media (max-width: 1320px) {
     .site-header__row { gap: 12px; }
@@ -455,7 +455,7 @@ ul li,ol li{
     fill: #FFFFFF;
     color: #FFFFFF;
     background-color: transparent;
-    background-image: linear-gradient(90deg, #AC1DE1 0%, #833BFF 100%);
+    background-image: linear-gradient(90deg, #0596FF 0%, #0573FF 100%);
     border-radius: 50px;
     /* font-weight: 700; */
     text-transform: uppercase;
@@ -465,8 +465,8 @@ ul li,ol li{
 
 .slide-1-button-group a:hover,
 .slide-1-button-group button:hover {
-    background-color: #AC1DE1;
-    border-color: #833BFF;
+    background-color: #0596FF;
+    border-color: #0573FF;
     box-shadow: 0 3px 5px #00000036;
     animation-name: b;
     -webkit-animation-name: b;
@@ -951,8 +951,10 @@ ul li,ol li{
 }
 
 .homepage-pricing{
-    padding-top: 250px;
-    padding-bottom:50px;
+    /* 250px was clearance for the old 700px-tall slide, which the cards were meant to
+       overlap. The hero is a normal section now, so this was 250px of nothing. */
+    padding-top: 76px;
+    padding-bottom: 50px;
 }
 .box-content *{
 	text-align: center;
@@ -970,15 +972,18 @@ ul li,ol li{
 	line-height:28px;
 }
 @media (min-width: 1220px){
-	.box-content .list-box:nth-child(2){
-		margin-top:-355px;
-	}
+	/* These were pulled up by 280px so they overlapped the old 700px-tall slide. The hero
+	   is a normal section now, so the negative margin dragged the whole row up over it.
+	   The middle card still stands 75px proud of the others, which was the other half of
+	   the effect and the half worth keeping. */
 	.box-content .list-box{
-		margin-top:-280px;
-		position:relative;
-		z-index:99;
+		margin-top: 0;
+		position: relative;
+		z-index: 2;
 	}
-
+	.box-content .list-box:nth-child(2){
+		margin-top: -75px;
+	}
 }
 .box-content .list-box .box-head{
 	padding: 25px 0;
@@ -3276,9 +3281,9 @@ button,
     align-items: center;
     gap: 10px;
     padding-bottom: 18px;
-    border-bottom: 2px solid #4c1d95;
+    border-bottom: 2px solid #0459cc;
 }
-.search-panel__icon { display: flex; color: #4c1d95; }
+.search-panel__icon { display: flex; color: #0459cc; }
 .search-panel__icon svg { width: 20px; height: 20px; }
 
 .search-panel__form input {
@@ -3300,14 +3305,14 @@ button,
     height: 40px;
     padding: 0 22px;
     border: 0;
-    background: #4c1d95;
+    background: #0459cc;
     color: #fff;
     font-family: inherit;
     font-size: 14.5px;
     font-weight: 700;
     cursor: pointer;
 }
-.search-panel__go:hover { background: #3b1479; }
+.search-panel__go:hover { background: #03429b; }
 
 .search-panel__x {
     flex: 0 0 auto;
@@ -3352,8 +3357,8 @@ button,
     color: #3f4657;
     text-decoration: none;
 }
-.search-panel__chips a:hover { background: #4c1d95; color: #fff; }
-.search-panel__chips a:focus-visible { outline: 2px solid #4c1d95; outline-offset: 2px; }
+.search-panel__chips a:hover { background: #0459cc; color: #fff; }
+.search-panel__chips a:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
 
 @media (max-width: 600px) {
     .search-panel { padding-top: 70px; }
@@ -3388,7 +3393,7 @@ button,
     font-weight: 700;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: #4c1d95;
+    color: #0459cc;
 }
 
 .panel-intro .main-heading {
@@ -3415,11 +3420,11 @@ button,
     align-items: flex-start;
     gap: 16px;
     padding: 18px 0 18px 20px;
-    border-left: 2px solid #ede9fe;
+    border-left: 2px solid #d7e8ff;
     border-radius: 0;
     cursor: default;
 }
-.panel-intro .intro-item:hover { background: transparent; border-left-color: #4c1d95; }
+.panel-intro .intro-item:hover { background: transparent; border-left-color: #0459cc; }
 .panel-intro .intro-item .icon { flex: 0 0 auto; width: 42px; }
 .panel-intro .intro-item .icon img { width: 100%; height: auto; display: block; }
 .panel-intro .intro-title {
@@ -3436,4 +3441,998 @@ button,
 @media (max-width: 1023px) {
     .panel-intro { padding: 56px 0 60px; }
     .panel-intro .main-heading { max-width: none; font-size: 26px; line-height: 36px; }
+}
+
+/* ===========================================================================
+   Home hero — two slides.
+
+   1. dark: badge, a headline that types itself, an orbital diagram
+   2. light: headline, a search field with industry hints, a fan of real covers
+
+   Both are drawn here. No borrowed artwork: the fan is our own template covers and
+   the orbit is CSS, so there is no third-party image to replace later.
+   =========================================================================== */
+
+.hero { position: relative; overflow: hidden; background: #f4f7fc; }
+.hero.is-dark { background: #071129; }
+
+/* Both slides occupy the same grid cell, so the section is as tall as the taller one and
+   neither has to change `position` when it becomes active. The old rule swapped
+   absolute→relative on change, which is a hard cut and a layout jump — no transition can
+   survive that. */
+.hero__slides { display: grid; }
+.hero__slide {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    padding: 62px 0 92px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(28px);
+    transition: opacity .62s cubic-bezier(.4, 0, .2, 1),
+                transform .78s cubic-bezier(.22, .78, .28, 1),
+                visibility 0s linear .78s;
+}
+.hero__slide.is-on {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition: opacity .62s cubic-bezier(.4, 0, .2, 1),
+                transform .78s cubic-bezier(.22, .78, .28, 1),
+                visibility 0s;
+}
+/* The one leaving goes the other way, so the pair reads as movement rather than a fade. */
+.hero__slide.was-on { transform: translateX(-28px); }
+.hero.is-back .hero__slide { transform: translateX(-28px); }
+.hero.is-back .hero__slide.was-on { transform: translateX(28px); }
+.hero.is-back .hero__slide.is-on { transform: none; }
+
+/* The copy rises as the slide arrives, a beat behind it and staggered down the column. */
+.hero__slide .hero__copy > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .5s ease, transform .6s cubic-bezier(.22, .78, .28, 1);
+}
+.hero__slide.is-on .hero__copy > * { opacity: 1; transform: none; }
+.hero__slide.is-on .hero__copy > *:nth-child(1) { transition-delay: .12s; }
+.hero__slide.is-on .hero__copy > *:nth-child(2) { transition-delay: .18s; }
+.hero__slide.is-on .hero__copy > *:nth-child(3) { transition-delay: .24s; }
+.hero__slide.is-on .hero__copy > *:nth-child(4) { transition-delay: .30s; }
+.hero__slide.is-on .hero__copy > *:nth-child(5) { transition-delay: .36s; }
+.hero__slide.is-on .hero__copy > *:nth-child(6) { transition-delay: .42s; }
+
+/* And the art comes in from its own side. */
+.hero__orbit, .hero__showcase {
+    opacity: 0;
+    transform: translateY(20px) scale(.985);
+    transition: opacity .6s ease .2s, transform .8s cubic-bezier(.22, .78, .28, 1) .2s;
+}
+.hero__slide.is-on .hero__orbit,
+.hero__slide.is-on .hero__showcase { opacity: 1; transform: none; }
+/* The slide is a flex box, which makes the container a flex item — and a flex item
+   shrink-fits instead of taking the container's width. */
+.hero__slide > .uk-container { width: 100%; position: relative; z-index: 2; }
+
+.hero__slide--dark { background: #071129; }
+.hero__slide--light { background: #f4f7fc; }
+
+.hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: 44px;
+    align-items: center;
+    width: 100%;
+}
+
+/* ── Shared copy ────────────────────────────────────────────────────────── */
+
+.hero__title { margin: 0 0 18px; font-weight: 700; letter-spacing: -.03em; }
+.hero__line { display: block; font-size: 40px; line-height: 53px; color: #0b1b3d; }
+.hero__line em { font-style: normal; color: #0573ff; }
+
+.hero__lead {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 16.5px;
+    line-height: 28px;
+    color: #5b6478;
+}
+
+.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 50px;
+    padding: 0 26px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.hero__btn svg { width: 18px; height: 18px; }
+.hero__btn--primary { background: #0573ff; color: #fff; }
+.hero__btn--primary:hover { background: #0459cc; color: #fff; }
+.hero__btn--warm { background: #ee4d2d; color: #fff; }
+.hero__btn--warm:hover { background: #d93c1d; color: #fff; }
+.hero__btn--ghost { background: #fff; border-color: #dde5f1; color: #0b1b3d; }
+.hero__btn--ghost:hover { border-color: #0573ff; color: #0573ff; }
+.hero__btn--outline {
+    background: transparent;
+    border-color: rgba(255, 255, 255, .28);
+    color: #fff;
+}
+.hero__btn--outline:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.hero__btn:focus-visible { outline: 2px solid #0573ff; outline-offset: 2px; }
+
+/* ── Slide 1: dark ──────────────────────────────────────────────────────── */
+
+/* A faint dot field, drawn rather than loaded. */
+.hero__dots-bg {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, .055) 1px, transparent 1px);
+    background-size: 40px 40px;
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 90% at 50% 40%, #000 0%, transparent 78%);
+}
+
+.hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    padding: 7px 15px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    background: rgba(255, 255, 255, .06);
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .8);
+}
+.hero__badge i { width: 7px; height: 7px; border-radius: 50%; background: #35d0ba; }
+
+.hero__title--dark .hero__line { color: #fff; }
+/* The typed line carries the one warm accent on this slide. */
+.hero__title--dark .hero__line--type {
+    background-image: linear-gradient(90deg, #ff8a3d 0%, #ffd166 42%, #35d0ba 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    min-height: 58px;
+}
+.hero__caret {
+    display: inline-block;
+    width: 3px;
+    height: 40px;
+    margin-left: 6px;
+    vertical-align: -6px;
+    background: #35d0ba;
+    -webkit-text-fill-color: #35d0ba;
+    animation: hero-caret 1.05s steps(1) infinite;
+}
+@keyframes hero-caret { 50% { opacity: 0; } }
+
+.hero__lead--dark { color: rgba(255, 255, 255, .66); }
+
+.hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    margin: 34px 0 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, .07);
+}
+.hero__stats dd {
+    margin: 0 0 3px;
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #fff;
+}
+.hero__stats dt { font-size: 12.5px; line-height: 18px; color: rgba(255, 255, 255, .5); max-width: 15ch; }
+
+/* ── The orbit ──────────────────────────────────────────────────────────── */
+
+.hero__orbit {
+    position: relative;
+    /* width:100% is load-bearing. A grid item stretches by default, but margin-left:auto
+       cancels that, and with only absolutely-positioned children left the box collapsed to
+       0x0 — every bubble stacked on one point and the rings were invisible. */
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 460px;
+    margin: 0 0 0 auto;
+}
+
+/* Barely there, as in the sample: the rings are a hint of structure, not a diagram
+   someone is meant to read. */
+.hero__ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .07);
+}
+.hero__ring--outer { inset: 0; }
+.hero__ring--inner {
+    inset: 21%;
+    border-style: dashed;
+    border-color: rgba(53, 208, 186, .18);
+}
+/* A third, inside, with the glow that sits behind the mark. */
+.hero__ring--inner::after {
+    content: '';
+    position: absolute;
+    inset: 26%;
+    border-radius: 50%;
+    border: 1px solid rgba(53, 208, 186, .28);
+    box-shadow: 0 0 40px rgba(53, 208, 186, .12) inset;
+}
+
+.hero__core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(53, 208, 186, .22) 0%, rgba(7, 17, 41, 0) 72%);
+}
+.hero__core img { max-width: 100%; height: auto; filter: brightness(0) invert(1); opacity: .92; }
+
+/* Placed by left/top worked out from an angle and a radius, so the group reads as an
+   orbit. Not by transform: a percentage inside translateX() resolves against the
+   element's own width, so 50% of a 58px bubble is 29px and all eight ended up in a heap
+   at the centre. */
+.hero__bubbles { position: absolute; inset: 0; }
+
+.hero__bubble {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #0f1c38;
+    border: 1px solid rgba(255, 255, 255, .09);
+    color: rgba(255, 255, 255, .72);
+    transform: translate(-50%, -50%);
+    animation: hero-float 7s ease-in-out infinite;
+    animation-delay: calc(var(--d, 0) * 1s);
+}
+.hero__bubble svg { width: 19px; height: 19px; }
+.hero__bubble b {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .5);
+}
+.hero__bubble.has-label {
+    width: 74px;
+    height: 74px;
+    background: #111f3d;
+    border-color: rgba(255, 255, 255, .13);
+}
+
+/* Four named on the outer ring, four icons on the inner. */
+.hero__bubble--1 { left: 74.4%; top: 11.0%; --d: 0.8; }
+.hero__bubble--2 { left: 14.8%; top: 20.4%; --d: 1.6; }
+.hero__bubble--3 { left: 88.1%; top: 75.7%; --d: 2.4; }
+.hero__bubble--4 { left: 29.8%; top: 91.3%; --d: 0.0; }
+.hero__bubble--5 { left: 76.4%; top: 44.4%; --d: 0.8; }
+.hero__bubble--6 { left: 57.4%; top: 76.0%; --d: 1.6; }
+.hero__bubble--7 { left: 23.6%; top: 55.6%; --d: 2.4; }
+.hero__bubble--8 { left: 43.0%; top: 23.9%; --d: 0.0; }
+
+/* Floating, not spinning: the sample's diagram barely moves. */
+@keyframes hero-float {
+    50% { transform: translate(-50%, calc(-50% - 7px)); }
+}
+
+/* ── Slide 2: light ─────────────────────────────────────────────────────── */
+
+/* Two soft blooms, drawn. The sample uses an image for this; a gradient is the same
+   thing without a request. */
+.hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(46% 60% at 12% 22%, rgba(5, 115, 255, .10) 0%, transparent 70%),
+        radial-gradient(40% 52% at 88% 78%, rgba(53, 208, 186, .12) 0%, transparent 72%);
+}
+
+.hero__search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 560px;
+    margin-top: 26px;
+    padding: 6px 6px 6px 20px;
+    border-radius: 40px;
+    background: #fff;
+    border: 1px solid #e2e8f3;
+    box-shadow: 0 8px 24px rgba(11, 27, 61, .06);
+}
+.hero__search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 42px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 15px;
+    color: #0b1b3d;
+}
+.hero__search input::placeholder { color: #a7afc0; }
+.hero__search input::-webkit-search-cancel-button { display: none; }
+.hero__search button {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: #0573ff;
+    color: #fff;
+    cursor: pointer;
+}
+.hero__search button svg { width: 19px; height: 19px; }
+.hero__search button:hover { background: #0459cc; }
+.hero__search button:focus-visible { outline: 2px solid #0573ff; outline-offset: 2px; }
+
+.hero__hints { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.hero__hints-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #9aa3b4;
+}
+.hero__hints ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.hero__hints a {
+    display: block;
+    padding: 5px 11px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0573ff;
+    text-decoration: none;
+}
+.hero__hints a:hover { background: #e6f0ff; }
+
+.hero__assure { margin: 18px 0 0; font-size: 13.5px; color: #8b93a5; }
+.hero__assure span { color: #1c9c6b; font-weight: 700; margin-right: 4px; }
+
+/* ── The fan ────────────────────────────────────────────────────────────── */
+
+.hero__showcase {
+    position: relative;
+    padding: 26px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e6ecf5;
+    box-shadow: 0 26px 60px rgba(11, 27, 61, .09);
+}
+
+/* Five covers overlapped and tilted, the middle one upright and forward — the spread the
+   sample shows, with our own templates in it. */
+.hero__fan {
+    position: relative;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero__fan-item {
+    position: absolute;
+    display: block;
+    /* Landscape, because our covers are landscape captures. A portrait frame cropped them
+       to 40% of their width and the fan read as five random fragments. */
+    width: 44%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #eef2f9;
+    border: 1px solid #e2e8f3;
+    box-shadow: 0 14px 34px rgba(11, 27, 61, .12);
+    /* --n is the card's index; the middle one (2) ends up centred and upright. */
+    --shift: calc((var(--n) - 2) * 26%);
+    --tilt: calc((var(--n) - 2) * 5deg);
+    transform: translateX(var(--shift)) rotate(var(--tilt)) scale(calc(1 - 0.055 * max(var(--n) - 2, 2 - var(--n))));
+    z-index: calc(5 - max(var(--n) - 2, 2 - var(--n)));
+    transition: transform .5s cubic-bezier(.2, .7, .3, 1);
+}
+.hero__fan-item img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.hero__showcase:hover .hero__fan-item {
+    transform: translateX(calc(var(--shift) * 1.14)) rotate(var(--tilt))
+               scale(calc(1 - 0.045 * max(var(--n) - 2, 2 - var(--n))));
+}
+
+.hero__pill {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e6ecf5;
+    box-shadow: 0 12px 30px rgba(11, 27, 61, .12);
+}
+.hero__pill svg { width: 20px; height: 20px; flex: 0 0 auto; }
+.hero__pill span { display: flex; flex-direction: column; font-size: 14px; font-weight: 700; color: #0b1b3d; }
+.hero__pill b {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #9aa3b4;
+}
+.hero__pill--demo { top: -18px; right: -14px; color: #ee4d2d; }
+.hero__pill--count { bottom: -18px; left: -14px; color: #0573ff; }
+
+/* ── Which slide ────────────────────────────────────────────────────────── */
+
+.hero__nav { position: absolute; left: 0; right: 0; bottom: 30px; z-index: 3; }
+.hero__pager { display: flex; gap: 8px; }
+.hero__pip {
+    width: 32px;
+    height: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: #cbd6e8;
+    cursor: pointer;
+    transition: background-color .3s ease, width .3s ease;
+}
+.hero.is-dark .hero__pip { background: rgba(255, 255, 255, .24); }
+.hero__pip.is-on { width: 52px; background: #0573ff; }
+.hero.is-dark .hero__pip.is-on { background: #35d0ba; }
+.hero__pip:focus-visible { outline: 2px solid #0573ff; outline-offset: 3px; }
+
+/* ── Narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+    .hero__grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+    .hero__line { font-size: 33px; line-height: 44px; }
+    .hero__title--dark .hero__line--type { min-height: 44px; }
+    .hero__caret { height: 30px; vertical-align: -4px; }
+    .hero__orbit { max-width: 360px; margin: 0 auto; }
+    .hero__fan { height: 230px; }
+}
+
+@media (max-width: 767px) {
+    .hero__slide { padding: 38px 0 68px; }
+    .hero__line { font-size: 26px; line-height: 35px; }
+    .hero__title--dark .hero__line--type { min-height: 35px; }
+    .hero__caret { height: 24px; vertical-align: -3px; }
+    .hero__actions .hero__btn { width: 100%; }
+    .hero__stats { gap: 20px; }
+    .hero__stats dd { font-size: 23px; }
+    .hero__orbit { max-width: 280px; }
+    .hero__bubble { width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+    .hero__bubble.has-label { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+    .hero__bubble b { display: none; }
+    .hero__showcase { padding: 16px; }
+    .hero__fan { height: 170px; }
+    .hero__pill { padding: 8px 12px; }
+    .hero__pill--demo { top: -14px; right: -8px; }
+    .hero__pill--count { bottom: -14px; left: -8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__slide, .hero__fan-item, .hero__pip { transition: none; }
+    .hero__slide, .hero__slide.was-on, .hero.is-back .hero__slide { transform: none; }
+    .hero__slide .hero__copy > *, .hero__orbit, .hero__showcase {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .hero__bubble, .hero__caret { animation: none; }
+    .hero__showcase:hover .hero__fan-item { transform: translateX(var(--shift)) rotate(var(--tilt)); }
+}
+
+/* ===========================================================================
+   Search panel — what the header's search icon opens.
+   =========================================================================== */
+
+.search-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 96px 20px 20px;
+}
+.search-panel[hidden] { display: none; }
+
+.search-panel__veil {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 12, 40, .62);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.search-panel.is-open .search-panel__veil { opacity: 1; }
+
+.search-panel__body {
+    position: relative;
+    width: 100%;
+    max-width: 660px;
+    padding: 26px 28px 28px;
+    background: #fff;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity .2s ease, transform .26s cubic-bezier(.2, .7, .3, 1);
+}
+.search-panel.is-open .search-panel__body { opacity: 1; transform: none; }
+
+.search-panel__form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #0459cc;
+}
+.search-panel__icon { display: flex; color: #0459cc; }
+.search-panel__icon svg { width: 20px; height: 20px; }
+
+.search-panel__form input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 40px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 19px;
+    color: #031d5b;
+}
+.search-panel__form input::placeholder { color: #a7afc0; }
+.search-panel__form input::-webkit-search-cancel-button { display: none; }
+
+.search-panel__go {
+    flex: 0 0 auto;
+    height: 40px;
+    padding: 0 22px;
+    border: 0;
+    background: #0459cc;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.search-panel__go:hover { background: #03429b; }
+
+.search-panel__x {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: transparent;
+    color: #8b93a5;
+    cursor: pointer;
+}
+.search-panel__x svg { width: 17px; height: 17px; }
+.search-panel__x:hover { color: #ee4d2d; }
+
+/* The suggestions. This is the half that makes a search box useful to someone who does
+   not yet know the word for what they want. */
+.search-panel__hot { margin-top: 22px; }
+.search-panel__hot-label {
+    margin: 0 0 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8b93a5;
+}
+.search-panel__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.search-panel__chips a {
+    display: block;
+    padding: 8px 14px;
+    background: #f4f5f9;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #3f4657;
+    text-decoration: none;
+}
+.search-panel__chips a:hover { background: #0459cc; color: #fff; }
+.search-panel__chips a:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
+
+@media (max-width: 600px) {
+    .search-panel { padding-top: 70px; }
+    .search-panel__body { padding: 20px 18px 22px; }
+    .search-panel__form input { font-size: 17px; }
+    .search-panel__go { padding: 0 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .search-panel__veil, .search-panel__body { transition: none; }
+    .search-panel__body { transform: none; }
+}
+
+/* ===========================================================================
+   Home: "Về chúng tôi".
+
+   The section had no padding of its own, so it sat flush against the video panel above
+   it — two different subjects with no seam between them. It also had no type hierarchy:
+   the eyebrow, the heading and the body were all within a few pixels of each other after
+   the site-wide type reduction.
+   =========================================================================== */
+
+.panel-intro {
+    padding: 84px 0 88px;
+    background: #fff;
+}
+
+/* The eyebrow. Small on purpose — it labels the section, it is not the heading. */
+.panel-intro .heading-1 { margin: 0 0 14px; }
+.panel-intro .heading-1 > * {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #0459cc;
+}
+
+.panel-intro .main-heading {
+    margin: 0 0 18px;
+    max-width: 22ch;
+    font-size: 31px;
+    line-height: 42px;
+    font-weight: 700;
+    letter-spacing: -.015em;
+    color: #031d5b;
+}
+
+.panel-intro > .uk-container .description {
+    max-width: 60ch;
+    font-size: 16px;
+    line-height: 28px;
+    color: #5b6478;
+}
+
+/* The two points below the copy. A rule down the left instead of a hover card: they are
+   read once, not clicked. */
+.panel-intro .intro-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0 18px 20px;
+    border-left: 2px solid #d7e8ff;
+    border-radius: 0;
+    cursor: default;
+}
+.panel-intro .intro-item:hover { background: transparent; border-left-color: #0459cc; }
+.panel-intro .intro-item .icon { flex: 0 0 auto; width: 42px; }
+.panel-intro .intro-item .icon img { width: 100%; height: auto; display: block; }
+.panel-intro .intro-title {
+    margin-bottom: 6px;
+    font-size: 17.5px;
+    font-weight: 700;
+    color: #031d5b;
+}
+.panel-intro .intro-item .description { margin-bottom: 0; font-size: 15px; line-height: 26px; }
+
+/* The illustration column: capped and centred so it does not tower over the copy. */
+.panel-intro .illus { max-width: 420px; }
+
+@media (max-width: 1023px) {
+    .panel-intro { padding: 56px 0 60px; }
+    .panel-intro .main-heading { max-width: none; font-size: 26px; line-height: 36px; }
+}
+
+/* ===========================================================================
+   Home hero.
+
+   Replaces the five-slide carousel. Two slides that argue different things — the
+   studio, then the library — on a flat ground, with the primary blue carrying the
+   accent and nothing else competing.
+   =========================================================================== */
+
+.hero {
+    position: relative;
+    background: #f6f8fc;
+    overflow: hidden;
+}
+
+.hero__slides { position: relative; }
+
+/* The slide is a flex box, which makes the container a flex item — and a flex item
+   shrink-fits its content instead of taking the container's own width, so the copy
+   drifted inward by a hundred pixels on one slide and not the other. */
+.hero__slide > .uk-container { width: 100%; }
+
+/* Stacked, so the height is the taller of the two and nothing jumps on change. */
+.hero__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 64px 0 96px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .55s cubic-bezier(.4, 0, .2, 1);
+}
+.hero__slide.is-on { opacity: 1; visibility: visible; position: relative; }
+
+.hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    gap: 56px;
+    align-items: center;
+    width: 100%;
+}
+
+/* ── Copy ───────────────────────────────────────────────────────────────── */
+
+.hero__eyebrow {
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #0573ff;
+}
+
+.hero__title {
+    margin: 0 0 18px;
+    max-width: 20ch;
+    font-size: 40px;
+    line-height: 52px;
+    font-weight: 500;
+    letter-spacing: -.02em;
+    color: #0b1b3d;
+}
+.hero__title strong { font-weight: 700; }
+
+.hero__lead {
+    margin: 0;
+    max-width: 54ch;
+    font-size: 16.5px;
+    line-height: 28px;
+    color: #5b6478;
+}
+
+.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 28px;
+    border: 1px solid transparent;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.hero__btn--primary { background: #0573ff; color: #fff; }
+.hero__btn--primary:hover { background: #0459cc; color: #fff; }
+.hero__btn--ghost { background: #fff; border-color: #d7e2f2; color: #0b1b3d; }
+.hero__btn--ghost:hover { border-color: #0573ff; color: #0573ff; }
+.hero__btn:focus-visible { outline: 2px solid #0573ff; outline-offset: 2px; }
+
+/* ── Slide 1: the numbers ───────────────────────────────────────────────── */
+
+.hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    margin: 36px 0 0;
+    padding-top: 26px;
+    border-top: 1px solid #e2e8f3;
+}
+.hero__stats dd {
+    margin: 0 0 4px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #0573ff;
+}
+.hero__stats dt { font-size: 13px; line-height: 19px; color: #8b93a5; max-width: 14ch; }
+
+/* The four capabilities, offset from each other so the column reads as a stack of
+   cards rather than a list. */
+.hero__caps { margin: 0; padding: 0; list-style: none; }
+.hero__caps li {
+    padding: 18px 22px;
+    margin-left: calc(var(--i) * 22px);
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #e6ecf7;
+    box-shadow: 0 10px 26px rgba(11, 27, 61, .05);
+}
+.hero__cap-name {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0b1b3d;
+}
+.hero__cap-note { display: block; font-size: 13.5px; line-height: 20px; color: #8b93a5; }
+
+/* ── Slide 2: the chips and the wall ────────────────────────────────────── */
+
+.hero__chips { margin-top: 30px; padding-top: 24px; border-top: 1px solid #e2e8f3; }
+.hero__chips-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8b93a5;
+}
+.hero__chips ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.hero__chips a {
+    display: block;
+    padding: 8px 14px;
+    background: #fff;
+    border: 1px solid #e2e8f3;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #3f4657;
+    text-decoration: none;
+}
+.hero__chips a:hover { border-color: #0573ff; color: #0573ff; }
+
+/* Three columns of real covers drifting at different speeds. Masked at both ends so
+   they fade out rather than being cut. */
+.hero__wall {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    height: 440px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+.hero__wall-col { display: grid; gap: 12px; animation: hero-drift 34s linear infinite; }
+.hero__wall-col:nth-child(2) { animation-duration: 44s; animation-direction: reverse; }
+.hero__wall-col:nth-child(3) { animation-duration: 39s; }
+.hero__wall-col span {
+    display: block;
+    aspect-ratio: 4 / 3;
+    background-size: cover;
+    background-position: center top;
+    border: 1px solid #e6ecf7;
+    background-color: #eef2f9;
+}
+
+@keyframes hero-drift {
+    from { transform: translateY(0); }
+    /* Half, because each column's covers are repeated twice — so the loop has no seam. */
+    to { transform: translateY(-50%); }
+}
+
+/* ── Which slide ────────────────────────────────────────────────────────── */
+
+.hero__nav { position: absolute; left: 0; right: 0; bottom: 30px; z-index: 3; }
+.hero__dots { display: flex; gap: 8px; }
+.hero__dot {
+    width: 34px;
+    height: 4px;
+    padding: 0;
+    border: 0;
+    background: #cbd6e8;
+    cursor: pointer;
+    transition: background-color .3s ease, width .3s ease;
+}
+.hero__dot.is-on { width: 54px; background: #0573ff; }
+.hero__dot:focus-visible { outline: 2px solid #0573ff; outline-offset: 3px; }
+
+/* ── Narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+    .hero__grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+    .hero__title { max-width: none; font-size: 32px; line-height: 42px; }
+    .hero__caps li { margin-left: 0; }
+    .hero__wall { height: 320px; }
+}
+
+@media (max-width: 767px) {
+    .hero__slide { padding: 40px 0 66px; }
+    .hero__title { font-size: 27px; line-height: 36px; }
+    .hero__actions .hero__btn { width: 100%; }
+    .hero__stats { gap: 22px; }
+    .hero__stats dd { font-size: 25px; }
+    .hero__wall { grid-template-columns: repeat(2, 1fr); height: 260px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__slide { transition: none; }
+    .hero__wall-col { animation: none; }
+    .hero__dot { transition: none; }
+}
+
+/* ── Hero arrows ────────────────────────────────────────────────────────── */
+
+/* Outside the copy, vertically centred. They appear on hover on a pointer device and are
+   always visible on touch, where there is no hover to reveal them. */
+.hero__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
+    padding: 0;
+    border: 1px solid #dde5f1;
+    border-radius: 50%;
+    background: #fff;
+    color: #0b1b3d;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .3s ease, background-color .28s ease, color .28s ease,
+                border-color .28s ease, transform .28s cubic-bezier(.2, .7, .3, 1);
+}
+.hero__arrow svg { width: 20px; height: 20px; }
+.hero__arrow--prev { left: 18px; transform: translateX(-6px); }
+.hero__arrow--next { right: 18px; transform: translateX(6px); }
+
+.hero:hover .hero__arrow,
+.hero__arrow:focus-visible { opacity: 1; transform: none; }
+.hero__arrow:hover { background: #0573ff; border-color: #0573ff; color: #fff; }
+.hero__arrow:focus-visible { outline: 2px solid #0573ff; outline-offset: 3px; }
+
+/* On the dark slide they have to invert. */
+.hero.is-dark .hero__arrow {
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(255, 255, 255, .16);
+    color: #fff;
+}
+.hero.is-dark .hero__arrow:hover { background: #35d0ba; border-color: #35d0ba; color: #071129; }
+
+@media (hover: none) {
+    .hero__arrow { opacity: 1; transform: none; }
+}
+
+@media (max-width: 767px) {
+    .hero__arrow { width: 38px; height: 38px; margin-top: -19px; }
+    .hero__arrow svg { width: 17px; height: 17px; }
+    .hero__arrow--prev { left: 8px; }
+    .hero__arrow--next { right: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__arrow { transition: opacity .2s ease; transform: none; }
 }

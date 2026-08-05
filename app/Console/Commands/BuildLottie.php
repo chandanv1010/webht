@@ -27,7 +27,7 @@ class BuildLottie extends Command
 
     /** Palette from the live site, as Lottie's 0..1 floats. */
     private const NAVY   = [0.008, 0.024, 0.216, 1];
-    private const VIOLET = [0.514, 0.231, 1.000, 1];
+    private const VIOLET = [0.020, 0.451, 1.000, 1];   // #0573ff — the primary tone
     private const BLUE   = [0.110, 0.424, 0.863, 1];
     private const CORAL  = [0.988, 0.455, 0.424, 1];
     private const TEAL   = [0.208, 0.816, 0.729, 1];

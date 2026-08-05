@@ -1,0 +1,284 @@
+/* ===========================================================================
+   Bảng giá.
+
+   Light page, blue accent, flat surfaces. Three cards with the middle one raised;
+   what a package leaves out is listed alongside what it includes.
+   =========================================================================== */
+
+.pri { background: #fff; color: #3f4657; }
+
+.pri-eyebrow {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #0573ff;
+}
+.pri-title {
+    margin: 0 0 16px;
+    font-size: 36px;
+    line-height: 46px;
+    font-weight: 500;
+    letter-spacing: -.02em;
+    color: #0b1b3d;
+}
+.pri-lead { margin: 0; font-size: 16.5px; line-height: 28px; color: #5b6478; }
+
+.pri-h2 {
+    margin: 0 0 14px;
+    font-size: 26px;
+    line-height: 35px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: #0b1b3d;
+}
+.pri-p { margin: 0; font-size: 15.5px; line-height: 27px; color: #5b6478; }
+
+/* ── Lead ───────────────────────────────────────────────────────────────── */
+
+/* Centred, with a pill badge above the heading — the shape of the page this follows. */
+.pri-hero { padding: 58px 0 10px; background: #fff; text-align: center; }
+.pri-hero__inner { max-width: 720px; margin: 0 auto; }
+
+.pri-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 7px 16px;
+    border-radius: 40px;
+    background: #eaf3ff;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0573ff;
+}
+.pri-badge i { width: 7px; height: 7px; border-radius: 50%; background: #0573ff; }
+
+.pri-title {
+    margin: 0 0 14px;
+    font-size: 40px;
+    line-height: 52px;
+    font-weight: 700;
+    letter-spacing: -.025em;
+    color: #0b1b3d;
+}
+.pri-lead { margin: 0 auto; max-width: 60ch; font-size: 16px; line-height: 27px; color: #6b7488; }
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+
+.pri-cards { padding: 44px 0 70px; }
+.pri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 26px;
+    /* Equal height, so the three buttons line up whatever each list holds. */
+    align-items: stretch;
+}
+
+.pri-card {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 30px 34px;
+    background: #fff;
+    border: 1px solid #e6ecf5;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(11, 27, 61, .03);
+    transition: border-color .28s ease, box-shadow .28s ease, transform .28s cubic-bezier(.2, .7, .3, 1);
+}
+.pri-card:hover {
+    border-color: #bcd9ff;
+    box-shadow: 0 18px 40px rgba(11, 27, 61, .08);
+    transform: translateY(-3px);
+}
+
+.pri-card__name {
+    margin: 0 0 18px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+    color: #0573ff;
+}
+
+/* The number is the loudest thing on the card, and warm against the blue. */
+.pri-card__price { margin: 0; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.pri-card__price strong {
+    font-size: 33px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #ee4d2d;
+}
+.pri-card__per { font-size: 14px; color: #8b93a5; }
+
+.pri-card__was { margin: 4px 0 0; }
+.pri-card__was s { font-size: 14.5px; color: #a7afc0; }
+
+.pri-card__scope {
+    margin: 18px 0 0;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #eef2f9;
+    font-size: 14.5px;
+    line-height: 24px;
+    color: #6b7488;
+}
+
+.pri-list { margin: 22px 0 26px; padding: 0; list-style: none; }
+.pri-list li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 13px;
+    font-size: 14.5px;
+    line-height: 23px;
+    color: #3f4657;
+}
+/* A tick for what is in, a dash for what is not — the marker's shape carries the
+   meaning, so it survives being printed or read without colour. */
+.pri-list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 6px;
+    width: 13px;
+    height: 7px;
+    border-left: 2px solid #0573ff;
+    border-bottom: 2px solid #0573ff;
+    transform: rotate(-45deg);
+}
+.pri-list li.is-off { color: #a7afc0; }
+.pri-list li.is-off::before {
+    top: 11px;
+    width: 13px;
+    height: 0;
+    border-left: 0;
+    border-bottom: 2px solid #cbd3e0;
+    transform: none;
+}
+
+.pri-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    /* Bottom-aligned across the row. */
+    margin-top: auto;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 40px;
+    background: #0573ff;
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+.pri-card__btn span { transition: transform .26s cubic-bezier(.2, .7, .3, 1); }
+.pri-card__btn:hover { background: #0459cc; color: #fff; }
+.pri-card__btn:hover span { transform: translateX(4px); }
+.pri-card__btn--solid { width: auto; }
+.pri-card__btn:focus-visible { outline: 2px solid #0573ff; outline-offset: 2px; }
+
+/* ── Extras ─────────────────────────────────────────────────────────────── */
+
+.pri-extras { padding: 62px 0; background: #f6f8fc; }
+.pri-extras__grid {
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: 48px;
+    align-items: start;
+}
+.pri-extras__list { margin: 0; }
+.pri-extras__list > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f3;
+}
+.pri-extras__list > div:first-child { border-top: 1px solid #e2e8f3; }
+.pri-extras__list dt { font-size: 15.5px; color: #3f4657; }
+.pri-extras__list dd { margin: 0; font-size: 15.5px; font-weight: 700; color: #0b1b3d; }
+
+/* ── Questions ──────────────────────────────────────────────────────────── */
+
+.pri-faq { padding: 62px 0 66px; }
+.pri-acc { max-width: 840px; margin-top: 22px; }
+.pri-acc__item { border-bottom: 1px solid #e6ecf7; }
+.pri-acc__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    width: 100%;
+    padding: 20px 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    font-family: inherit;
+    font-size: 16.5px;
+    font-weight: 600;
+    color: #0b1b3d;
+    cursor: pointer;
+}
+.pri-acc__q i { position: relative; flex: 0 0 auto; width: 16px; height: 16px; }
+.pri-acc__q i::before,
+.pri-acc__q i::after {
+    content: '';
+    position: absolute;
+    background: #0573ff;
+    transition: transform .28s cubic-bezier(.2, .7, .3, 1), opacity .28s ease;
+}
+.pri-acc__q i::before { left: 0; top: 7px; width: 16px; height: 2px; }
+.pri-acc__q i::after { left: 7px; top: 0; width: 2px; height: 16px; }
+.pri-acc__item.is-open .pri-acc__q i::after { transform: rotate(90deg); opacity: 0; }
+
+.pri-acc__a { max-height: 0; overflow: hidden; transition: max-height .34s cubic-bezier(.2, .7, .3, 1); }
+.pri-acc__a p {
+    margin: 0;
+    padding: 0 0 22px;
+    max-width: 72ch;
+    font-size: 15.5px;
+    line-height: 27px;
+    color: #5b6478;
+}
+
+/* ── Close ──────────────────────────────────────────────────────────────── */
+
+.pri-close { padding: 0 0 72px; }
+.pri-close__box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 26px;
+    padding: 36px 40px;
+    background: #0b1b3d;
+}
+.pri-close__title { margin: 0 0 8px; font-size: 24px; font-weight: 700; line-height: 33px; color: #fff; }
+.pri-close__lead { margin: 0; max-width: 58ch; font-size: 15.5px; line-height: 26px; color: rgba(255, 255, 255, .72); }
+.pri-close__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.pri-close__actions .pri-card__btn { width: auto; }
+.pri-close__call { font-size: 19px; font-weight: 700; color: #fff; text-decoration: none; }
+.pri-close__call:hover { color: #8ec2ff; }
+
+@media (max-width: 1023px) {
+    .pri-extras__grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+@media (max-width: 767px) {
+    .pri-hero { padding: 40px 0 38px; }
+    .pri-title { font-size: 27px; line-height: 36px; }
+    .pri-cards { padding: 34px 0 44px; }
+    .pri-close__box { padding: 26px 22px; }
+    .pri-close__actions { width: 100%; }
+    .pri-close__actions .pri-card__btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pri-acc__a, .pri-acc__q i::before, .pri-acc__q i::after { transition: none; }
+}

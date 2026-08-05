@@ -13,6 +13,7 @@
     // The media containers across the site. Each holds one <img> or <iframe>.
     var SELECTORS = [
         '.tpl-card__poster',
+        '.hero__fan-item',
         '.art-card__media',
         '.store-hero__frame',
         '.tpl-frame__screen--shot',
