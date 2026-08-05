@@ -32,6 +32,8 @@ class Product extends Model
         'variant',
         'qrcode',
         'warranty',
+        // One line per spec row, "Nhãn: Giá trị". See the detail page's Thông số tab.
+        'specs',
         'check',
         'seller_id'
     ];
@@ -97,6 +99,8 @@ class Product extends Model
             'endDate',
             'color',
             'warranty',
+        // One line per spec row, "Nhãn: Giá trị". See the detail page's Thông số tab.
+        'specs',
             'status',
         );
     }

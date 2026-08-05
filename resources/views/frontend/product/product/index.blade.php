@@ -15,26 +15,49 @@
     $listPrice = $price > 0 ? (int) round($price * 1.6 / 100000) * 100000 : 0;
     $saving = $listPrice > $price ? (int) round(100 - ($price / $listPrice * 100)) : 0;
 
-    $specs = array_filter([
-        'Mã mẫu' => $product->code,
-        'Danh mục' => $catName,
+    // Specs. What the record knows comes first, then whatever the client typed into
+    // "Thông số kỹ thuật" on this product, one "Nhãn: Giá trị" per line. The defaults are
+    // only a fallback: they used to be the whole list, which meant all 36 templates
+    // claimed the same platform whether or not it was true.
+    $ownSpecs = [];
+    foreach (preg_split('/\r\n|\r|\n/', (string) ($product->specs ?? '')) as $line) {
+        $line = trim($line);
+        if ($line === '' || !str_contains($line, ':')) {
+            continue;
+        }
+        [$label, $value] = explode(':', $line, 2);
+        $label = trim($label);
+        $value = trim($value);
+        if ($label !== '' && $value !== '') {
+            $ownSpecs[$label] = $value;
+        }
+    }
+
+    $defaultSpecs = [
         'Nền tảng' => 'Laravel 10 · PHP 8.1+ · MySQL 8.0',
         'Giao diện' => 'Responsive — máy tính, máy tính bảng, điện thoại',
         'Trang quản trị' => 'Tiếng Việt, có phân quyền người dùng',
         'Bàn giao' => 'Mã nguồn đầy đủ kèm cơ sở dữ liệu',
-        'Bảo hành' => $product->warranty ? $product->warranty.' tháng' : '12 tháng lỗi kỹ thuật',
-        // getProductById() selects an explicit column list that leaves out updated_at,
-        // so this is null on this page and convertDateTime() rejects null.
-        'Cập nhật' => $product->updated_at ? convertDateTime($product->updated_at, 'd/m/Y') : null,
-    ], fn ($v) => !empty($v));
-
-    $handover = [
-        ['Mã nguồn', 'Toàn bộ source code, không mã hoá, không giới hạn số lần cài lại.'],
-        ['Cơ sở dữ liệu', 'File .sql kèm dữ liệu mẫu, để bạn thấy website đầy đủ trước khi thay nội dung.'],
-        ['Tài khoản quản trị', 'Tài khoản cấp cao nhất. Bạn tự tạo thêm người dùng và phân quyền.'],
-        ['Tài liệu hướng dẫn', 'Hướng dẫn quản trị bằng tiếng Việt, kèm một buổi đào tạo trực tiếp.'],
-        ['Hosting năm đầu', 'Hosting tại Việt Nam, SSL và sao lưu hằng ngày, miễn phí 12 tháng.'],
     ];
+
+    $specs = array_filter(array_merge(
+        [
+            'Mã mẫu' => $product->code,
+            'Danh mục' => $catName,
+        ],
+        // The product's own lines win over the defaults, by label.
+        array_merge($defaultSpecs, $ownSpecs),
+        [
+            'Bảo hành' => $product->warranty ? $product->warranty.' tháng' : '12 tháng lỗi kỹ thuật',
+            'Cập nhật' => $product->updated_at ? convertDateTime($product->updated_at, 'd/m/Y') : null,
+        ]
+    ), fn ($v) => !empty($v));
+
+    // Handover and terms are identical for every template, so they live in the settings
+    // rather than being copied into each record — one edit changes all of them. The
+    // fallbacks below are what the page used to hardcode.
+    $handoverHtml = trim((string) ($system['template_handover'] ?? ''));
+    $termsHtml = trim((string) ($system['template_terms'] ?? ''));
 @endphp
 
 @extends('frontend.homepage.layout')
@@ -220,26 +243,35 @@
                 </div>
 
                 <div class="tpl-panel" data-panel="ban-giao" hidden>
-                    <ul class="tpl-list">
-                        @foreach ($handover as [$title, $body])
-                            <li>
-                                <span class="tpl-list__title">{{ $title }}</span>
-                                <span class="tpl-list__body">{{ $body }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
+                    @if ($handoverHtml !== '')
+                        <div class="tpl-prose">{!! $handoverHtml !!}</div>
+                    @else
+                        <ul class="tpl-list">
+                            @foreach ([
+                                ['Mã nguồn', 'Toàn bộ source code, không mã hoá, không giới hạn số lần cài lại.'],
+                                ['Cơ sở dữ liệu', 'File .sql kèm dữ liệu mẫu, để bạn thấy website đầy đủ trước khi thay nội dung.'],
+                                ['Tài khoản quản trị', 'Tài khoản cấp cao nhất. Bạn tự tạo thêm người dùng và phân quyền.'],
+                                ['Tài liệu hướng dẫn', 'Hướng dẫn quản trị bằng tiếng Việt, kèm một buổi đào tạo trực tiếp.'],
+                            ] as [$title, $body])
+                                <li>
+                                    <span class="tpl-list__title">{{ $title }}</span>
+                                    <span class="tpl-list__body">{{ $body }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
 
                 <div class="tpl-panel" data-panel="dieu-khoan" hidden>
                     <div class="tpl-prose">
-                        <h3>Bản quyền sử dụng</h3>
-                        <p>Một lần mua dùng cho một tên miền. Mã nguồn thuộc về bạn, được sửa và mở rộng tự do. Không bán lại chính mẫu này cho bên thứ ba.</p>
-                        <h3>Thanh toán</h3>
-                        <p>Chia hai đợt: 50% khi xác nhận đơn, 50% khi nghiệm thu. Xuất hoá đơn VAT đầy đủ cho từng đợt.</p>
-                        <h3>Bảo hành</h3>
-                        <p>12 tháng cho lỗi kỹ thuật phát sinh từ mã nguồn chúng tôi bàn giao. Không áp dụng cho lỗi do bên thứ ba can thiệp mã nguồn, hoặc cho yêu cầu tính năng mới.</p>
-                        <h3>Hoàn tiền</h3>
-                        <p>Hoàn 100% nếu chúng tôi không bàn giao được đúng mẫu bạn đã chọn. Đã bàn giao và nghiệm thu thì không hoàn.</p>
+                        @if ($termsHtml !== '')
+                            {!! $termsHtml !!}
+                        @else
+                            <h3>Bản quyền sử dụng</h3>
+                            <p>Một lần mua dùng cho một tên miền. Mã nguồn thuộc về bạn, được sửa và mở rộng tự do. Không bán lại chính mẫu này cho bên thứ ba.</p>
+                            <h3>Bảo hành</h3>
+                            <p>12 tháng cho lỗi kỹ thuật phát sinh từ mã nguồn chúng tôi bàn giao.</p>
+                        @endif
                     </div>
                 </div>
             </div>

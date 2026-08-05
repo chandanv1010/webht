@@ -108,6 +108,22 @@
             </div>
         </div>
         <div class="form-row">
+            <label for="">Thông số kỹ thuật</label>
+            <textarea
+                type="text"
+                name="specs"
+                class="form-control"
+                style="height:150px;"
+                placeholder="Nền tảng: Laravel 10 · PHP 8.1+ · MySQL 8.0&#10;Số trang: 12&#10;Trang quản trị: Tiếng Việt, có phân quyền"
+            >{{ old('specs', ($product->specs) ?? '') }}</textarea>
+            <small style="display:block;margin-top:6px;color:#888;line-height:18px;">
+                Mỗi dòng một thông số, theo dạng <b>Nhãn: Giá trị</b>. Hiện ở tab
+                &ldquo;Thông số kỹ thuật&rdquo; trên trang chi tiết. Để trống thì dùng bộ
+                thông số mặc định.
+            </small>
+        </div>
+
+        <div class="form-row">
             <label for="">Link xem trước (hoặc mã nhúng)</label>
             <textarea
                 type="text"

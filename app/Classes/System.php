@@ -42,6 +42,23 @@ class System{
             ]
         ];
 
+        $data['template'] = [
+            'label' => 'Trang mẫu website',
+            'description' => 'Nội dung dùng chung cho mọi mẫu trong kho giao diện: những gì bàn giao, và điều khoản mua. Sửa ở đây là đổi trên tất cả các mẫu.',
+            'value' => [
+                'handover' => [
+                    'type' => 'editor',
+                    'label' => 'Bàn giao & hướng dẫn',
+                    'title' => 'Danh sách những gì khách nhận được. Dùng thẻ danh sách hoặc mỗi mục một đoạn.',
+                ],
+                'terms' => [
+                    'type' => 'editor',
+                    'label' => 'Điều khoản',
+                    'title' => 'Bản quyền, thanh toán, bảo hành, hoàn tiền.',
+                ],
+            ],
+        ];
+
         $data['contact'] = [
             'label' => 'Thông tin liên hệ',
             'description' => 'Cài đặt thông tin liên hệ của website ví dụ: Địa chỉ công ty, Văn phòng giao dịch, Hotline, Bản đồ, vv...',

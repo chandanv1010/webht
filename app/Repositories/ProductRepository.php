@@ -148,6 +148,10 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
                 'products.variant',
                 'products.qrcode',
                 'products.warranty',
+                'products.specs',
+                // updated_at was missing from this explicit list, so the detail page's
+                // "Cập nhật" row had nothing to show and was silently dropped.
+                'products.updated_at',
                 'products.iframe',
                 'products.seller_id',
                 'tb2.name',
