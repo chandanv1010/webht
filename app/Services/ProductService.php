@@ -102,7 +102,14 @@ class ProductService extends BaseService implements ProductServiceInterface
 
         $orderBy = ['products.order', 'DESC'];
 
-        $relations = ['product_catalogues'];
+        // 'languages' is eager-loaded: the listing cards and the JSON-LD builder both
+        // read $product->languages->first()->pivot, and without this a page of 24
+        // products issued 24 extra queries for names it had just selected.
+        //
+        // Plain strings only — scopeRelationCount() passes each entry to withCount(),
+        // which rejects a closure, so the usual ['languages' => fn ($q) => ...] form
+        // would throw here.
+        $relations = ['product_catalogues', 'languages'];
 
         $rawQuery = $this->whereRaw($request, $languageId, $productCatalogue);
 
