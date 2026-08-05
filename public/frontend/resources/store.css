@@ -15,8 +15,9 @@
      #35d0ba  value / free
      #fc746c  warm accent
 
-   Type comes from families the site already loads: Outfit for display (its 800
-   weight holds a billboard), Manrope for everything else. No new network cost.
+   Type is Be Vietnam Pro throughout — a geometric sans built for Vietnamese, which
+   Poppins is not (it has no Vietnamese diacritics). Hierarchy comes from weight and
+   tracking rather than from a second family.
    =========================================================================== */
 
 .store {
@@ -32,7 +33,7 @@
 
     background: var(--canvas);
     color: var(--ink);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     padding-bottom: 80px;
     overflow-x: hidden;
 }
@@ -42,7 +43,7 @@
    silently killed the billboard's spacing. Per-element margins stay with the
    elements. */
 .store h1, .store h2 {
-    font-family: 'Outfit', 'Manrope', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: var(--ink);
 }
 
@@ -160,7 +161,7 @@
     margin: 0 0 30px;
 }
 .store-hero__price {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 26px;
     font-weight: 700;
     color: var(--value);
@@ -304,12 +305,30 @@
 }
 .store-shelf__all:hover { color: var(--ink); }
 
-.store-shelf__viewport { position: relative; }
+.store-shelf__viewport {
+    position: relative;
+    /* Break out of .uk-container so the row can run under the right edge of the
+       window. The left padding is restored below so cards still line up with the
+       section heading. */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+.store-shelf__viewport > .uk-container {
+    max-width: none;
+    padding-right: 0;
+}
+@media (min-width: 1220px) {
+    .store-shelf__viewport > .uk-container {
+        /* Match .uk-container's own gutter at this breakpoint — style.css widens it to
+           1320px with no padding — so the first card lines up with the shelf title. */
+        padding-left: calc((100vw - 1320px) / 2);
+    }
+}
 
 .store-shelf__track {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 320px;
+    grid-auto-columns: 78%;
     gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x proximity;
@@ -323,16 +342,19 @@
 /* Three per row, not four or five. These are homepage previews, not film posters —
    at a quarter of the container you cannot read the layout, which is the only thing
    a visitor is actually shopping for. Fewer, larger, and the shelf scrolls. */
+/* Four per row plus a fifth peeking past the right edge, so it is obvious the row
+   continues. The track is deliberately wider than the container and bleeds to the
+   viewport edge — a row that stops neatly at the container margin reads as finished. */
 @media (min-width: 960px) {
-    .store-shelf__track { grid-auto-columns: calc((100% - 2 * 18px) / 3); gap: 18px; }
-}
-@media (min-width: 1500px) {
-    .store-shelf__track { grid-auto-columns: calc((100% - 3 * 18px) / 4); }
+    .store-shelf__track {
+        grid-auto-columns: calc((100% - 4 * 18px) / 4.22);
+        gap: 18px;
+    }
 }
 
 .store-shelf__nav {
     position: absolute;
-    top: 50%;
+    top: calc(50% - 14px);
     transform: translateY(-50%);
     z-index: 5;
     width: 42px;
@@ -347,11 +369,22 @@
     justify-content: center;
     transition: background .16s ease, opacity .16s ease;
 }
-.store-shelf__nav::before { content: ''; width: 9px; height: 9px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; }
-.store-shelf__nav--next { right: 8px; }
-.store-shelf__nav--next::before { transform: rotate(45deg); margin-left: 3px; }
-.store-shelf__nav--prev { left: 8px; }
-.store-shelf__nav--prev::before { transform: rotate(-135deg); margin-right: 3px; }
+/* A masked SVG chevron. The old arrow was a rotated square with two borders, which
+   renders with uneven stroke ends and looked bent at this size. */
+.store-shelf__nav::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: currentColor;
+    -webkit-mask: var(--chev) center / 20px 20px no-repeat;
+    mask: var(--chev) center / 20px 20px no-repeat;
+}
+.store-shelf__nav {
+    --chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 5 16 12 9 19'/%3E%3C/svg%3E");
+}
+.store-shelf__nav--next { right: 20px; }
+.store-shelf__nav--prev { left: 20px; }
+.store-shelf__nav--prev::before { transform: scaleX(-1); }
 .store-shelf__nav:hover { background: var(--accent); }
 .store-shelf__nav:focus-visible { outline: 2px solid var(--value); outline-offset: 2px; }
 .at-start .store-shelf__nav--prev,
@@ -471,7 +504,7 @@
 .tpl-card__price {
     display: block;
     margin-top: 8px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 16px;
     font-weight: 700;
     color: var(--value);
@@ -502,7 +535,7 @@
     font-size: 15px;
     line-height: 1.75;
 }
-.store-about__body :is(h2, h3) { color: var(--ink); font-family: 'Outfit', sans-serif; }
+.store-about__body :is(h2, h3) { color: var(--ink); font-family: 'Be Vietnam Pro', sans-serif; }
 .store-about__body a { color: var(--value); }
 
 /* ── Small screens ──────────────────────────────────────────────────────── */
@@ -520,7 +553,7 @@
             linear-gradient(180deg, rgba(5, 6, 26, .78) 0%, rgba(5, 6, 26, .9) 60%, var(--canvas) 100%);
     }
     .store-filter__sort { margin-left: 0; width: 100%; }
-    .store-shelf__track { grid-auto-columns: 264px; }
+    .store-shelf__track { grid-auto-columns: 74%; }
     /* Arrow buttons are pointless next to a thumb — touch already scrolls. */
     .store-shelf__nav { display: none; }
 }
