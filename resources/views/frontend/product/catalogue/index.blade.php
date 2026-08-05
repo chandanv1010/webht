@@ -38,56 +38,95 @@
 <div class="store store-page">
 
     {{-- ── Billboard ─────────────────────────────────────────────── --}}
-    @if ($storeFeatured)
-        <section class="store-hero">
-            {{-- The mosaic is the whole catalogue at once, dimmed and drifting. It is
-                 the literal reading of "a world of websites" — you see the scale of
-                 the store before you have scrolled a pixel. Duplicated once so the
-                 vertical drift has somewhere to go without a visible seam. --}}
-            <div class="store-hero__wall" aria-hidden="true">
-                <div class="store-hero__wall-grid">
-                    @foreach ($storePosters as $poster)
-                        <img src="{{ image($poster) }}" alt="" loading="lazy" width="1200" height="750">
-                    @endforeach
-                    @foreach ($storePosters as $poster)
-                        <img src="{{ image($poster) }}" alt="" loading="lazy" width="1200" height="750">
-                    @endforeach
-                </div>
+    @if ($storeFeaturedList->isNotEmpty())
+        @php
+            $slides = $storeFeaturedList->map(function ($p) {
+                $pv = $p->languages->first()?->pivot;
+                return [
+                    'name' => $pv->name ?? '',
+                    'href' => write_url($pv->canonical ?? ''),
+                    'desc' => \Illuminate\Support\Str::limit(strip_tags($pv->description ?? ''), 165),
+                    'price' => (int) $p->price,
+                    'image' => image($p->image),
+                    'cat' => $p->product_catalogues->first()?->languages->first()?->pivot->name ?? '',
+                ];
+            })->values();
+        @endphp
+
+        <section class="store-hero" data-hero aria-roledescription="carousel" aria-label="Giao diện nổi bật">
+            {{-- One backdrop layer per slide, crossfaded. The backdrop is the template's
+                 own screenshot, anchored to its top edge — the part of a homepage that
+                 identifies it — so moving between slides changes the whole atmosphere
+                 the way a streaming service does. --}}
+            <div class="store-hero__back" aria-hidden="true">
+                @foreach ($slides as $i => $slide)
+                    <div class="store-hero__back-layer {{ $i === 0 ? 'is-on' : '' }}"
+                         style="background-image:url('{{ $slide['image'] }}')"></div>
+                @endforeach
             </div>
 
-            {{-- The grid lives on an inner div, not on .uk-container: UIkit gives that
-                 class ::before/::after for clearfix, and pseudo-elements become grid
-                 items — they took the first cells and pushed the text into column two
-                 and the frame onto a second row. --}}
             <div class="uk-container uk-container-center">
                 <div class="store-hero__inner">
-                <div class="store-hero__text">
-                    <p class="store-hero__eyebrow">{{ $rootPivot->name ?? 'Kho giao diện' }} · {{ $storeTotal }} mẫu</p>
-                    <h1 class="store-hero__title">{{ $featuredName }}</h1>
+                    <div class="store-hero__stage">
+                        @foreach ($slides as $i => $slide)
+                            <div class="store-hero__text {{ $i === 0 ? 'is-on' : '' }}"
+                                 role="group"
+                                 aria-roledescription="slide"
+                                 aria-label="{{ $i + 1 }} / {{ count($slides) }}"
+                                 @if ($i !== 0) aria-hidden="true" @endif>
+                                <p class="store-hero__eyebrow">
+                                    {{ $slide['cat'] !== '' ? $slide['cat'] : ($rootPivot->name ?? 'Kho giao diện') }}
+                                    · {{ $storeTotal }} mẫu
+                                </p>
+                                <h1 class="store-hero__title">{{ $slide['name'] }}</h1>
 
-                    @if ($featuredDesc !== '')
-                        <p class="store-hero__desc">{{ \Illuminate\Support\Str::limit(strip_tags($featuredDesc), 170) }}</p>
-                    @endif
+                                @if ($slide['desc'] !== '')
+                                    <p class="store-hero__desc">{{ $slide['desc'] }}</p>
+                                @endif
 
-                    <p class="store-hero__meta">
-                        <span class="store-hero__price">
-                            @if ($featuredPrice === 0) Miễn phí @else {{ convert_price($featuredPrice, true) }}đ @endif
-                        </span>
-                        <span class="store-hero__count">Bàn giao 5–7 ngày · Kèm mã nguồn</span>
-                    </p>
+                                <p class="store-hero__meta">
+                                    <span class="store-hero__price">
+                                        @if ($slide['price'] === 0) Miễn phí @else {{ convert_price($slide['price'], true) }}đ @endif
+                                    </span>
+                                    <span class="store-hero__count">Bàn giao 5–7 ngày · Kèm mã nguồn</span>
+                                </p>
 
-                    <div class="store-hero__actions">
-                        <a class="store-btn store-btn--primary" href="{{ $featuredHref }}">Xem mẫu này</a>
-                        <a class="store-btn store-btn--ghost" href="{{ write_url('lien-he') }}">Nhận tư vấn chọn mẫu</a>
+                                <div class="store-hero__actions">
+                                    <a class="store-btn store-btn--primary" href="{{ $slide['href'] }}"
+                                       @if ($i !== 0) tabindex="-1" @endif>Xem mẫu này</a>
+                                    <a class="store-btn store-btn--ghost" href="{{ write_url('lien-he') }}"
+                                       @if ($i !== 0) tabindex="-1" @endif>Nhận tư vấn chọn mẫu</a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="store-hero__frames">
+                        @foreach ($slides as $i => $slide)
+                            <a class="store-hero__frame {{ $i === 0 ? 'is-on' : '' }}"
+                               href="{{ $slide['href'] }}"
+                               aria-label="{{ $slide['name'] }}"
+                               @if ($i !== 0) tabindex="-1" aria-hidden="true" @endif>
+                                <img src="{{ $slide['image'] }}" alt="{{ $slide['name'] }}"
+                                     width="1400" height="875" {{ $i === 0 ? '' : 'loading=lazy' }}>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
 
-                {{-- The featured template shown as what it is: a website, in a frame. --}}
-                {{-- No browser bar of our own here: the poster already draws one, and
-                     two stacked chrome strips read as a bug. --}}
-                <a class="store-hero__frame" href="{{ $featuredHref }}" aria-label="{{ $featuredName }}">
-                    <img src="{{ image($storeFeatured->image) }}" alt="{{ $featuredName }}" width="1200" height="750">
-                </a>
+                {{-- Dots live inside the same .uk-container as the slides. As a sibling
+                     with its own container they became a second flex item of
+                     .store-hero and both halves lost their gutter. --}}
+                <div class="store-hero__controls">
+                    <div class="store-hero__dots" role="tablist" aria-label="Chọn giao diện">
+                    @foreach ($slides as $i => $slide)
+                            <button type="button" class="store-hero__dot {{ $i === 0 ? 'is-on' : '' }}"
+                                    role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+                                    data-go="{{ $i }}">
+                                <span class="uk-hidden">{{ $slide['name'] }}</span>
+                            </button>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </section>
@@ -312,6 +351,83 @@
 
         block.querySelector('.store-about__inner').appendChild(btn);
         collapse();
+    });
+    // Billboard slideshow. Crossfades the backdrop, the copy and the framed preview
+    // together, so moving between slides changes the whole atmosphere rather than just
+    // swapping a picture. Everything is already in the DOM; this only moves a class.
+    document.querySelectorAll('[data-hero]').forEach(function (hero) {
+        var layers = hero.querySelectorAll('.store-hero__back-layer');
+        var texts  = hero.querySelectorAll('.store-hero__text');
+        var frames = hero.querySelectorAll('.store-hero__frame');
+        var dots   = hero.querySelectorAll('.store-hero__dot');
+        var count  = texts.length;
+        if (count < 2) return;
+
+        var current = 0;
+        var timer = null;
+        var INTERVAL = 6500;
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function show(next) {
+            if (next === current) return;
+            next = (next + count) % count;
+
+            [[layers, false], [texts, true], [frames, true]].forEach(function (pair) {
+                var nodes = pair[0], manageFocus = pair[1];
+                if (!nodes[current] || !nodes[next]) return;
+
+                nodes[current].classList.remove('is-on');
+                nodes[next].classList.add('is-on');
+
+                if (!manageFocus) return;
+                // Keep the hidden slides out of the tab order and out of the
+                // accessibility tree — three invisible CTAs is three wasted tab stops.
+                nodes[current].setAttribute('aria-hidden', 'true');
+                nodes[next].removeAttribute('aria-hidden');
+                nodes[current].querySelectorAll('a').forEach(function (a) { a.tabIndex = -1; });
+                nodes[next].querySelectorAll('a').forEach(function (a) { a.removeAttribute('tabindex'); });
+                if (nodes[next].tagName === 'A') nodes[next].removeAttribute('tabindex');
+                if (nodes[current].tagName === 'A') nodes[current].tabIndex = -1;
+            });
+
+            dots.forEach(function (d, i) {
+                d.classList.toggle('is-on', i === next);
+                d.setAttribute('aria-selected', i === next ? 'true' : 'false');
+            });
+
+            current = next;
+        }
+
+        function play() {
+            if (reduced || timer) return;
+            timer = setInterval(function () { show(current + 1); }, INTERVAL);
+        }
+        function pause() { clearInterval(timer); timer = null; }
+
+        dots.forEach(function (dot) {
+            dot.addEventListener('click', function () {
+                show(parseInt(dot.dataset.go, 10));
+                // A deliberate choice should not be overwritten a moment later.
+                pause();
+            });
+        });
+
+        // Arrow keys work when the dot strip has focus.
+        hero.querySelector('.store-hero__dots').addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') { show(current + 1); pause(); }
+            if (e.key === 'ArrowLeft')  { show(current - 1); pause(); }
+        });
+
+        hero.addEventListener('mouseenter', pause);
+        hero.addEventListener('mouseleave', play);
+        hero.addEventListener('focusin', pause);
+
+        // Nothing should animate in a tab nobody is looking at.
+        document.addEventListener('visibilitychange', function () {
+            document.hidden ? pause() : play();
+        });
+
+        play();
     });
 </script>
 @endsection

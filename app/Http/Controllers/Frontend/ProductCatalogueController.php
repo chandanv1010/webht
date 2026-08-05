@@ -199,6 +199,10 @@ class ProductCatalogueController extends FrontendController
             'storeShelves' => $shelves,
             'storeResults' => $templates,
             'storeFeatured' => $templates->first(),
+            // The billboard is a slideshow: a handful of templates, each supplying its
+            // own background, the way a streaming service swaps the backdrop when you
+            // move between titles.
+            'storeFeaturedList' => $templates->take(5)->values(),
             'storeTotal' => $templates->count(),
             // Every poster in the store, for the mosaic wall behind the billboard.
             // It is the literal answer to "a world of websites": the whole catalogue

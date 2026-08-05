@@ -49,6 +49,8 @@
 
 /* ── Billboard ──────────────────────────────────────────────────────────── */
 
+.store-hero > .uk-container { width: 100%; }
+
 .store-hero {
     position: relative;
     /* .pc-header is position:absolute and 144px tall, so it floats over the top of
@@ -63,53 +65,90 @@
     overflow: hidden;
 }
 
-/* ── The wall: every poster in the store, dimmed, drifting ──────────────── */
+/* ── Backdrop: the current slide's own screenshot ───────────────────────── */
 
-.store-hero__wall {
+.store-hero__back {
     position: absolute;
-    inset: -6% -4%;
+    inset: 0;
     z-index: -2;
-    /* Fade to the canvas on every edge so the grid has no hard boundary and the
-       headline always has something dark to sit on. */
-    mask-image:
-        radial-gradient(115% 95% at 78% 42%, #000 0%, rgba(0, 0, 0, .55) 46%, transparent 78%);
-    -webkit-mask-image:
-        radial-gradient(115% 95% at 78% 42%, #000 0%, rgba(0, 0, 0, .55) 46%, transparent 78%);
-    opacity: .5;
+    overflow: hidden;
 }
 
-.store-hero__wall-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-    transform: rotate(-9deg) scale(1.35);
-    animation: store-wall-drift 68s linear infinite;
-    will-change: transform;
+/* One layer per slide, all stacked. Only opacity animates, so the crossfade stays on
+   the compositor and never reflows the page behind it. */
+.store-hero__back-layer {
+    position: absolute;
+    inset: 0;
+    /* Anchored to the top of the screenshot: the masthead and hero of a homepage are
+       what identify it, and that is the part worth showing. */
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.05s ease, transform 8s ease-out;
+    will-change: opacity;
+    filter: saturate(.85) brightness(.55) blur(2px);
 }
-.store-hero__wall-grid img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-    filter: saturate(.7) brightness(.72);
-}
-@keyframes store-wall-drift {
-    from { transform: rotate(-9deg) scale(1.35) translateY(0); }
-    /* Half the duplicated grid, so it loops without a visible jump. */
-    to   { transform: rotate(-9deg) scale(1.35) translateY(-50%); }
+.store-hero__back-layer.is-on {
+    opacity: 1;
+    /* A very slow drift while a slide is up, so a still image does not look frozen. */
+    transform: scale(1.13);
 }
 
-/* A second scrim over the wall keeps text contrast independent of which posters
-   happen to land behind it. */
+/* A scrim over the backdrop keeps the copy legible whatever screenshot is behind it. */
 .store-hero::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
     background:
-        linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .93) 30%, rgba(5, 6, 26, .55) 62%, rgba(5, 6, 26, .72) 100%),
-        linear-gradient(0deg, var(--canvas) 0%, rgba(5, 6, 26, 0) 34%);
+        linear-gradient(90deg, var(--canvas) 0%, rgba(5, 6, 26, .95) 26%, rgba(5, 6, 26, .62) 58%, rgba(5, 6, 26, .8) 100%),
+        linear-gradient(0deg, var(--canvas) 0%, rgba(5, 6, 26, 0) 38%);
 }
+
+/* ── Slides ─────────────────────────────────────────────────────────────── */
+
+/* The stage is as tall as its tallest slide, so the layout never jumps when the copy
+   changes length between templates. */
+.store-hero__stage { position: relative; display: grid; }
+.store-hero__stage > * { grid-area: 1 / 1; }
+
+.store-hero__text {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .55s ease, transform .55s cubic-bezier(.22, .8, .3, 1);
+    pointer-events: none;
+}
+.store-hero__text.is-on {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+}
+
+.store-hero__frames { position: relative; display: grid; }
+.store-hero__frames > * { grid-area: 1 / 1; }
+
+.store-hero__controls { position: relative; margin-top: 38px; }
+
+.store-hero__dots { display: flex; align-items: center; gap: 10px; }
+
+.store-hero__dot {
+    width: 30px;
+    height: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(244, 246, 255, .24);
+    cursor: pointer;
+    transition: background .25s ease, width .25s ease;
+}
+.store-hero__dot:hover { background: rgba(244, 246, 255, .5); }
+.store-hero__dot.is-on {
+    width: 54px;
+    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+}
+.store-hero__dot:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
 
 .store-hero__inner::before,
 .store-hero__inner::after { display: none; }
@@ -175,13 +214,16 @@
 .store-hero__frame {
     display: block;
     position: relative;
+    opacity: 0;
+    pointer-events: none;
     border-radius: 14px;
     overflow: hidden;
     background: #101433;
     border: 1px solid rgba(244, 246, 255, .16);
     box-shadow: 0 40px 90px rgba(0, 0, 0, .6);
-    transition: transform .3s cubic-bezier(.2, .8, .3, 1), box-shadow .3s ease;
+    transition: opacity .6s ease, transform .3s cubic-bezier(.2, .8, .3, 1), box-shadow .3s ease;
 }
+.store-hero__frame.is-on { opacity: 1; pointer-events: auto; }
 .store-hero__frame:hover { transform: translateY(-6px); box-shadow: 0 52px 110px rgba(0, 0, 0, .7); }
 .store-hero__frame:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
 
@@ -667,7 +709,7 @@
 
 @media (max-width: 767px) {
     .store-hero { padding: calc(96px + 30px) 0 48px; min-height: 0; }
-    .store-hero__wall-grid { grid-template-columns: repeat(4, 1fr); animation-duration: 90s; }
+    .store-hero__back-layer { filter: saturate(.85) brightness(.42) blur(3px); }
     .store-hero::before {
         background:
             linear-gradient(180deg, rgba(5, 6, 26, .78) 0%, rgba(5, 6, 26, .9) 60%, var(--canvas) 100%);
@@ -679,7 +721,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .store-hero__wall-grid { animation: none; }
+    .store-hero__back-layer { transition: opacity .01ms; transform: scale(1.06); }
+    .store-hero__text { transition: none; transform: none; }
     .store-hero__frame { transition: none; }
     .store-hero__frame:hover { transform: none; }
     .store-btn, .tpl-card__link, .tpl-card__hint,
