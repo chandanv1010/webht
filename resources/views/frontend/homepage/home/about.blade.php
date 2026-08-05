@@ -137,7 +137,7 @@
                                     <strong>2.</strong>Với quy trình làm việc rõ ràng, đội ngũ giàu kinh nghiệm và tinh thần sáng tạo, chúng tôi giúp doanh nghiệp xác định đúng nhu cầu, lựa chọn đúng công nghệ và phát triển đúng giải pháp – để website không chỉ đẹp mà còn tạo ra giá trị thật sự.
                                 </p>
                             </div>
-                            <a href="tel:{{ $system['contact_hotline'] }}" class="btn-support-button spec-button">Hotline: {{ $system['contact_hotline'] }}</a>
+                            <a href="{{ tel_href($system['contact_hotline']) }}" class="btn-support-button spec-button">Hotline: {{ $system['contact_hotline'] }}</a>
                         </div>
                     </div>
                     <div class="uk-width-large-1-2">
