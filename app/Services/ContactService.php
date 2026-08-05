@@ -5,6 +5,8 @@ use App\Services\Interfaces\ContactServiceInterface;
 use App\Repositories\Interfaces\ContactRepositoryInterface as ContactRepository;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ContactMail;
+use App\Support\TelegramNotifier;
+use Illuminate\Support\Facades\Log;
 use App\Repositories\Interfaces\ProductRepositoryInterface as ProductRepository;
 use App\Repositories\Interfaces\PostRepositoryInterface as PostRepository;
 
@@ -37,40 +39,79 @@ class ContactService extends BaseService implements ContactServiceInterface
     }
 
     public function create($request){
-        DB::beginTransaction();
-        try{
-            $payload = $request->except('_token');
+        // The enquiry is committed on its own. Notifications happen afterwards,
+        // because they used to sit inside this transaction: an SMTP timeout rolled
+        // the row back and the customer was lost entirely, while still being told
+        // "gửi thành công".
+        try {
+            $contact = DB::transaction(function () use ($request) {
+                $payload = $request->except('_token');
+                $payload['name'] = $request->input('name') ?? $request->input('fullname');
 
-            $payload['name'] = $request->input('name') ?? $request->input('fullname');
-            $contact = $this->contactRepository->create($payload);
-            $product_name = ($contact->product_id != null) ? $this->productRepository->getProductById($contact->product_id, 1)->name : null;
-            $post_name = ($contact->post_id != null) ?  $this->postRepository->getPostById($contact->post_id, 1)->name : null;
-            $to = 'noithatanhung.vn@gmail.com';
-            $cc = 'tuannc.dev@gmail.com';
-            $data = [
-                'name' => $contact->name, 
+                return $this->contactRepository->create($payload);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Không lưu được liên hệ: '.$e->getMessage());
+
+            return [
+                'code' => 11,
+                'message' => 'Có vấn đề xảy ra! Hãy thử lại'
+            ];
+        }
+
+        $this->notify($contact, $request);
+
+        return [
+            'code' => 10,
+            'message' => 'Gửi liên hệ thành công , Chúng tôi sẽ sớm phản hồi lại bạn'
+        ];
+    }
+
+    /**
+     * Tell the team about a saved enquiry. Every failure in here is logged and
+     * swallowed — the row is already committed and the visitor has been thanked.
+     */
+    private function notify($contact, $request): void
+    {
+        $productName = ($contact->product_id != null)
+            ? optional($this->productRepository->getProductById($contact->product_id, 1))->name
+            : null;
+        $postName = ($contact->post_id != null)
+            ? optional($this->postRepository->getPostById($contact->post_id, 1))->name
+            : null;
+
+        TelegramNotifier::lead('🔔 Liên hệ mới từ website', [
+            'Họ tên' => $contact->name,
+            'Điện thoại' => $contact->phone,
+            'Email' => $contact->email ?? null,
+            'Địa chỉ' => $contact->address,
+            'Quan tâm' => $productName ?? $postName,
+            'Nội dung' => $request->input('content') ?? $request->input('note'),
+        ], $request->headers->get('referer'));
+
+        // Recipients come from the site's own settings. They used to be hardcoded to
+        // a furniture company and a developer's personal Gmail, both left over from
+        // the project this codebase was reused from.
+        $to = config('mail.lead_recipient')
+            ?: DB::table('systems')->where('keyword', 'contact_email')->where('language_id', 1)->value('content');
+
+        if (empty($to)) {
+            return;
+        }
+
+        try {
+            \Mail::to($to)->send(new ContactMail([
+                'name' => $contact->name,
                 'created_at' => $contact->created_at,
                 'phone' => $contact->phone,
                 'address' => $contact->address,
                 'type' => $contact->type ?? null,
                 'product_id' => $request->product_id,
-                'product_name' => $product_name ?? $post_name,
-                'post_id' => $post_name, 
-            ];
-
-            \Mail::to($to)->cc($cc)->send(new ContactMail($data));
-            DB::commit();
-            return [
-                'code' => 10,
-                'message' => 'Gửi liên hệ thành công , Chúng tôi sẽ sớm phản hồi lại bạn'
-            ];
-        }catch(\Exception $e ){
-            DB::rollBack();
-            echo $e->getMessage();die();
-            return [
-                'code' => 11,
-                'message' => 'Có vấn đề xảy ra! Hãy thử lại'
-            ];
+                'product_name' => $productName ?? $postName,
+                'post_id' => $postName,
+            ]));
+        } catch (\Throwable $e) {
+            Log::warning('Không gửi được email thông báo liên hệ: '.$e->getMessage());
         }
     }
 

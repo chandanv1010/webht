@@ -43,6 +43,13 @@ return [
         'redirect' =>  env('url').'/buyer/google/callback'
     ],
 
+    // Lead notifications. With either value empty the notifier is a no-op, so a
+    // developer machine needs no credentials.
+    'telegram' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+    ],
+
     'facebook' => [
         'client_id' => config('apps.general.facebook_client_id'),
         'client_secret' => config('apps.general.facebook_secret_id'),
