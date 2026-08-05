@@ -21,7 +21,7 @@
                 </div>
                 <div class="uk-width-large-1-2">
                     <div class="slide-container">
-                        <lottie-player src="https://lottie.host/f8dec688-4fc4-4f71-bf54-30e37280d8b4/k55alrVY8Y.json" background="transparent" speed="1" style="width: 100%; height: 100%;" loop="" autoplay=""></lottie-player>
+                        @include('frontend.component.illustration', ['name' => 'contact'])
                     </div>
                 </div>
             </div>

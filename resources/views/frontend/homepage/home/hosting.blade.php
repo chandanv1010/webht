@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="uk-width-large-3-5">
-                    <lottie-player src="https://lottie.host/7f18a936-2156-430e-9143-373dbd94a589/0HWlkEScMy.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                    @include('frontend.component.illustration', ['name' => 'domain'])
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
            <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle">
                 <div class="uk-width-large-1-2">
                     <div class="lotier">
-                        <lottie-player src="https://lottie.host/fce80f91-dd65-4dc8-944f-4f727ecf23f8/nHJzPOX8u5.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                        @include('frontend.component.illustration', ['name' => 'support'])
                     </div>
                 </div>
                 <div class="uk-width-large-1-2">
@@ -410,7 +410,7 @@
                                     </div>
                                     <div class="uk-width-large-1-2">
                                         <div class="lottier-wraper">
-                                            <lottie-player src="https://lottie.host/18f60b16-e23a-48df-89db-281c208fe879/LUAdHKdqJP.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                                            @include('frontend.component.illustration', ['name' => 'email'])
                                         </div>
                                     </div>
                                 </div>
@@ -428,7 +428,7 @@
                                     </div>
                                     <div class="uk-width-large-1-2">
                                         <div class="lottier-wraper">
-                                            <lottie-player src="https://lottie.host/4803ecb0-dbde-4ff8-be38-76065fe3e084/cyxKMmXrCA.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                                            @include('frontend.component.illustration', ['name' => 'support'])
                                         </div>
                                     </div>
                                 </div>

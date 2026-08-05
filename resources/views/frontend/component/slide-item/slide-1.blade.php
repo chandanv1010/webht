@@ -4,7 +4,7 @@
             <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle">
                 <div class="uk-width-large-1-2">
                     <div class="slide-container">
-                        <lottie-player src="https://lottie.host/dd2ef904-a9ea-432b-8008-d070724d578a/7dZCXEXCV3.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                        @include('frontend.component.illustration', ['name' => 'build'])
                     </div>
                 </div>
                 <div class="uk-width-large-1-2">

@@ -466,6 +466,15 @@ ul li,ol li{
     display: none;
 }
 
+/* Hiding ::after only covers Swiper's old font-icon. Current Swiper injects a real
+   <svg class="swiper-navigation-icon"> into the button instead, which sat on top of
+   the → / ← above — a small chevron overlapping a large arrow. The hero slider never
+   showed it because its buttons are built before Swiper initialises them. */
+.swiper-button-next > svg.swiper-navigation-icon,
+.swiper-button-prev > svg.swiper-navigation-icon {
+    display: none;
+}
+
 
 .slide-item-2{
     background: url('img/slide/pattern-bg-01.png');
@@ -1709,7 +1718,9 @@ ul li,ol li{
 .lottier-wraper{
     height:215px !important;
 }
-.support-phone lottie-player{
+/* Retargeted from lottie-player to .illus — the players were removed with the
+   dead lottie.host animations, which left these rules matching nothing. */
+.support-phone .illus{
     height: 100% !important;
 }
 .support-phone-button{
@@ -1725,9 +1736,9 @@ ul li,ol li{
     background: #f6f4f2;
 }
 
-.panel-whyus lottie-player{
-    transform: scale(1.2);
-}
+/* No scale(1.2) here any more. It compensated for dead space inside the old Lottie
+   asset; the SVG illustration fills its own viewBox, so scaling it overflowed the
+   column by 95px. */
 
 .panel-partner{
     padding: 50px 0;

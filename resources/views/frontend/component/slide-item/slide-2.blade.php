@@ -23,7 +23,7 @@
                 </div>
                 <div class="uk-width-large-1-2">
                     <div class="slide-container">
-                        <lottie-player src="https://lottie.host/284c1f73-de3e-443c-8ff0-97e7ed80b960/5nir1PF9Q3.json" background="transparent" speed="1" style="width: 100%; height: 100%;" loop="" autoplay=""></lottie-player>
+                        @include('frontend.component.illustration', ['name' => 'welcome'])
                     </div>
                 </div>
             </div>

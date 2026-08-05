@@ -47,6 +47,7 @@
         'frontend/core/plugins/jquery-nice-select-1.1.0/css/nice-select.css',
         'frontend/resources/config.css',
         'frontend/resources/style.css',
+        'frontend/resources/illustration.css',
     ];
     if(isset($config['css'])){
         foreach($config['css'] as $key => $val){
@@ -58,4 +59,8 @@
     <link rel="stylesheet" href="{{ asset($item) }}">
 @endforeach
 <script src="{{ asset('frontend/resources/library/js/jquery.js') }}"></script>
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js?ver=6.8.1" id="pbmit-lottiefiles-script-js"></script>
+{{-- The lottie-player script is gone with the animations it played. Every
+     lottie.host asset the site used returned 403 once that account closed, so the
+     player only ever rendered empty boxes. Illustrations are now inline SVG — see
+     frontend.component.illustration. Loading it from @latest was a second problem:
+     an unpinned CDN dependency can change under production without warning. --}}

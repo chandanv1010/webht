@@ -99,7 +99,7 @@
         <div class="uk-container uk-container-center">
             <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle">
                 <div class="uk-width-large-1-2">
-                    <lottie-player src="https://lottie.host/5bd4f1d0-25a2-419b-8029-62523573228e/T3lPk1hX4F.json" background="transparent" speed="1" style="width: 100%; height: 100%;" loop="" autoplay=""></lottie-player>
+                    @include('frontend.component.illustration', ['name' => 'company'])
                 </div>
                 <div class="uk-width-large-1-2">
                     <div class="intro-container">
@@ -181,8 +181,8 @@
                     </div>
                 </div>
                 <div class="uk-width-large-1-2">
-                    {{-- <lottie-player src="https://lottie.host/a51827b4-c698-4cad-aa01-2a46968b4c90/lKyLGQB3ZB.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player> --}}
-                    <lottie-player src="https://lottie.host/ca57390d-70b9-4333-b2f2-4f465db1cfa2/NeEadUlzgA.json" background="transparent" speed="1" style="width: 100%; height: 100%;" loop="" autoplay=""></lottie-player>
+                    {{-- @include('frontend.component.illustration', ['name' => 'speed']) --}}
+                    @include('frontend.component.illustration', ['name' => 'speed'])
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@
         <div class="uk-container uk-container-center">
             <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle">
                 <div class="uk-width-large-1-2">
-                    <lottie-player src="https://lottie.host/c3b4ff4e-7823-4cd8-85a2-266b71d49c22/T1wUNBCS7U.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                    @include('frontend.component.illustration', ['name' => 'team'])
 
                 </div>
                 <div class="uk-width-large-1-2">
@@ -304,7 +304,7 @@
                                 </div>
                                 <div class="uk-width-large-1-2">
                                     <div class="lottier-wraper">
-                                        <lottie-player src="https://lottie.host/18f60b16-e23a-48df-89db-281c208fe879/LUAdHKdqJP.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                                        @include('frontend.component.illustration', ['name' => 'email'])
                                     </div>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="uk-width-large-1-2">
                                     <div class="lottier-wraper">
-                                        <lottie-player src="https://lottie.host/4803ecb0-dbde-4ff8-be38-76065fe3e084/cyxKMmXrCA.json" background="transparent" speed="1" style="width: 100%;height: 100%" loop="" autoplay=""></lottie-player>
+                                        @include('frontend.component.illustration', ['name' => 'support'])
                                     </div>
                                 </div>
                             </div>
