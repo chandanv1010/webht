@@ -108,13 +108,19 @@
             </div>
         </div>
         <div class="form-row">
-            <label for="">Mã Nhúng</label>
-            <textarea 
+            <label for="">Link xem trước (hoặc mã nhúng)</label>
+            <textarea
                 type="text"
                 name="iframe"
                 class="form-control"
-                style="height:168px;"
+                style="height:110px;"
+                placeholder="https://demo.example.com — hoặc dán cả thẻ <iframe src=&quot;...&quot;>"
             >{{ old('iframe', ($product->iframe) ?? '') }}</textarea>
+            <small style="display:block;margin-top:6px;color:#888;line-height:18px;">
+                Dán địa chỉ mẫu đang chạy. Trang chi tiết sẽ hiển thị mẫu thật trong khung
+                máy tính / máy tính bảng / điện thoại, và bố cục co giãn theo khung.
+                Để trống thì dùng ảnh chụp.
+            </small>
         </div>
     </div>
 </div>

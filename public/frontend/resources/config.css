@@ -26,7 +26,7 @@ i[class^=fi-rs-],span[class^=fi-rs-]{line-height:0 !important}i[class^=fi-rs-]:b
     box-sizing: border-box;
 }
 body{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     /* font-weight: 300; */
     margin:0;
     color:#000;
@@ -974,8 +974,9 @@ ul li{
     display: block;
     width: 225px;
 }
+.panel-foot .buy-more .btn-buymore{ transition: all 0.3s ease; }
 .panel-foot .buy-more .btn-buymore:hover{
-    transition: all 0.3s ease;
+    
     background: #da2229;
     color: #fff
 }
@@ -1136,7 +1137,7 @@ ul li{
     text-align: justify;
     line-height:22px;
     font-size:13px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 400;
 }
 .order-success_note{
@@ -1167,7 +1168,7 @@ ul li{
     color: #005599;
     font-weight: 600;
     text-transform: uppercase;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
 }
 
 .order-summary__body{
@@ -1232,7 +1233,7 @@ ul li{
 
 .product-column .product-title{
     font-weight: normal;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-size:13px;
     color:#005599;
 }
@@ -1272,7 +1273,7 @@ ul li{
     margin-bottom:0;
     font-size:15px;
     font-weight: 800;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
 }
 .final-total .cart-price-label{
     text-transform: uppercase;

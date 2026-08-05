@@ -127,18 +127,63 @@
                 </div>
             </header>
 
+            @php
+                // "Mã Nhúng" in the admin holds either the demo address or a whole
+                // <iframe> snippet. Accept both, and take the src out of the snippet so
+                // the frame controls the size rather than whatever was pasted.
+                $embed = trim((string) ($product->iframe ?? ''));
+                $demoUrl = null;
+
+                if ($embed !== '') {
+                    if (preg_match('/src=["\']([^"\']+)["\']/i', $embed, $m)) {
+                        $demoUrl = $m[1];
+                    } elseif (preg_match('~^https?://~i', $embed)) {
+                        $demoUrl = $embed;
+                    }
+                }
+
+                // Most sites refuse to be framed. Asking first means a refusal shows the
+                // screenshot rather than a broken-page icon inside the device frame.
+                if ($demoUrl && !\App\Support\FramePolicy::allowsFraming($demoUrl)) {
+                    $demoUrl = null;
+                }
+            @endphp
+
             <div class="tpl-stage is-desktop" data-stage>
                 <div class="tpl-frame">
                     <div class="tpl-frame__bar">
                         <span></span><span></span><span></span>
-                        <span class="tpl-frame__url">{{ \Illuminate\Support\Str::limit($name, 44) }}</span>
+                        <span class="tpl-frame__url">
+                            {{ $demoUrl ? \Illuminate\Support\Str::limit(preg_replace('~^https?://~', '', $demoUrl), 44) : \Illuminate\Support\Str::limit($name, 44) }}
+                        </span>
                     </div>
-                    <div class="tpl-frame__screen">
-                        <img src="{{ $poster }}" alt="{{ $name }}">
-                    </div>
+
+                    @if ($demoUrl)
+                        {{-- The real page inside the frame. Switching device changes the
+                             frame's width, so the layout reflows exactly as it will for a
+                             visitor — which is the only thing these buttons are for. --}}
+                        <div class="tpl-frame__screen tpl-frame__screen--live skel" data-live>
+                            <iframe
+                                src="{{ $demoUrl }}"
+                                title="Xem trước {{ $name }}"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                data-frame></iframe>
+                        </div>
+                    @else
+                        {{-- No demo address: the screenshot, which is taller than any
+                             frame, so it scrolls from top to bottom on hover instead of
+                             showing only its masthead. --}}
+                        <div class="tpl-frame__screen tpl-frame__screen--shot skel" data-shot>
+                            <img src="{{ $poster }}" alt="{{ $name }}" data-longshot>
+                        </div>
+                    @endif
                 </div>
             </div>
-            <p class="tpl-stage__note" data-note>Chiều rộng 1440px — bố cục đầy đủ</p>
+            <p class="tpl-stage__note" data-note>
+                {{ $demoUrl ? 'Chiều rộng 1440px — mẫu thật, cuộn được trong khung' : 'Chiều rộng 1440px — đưa chuột vào để xem toàn trang' }}
+            </p>
         </div>
     </section>
 
@@ -277,6 +322,9 @@
             mobile: 'Chiều rộng 390px — cột xếp dọc, menu gom vào nút'
         };
 
+        var live = root.querySelector('[data-live]');
+        var shot = root.querySelector('[data-shot]');
+
         root.querySelectorAll('[data-device]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 root.querySelectorAll('[data-device]').forEach(function (b) {
@@ -289,6 +337,75 @@
                 if (note) note.textContent = notes[btn.dataset.device];
             });
         });
+
+        // The iframe is laid out at the device's real viewport width, then scaled to fit
+        // the frame. Kept in sync here because only JS knows the frame's rendered width.
+        function fitLive() {
+            if (!live) return;
+            var iframe = live.querySelector('[data-frame]');
+            if (!iframe) return;
+            var declared = parseFloat(getComputedStyle(iframe).width) || 1440;
+            live.style.setProperty('--fit', (live.clientWidth / declared).toFixed(4));
+        }
+
+        if (live) {
+            fitLive();
+            window.addEventListener('resize', fitLive);
+            // The stage animates its max-width over .55s, so refit while it moves.
+            root.querySelectorAll('[data-device]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var until = Date.now() + 700;
+                    (function tick() {
+                        fitLive();
+                        if (Date.now() < until) requestAnimationFrame(tick);
+                    })();
+                });
+            });
+        }
+
+        // The skeleton stays until the preview has something to show, so the frame is
+        // never an empty rectangle while a whole page loads inside it.
+        if (live) {
+            var iframe = live.querySelector('[data-frame]');
+            var settle = function () { live.classList.remove('skel'); };
+            if (iframe) {
+                iframe.addEventListener('load', settle);
+                // Cross-origin pages sometimes never fire load in a sandboxed frame;
+                // clear the placeholder anyway rather than shimmer for ever.
+                setTimeout(settle, 6000);
+            }
+        }
+
+        if (shot) {
+            var img = shot.querySelector('[data-longshot]');
+            if (img) {
+                // Measured from the file's own proportions, not from offsetHeight: the
+                // image is object-fit:cover at height:100%, so its rendered height always
+                // equals the frame's and nothing would ever look tall enough to pan.
+                var measure = function () {
+                    shot.classList.remove('skel');
+                    if (!img.naturalWidth) return;
+
+                    var full = shot.clientWidth * (img.naturalHeight / img.naturalWidth);
+                    var over = Math.round(full - shot.clientHeight);
+
+                    shot.classList.toggle('can-pan', over > 40);
+                    if (over > 40) {
+                        img.style.setProperty('--pan', '-' + over + 'px');
+                        // Speed set by distance, so a very long page does not take half a
+                        // minute and a short one is not a blur.
+                        img.style.setProperty('--pan-time', Math.min(16, Math.max(3.5, over / 170)).toFixed(1) + 's');
+                    }
+                };
+
+                img.complete ? measure() : img.addEventListener('load', measure);
+                // The frame changes width when the device changes, so remeasure.
+                window.addEventListener('resize', measure);
+                root.querySelectorAll('[data-device]').forEach(function (b) {
+                    b.addEventListener('click', function () { setTimeout(measure, 650); });
+                });
+            }
+        }
     });
 
     // ── Tabs ────────────────────────────────────────────────────────────────

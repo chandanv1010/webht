@@ -19,7 +19,7 @@
                                 Thiết kế Website đẹp, sáng tạo, mã nguồn riêng biệt, chuẩn SEO, Chuẩn Mobile
                             </div>
                             <div class="t-readmore">
-                                <a href="" class="text-readmore">
+                                <a href="{{ write_url('thiet-ke-theo-yeu-cau') }}" class="text-readmore">
                                     Xem chi tiết
                                 </a>
                             </div>
@@ -33,7 +33,7 @@
                                 Chúng tôi tạo ra các sản phẩm App Mobile ấn tượng, và đạt chất lượng cao
                             </div>
                             <div class="t-readmore">
-                                <a href="" class="text-readmore">
+                                <a href="{{ write_url('thiet-ke-website-theo-mau-co-san') }}" class="text-readmore">
                                     Xem chi tiết
                                 </a>
                             </div>
@@ -47,7 +47,7 @@
                                 HT Việt Nam giúp khách hàng dễ dàng tiếp cận tới khách hàng bằng dịch vụ quảng cáo google hiệu quả
                             </div>
                             <div class="t-readmore">
-                                <a href="" class="text-readmore">
+                                <a href="{{ write_url('cham-soc-website') }}" class="text-readmore">
                                     Xem chi tiết
                                 </a>
                             </div>
@@ -61,7 +61,7 @@
                                 Máy chủ sử dụng các dòng CPU thế hệ mới nhất của Intel công nghệ lưu trữ NVMe SSD U.2 - Raid 10 cực nhanh và an toàn dữ liệu cao nhất 
                             </div>
                             <div class="t-readmore">
-                                <a href="" class="text-readmore">
+                                <a href="{{ write_url('dich-vu-seo') }}" class="text-readmore">
                                     Xem chi tiết
                                 </a>
                             </div>
@@ -299,7 +299,7 @@
                                     <div class="support-article">
                                         <div class="title">Hỗ trợ qua Email</div>
                                         <div class="description">Dịch vụ phát triển website chuyên nghiệp. Hãy gửi cho chúng tôi Email của bạn</div>
-                                        <a href="" class="btn-support-button">Give Me A Email</a>
+                                        <button type="button" class="btn-support-button" data-lead-open data-lead-subject="Trang chủ — hỗ trợ qua email">Gửi yêu cầu</button>
                                     </div>
                                 </div>
                                 <div class="uk-width-large-1-2">
@@ -317,7 +317,7 @@
                                     <div class="support-article">
                                         <div class="title">Hỗ trợ Hotline</div>
                                         <div class="description">Dịch vụ phát triển website chuyên nghiệp. Hãy gọi ngay cho chúng tôi</div>
-                                        <a href="" class="btn-support-button support-phone-button">{{ $system['contact_hotline'] }}</a>
+                                        <a href="{{ tel_href($system['contact_hotline']) }}" class="btn-support-button support-phone-button">{{ $system['contact_hotline'] }}</a>
                                     </div>
                                 </div>
                                 <div class="uk-width-large-1-2">

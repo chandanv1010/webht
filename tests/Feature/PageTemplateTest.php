@@ -46,52 +46,54 @@ class PageTemplateTest extends TestCase
         $res->assertDontSee('showroom-system', false);
     }
 
-    public function test_a_service_page_renders_the_service_view(): void
-    {
-        $res = $this->get('/cham-soc-website.html');
-
-        $res->assertStatus(200);
-        $res->assertSee('service-page', false);
-        // Built from the body's own headings, so its presence proves the body rendered.
-        $res->assertSee('service-toc__list', false);
-        $res->assertSee('Dịch vụ khác', false);
-    }
-
     /**
-     * "Dịch vụ khác" must list services. Every standalone page shares one catalogue, so
-     * an unfiltered sibling query offered the payment policy as a service.
-     *
-     * Asserted against that section alone — the policy pages legitimately appear in the
-     * footer menu on every page, so a whole-document assertion would always fail.
+     * Each service is its own landing page now, following the layout of the hosting page
+     * the client asked to keep: hero, three promises, the offer as cards, an enquiry.
+     * The earlier post-driven article layout is gone.
      */
-    public function test_service_siblings_exclude_the_policy_pages(): void
+    public function test_a_service_page_renders_its_landing(): void
     {
         $res = $this->get('/cham-soc-website.html');
+
         $res->assertStatus(200);
-
-        $html = $res->getContent();
-        $start = strpos($html, 'service-others');
-        $this->assertNotFalse($start, 'the "Dịch vụ khác" section did not render');
-        $section = substr($html, $start, strpos($html, '</section>', $start) - $start);
-
-        $this->assertStringContainsString('Thiết kế website theo yêu cầu', $section);
-        $this->assertStringNotContainsString('Chính sách thanh toán', $section);
-        $this->assertStringNotContainsString('Quy định sử dụng', $section);
+        $res->assertSee('service-landing', false);
+        $res->assertSee('hosting-element-title', false);
+        // The offer, and a button that opens the shared enquiry popup rather than a link
+        // to somewhere else.
+        $res->assertSee('hosting-item', false);
+        $res->assertSee('data-lead-open', false);
+        // Leftovers from the furniture theme.
+        $res->assertDontSee('showroom-system', false);
     }
 
-    /** All four services the brief asked for have to exist and render. */
-    public function test_every_service_page_resolves(): void
+    /** All four services, plus the two the footer menu lists, have to render. */
+    public function test_every_service_landing_resolves(): void
     {
         foreach ([
             'thiet-ke-theo-yeu-cau',
             'thiet-ke-website-theo-mau-co-san',
             'cham-soc-website',
-            'dich-vu-hosting',
+            'dich-vu-seo',
         ] as $canonical) {
             $res = $this->get('/'.$canonical.'.html');
             $res->assertStatus(200);
-            $res->assertSee('service-page', false);
+            $res->assertSee('service-landing', false);
         }
+
+        // The hosting page keeps its own hand-built view.
+        $res = $this->get('/dich-vu-hosting.html');
+        $res->assertStatus(200);
+        $res->assertSee('panel-search-domain', false);
+    }
+
+    /** Every landing states a price. A service page with no number is a brochure. */
+    public function test_a_service_landing_states_prices(): void
+    {
+        $res = $this->get('/cham-soc-website.html');
+
+        $res->assertStatus(200);
+        $res->assertSee('600.000đ', false);
+        $res->assertSee('3.500.000đ', false);
     }
 
     public function test_contact_page_has_a_working_form(): void
@@ -107,6 +109,48 @@ class PageTemplateTest extends TestCase
         // The old page's furniture leftovers.
         $res->assertDontSee('showroom-item', false);
         $res->assertDontSee('news-outstanding', false);
+    }
+
+    /** The header the client asked for: slogan on top, search as its own field. */
+    public function test_header_has_the_slogan_and_its_own_search(): void
+    {
+        $res = $this->get('/');
+
+        $res->assertStatus(200);
+        $res->assertSee('site-header__slogan', false);
+        $res->assertSee('site-search', false);
+        $res->assertSee('site-header__cta', false);
+        // The old markup, whose hover-expanding field flickered without end.
+        $res->assertDontSee('class="header-search"', false);
+        $res->assertDontSee('middle-toolbox', false);
+    }
+
+    /** Every page carries the enquiry popup, so any CTA can open it. */
+    public function test_the_enquiry_popup_is_on_every_page(): void
+    {
+        foreach (['/', '/kho-giao-dien.html', '/cham-soc-website.html', '/blog.html'] as $url) {
+            $res = $this->get($url);
+            $res->assertStatus(200);
+            $res->assertSee('id="lead-modal"', false);
+            $res->assertSee(route('fe.contact.advise'), false);
+        }
+    }
+
+    /** The Blog category the menu links to used to be empty. */
+    public function test_blog_listing_has_articles(): void
+    {
+        $res = $this->get('/blog.html');
+
+        $res->assertStatus(200);
+        $res->assertSee('art-card', false);
+
+        $count = DB::table('post_catalogue_post')
+            ->join('post_catalogue_language as l', 'l.post_catalogue_id', '=', 'post_catalogue_post.post_catalogue_id')
+            ->where('l.canonical', 'blog')
+            ->where('l.language_id', 1)
+            ->count();
+
+        $this->assertGreaterThanOrEqual(6, $count, 'blog has too few posts to judge the listing');
     }
 
     /** Every phone number on the site is the one the client asked for. */

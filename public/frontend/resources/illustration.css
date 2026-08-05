@@ -300,3 +300,19 @@
     .illus .il-rail-fill { stroke-dashoffset: 0; }
     .illus .il-letter    { opacity: 1; }
 }
+
+/* ===========================================================================
+   Scale ceiling.
+
+   These are drawn on a 480x360 grid with 2–2.5px strokes. Stretched to 850px the
+   strokes land at 4–5px and the shapes stop reading as line art — they become
+   coloured blobs. Cap the width and centre what is left.
+   =========================================================================== */
+
+.illus {
+    max-width: 470px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Inside the fixed-height support boxes the cap would fight the box; let those be. */
+.lottier-wraper .illus { max-width: none; }

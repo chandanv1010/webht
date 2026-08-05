@@ -33,7 +33,7 @@
 
     background: var(--canvas);
     color: var(--ink);
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     padding-bottom: 80px;
     overflow-x: hidden;
 }
@@ -43,7 +43,7 @@
    silently killed the billboard's spacing. Per-element margins stay with the
    elements. */
 .store h1, .store h2 {
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     color: var(--ink);
 }
 
@@ -85,15 +85,24 @@
     background-size: cover;
     background-repeat: no-repeat;
     opacity: 0;
-    transform: scale(1.06);
-    transition: opacity 1.05s ease, transform 8s ease-out;
-    will-change: opacity;
-    filter: saturate(.85) brightness(.55) blur(2px);
+    /* The outgoing layer stays put and the incoming one fades in on top of it. Fading
+       both at once dipped to two half-transparent images over the scrim in the middle of
+       every change, which is what made the slideshow look like it stuttered. */
+    z-index: 0;
+    transform: scale(1.06) translateZ(0);
+    transition: opacity 1.1s cubic-bezier(.4, 0, .2, 1), transform 9s linear;
+    /* Promoted, and no blur: blurring a full-bleed image while also scaling it forces a
+       repaint of the whole surface on every frame. The scrim below already softens it. */
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    filter: saturate(.85) brightness(.55);
 }
 .store-hero__back-layer.is-on {
     opacity: 1;
-    /* A very slow drift while a slide is up, so a still image does not look frozen. */
-    transform: scale(1.13);
+    z-index: 1;
+    /* A very slow linear drift while a slide is up, so a still image does not look
+       frozen — linear rather than eased, or it visibly slows to a stop mid-slide. */
+    transform: scale(1.14) translateZ(0);
 }
 
 /* A scrim over the backdrop keeps the copy legible whatever screenshot is behind it. */
@@ -117,7 +126,8 @@
 .store-hero__text {
     opacity: 0;
     transform: translateY(14px);
-    transition: opacity .55s ease, transform .55s cubic-bezier(.22, .8, .3, 1);
+    transition: opacity .55s cubic-bezier(.4, 0, .2, 1), transform .6s cubic-bezier(.22, .8, .3, 1);
+    will-change: opacity, transform;
     pointer-events: none;
 }
 .store-hero__text.is-on {
@@ -146,7 +156,7 @@
 .store-hero__dot:hover { background: rgba(244, 246, 255, .5); }
 .store-hero__dot.is-on {
     width: 54px;
-    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+    background: var(--accent);
 }
 .store-hero__dot:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
 
@@ -200,7 +210,7 @@
     margin: 0 0 30px;
 }
 .store-hero__price {
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 26px;
     font-weight: 700;
     color: var(--value);
@@ -221,9 +231,16 @@
     background: #101433;
     border: 1px solid rgba(244, 246, 255, .16);
     box-shadow: 0 40px 90px rgba(0, 0, 0, .6);
-    transition: opacity .6s ease, transform .3s cubic-bezier(.2, .8, .3, 1), box-shadow .3s ease;
+    z-index: 0;
+    transition: opacity .62s cubic-bezier(.4, 0, .2, 1),
+                transform .32s cubic-bezier(.2, .8, .3, 1),
+                box-shadow .32s ease;
+    will-change: opacity;
+    backface-visibility: hidden;
 }
-.store-hero__frame.is-on { opacity: 1; pointer-events: auto; }
+/* Above the outgoing frame while it fades in, so the change never shows two
+   half-transparent mockups stacked on each other. */
+.store-hero__frame.is-on { opacity: 1; pointer-events: auto; z-index: 1; }
 .store-hero__frame:hover { transform: translateY(-6px); box-shadow: 0 52px 110px rgba(0, 0, 0, .7); }
 .store-hero__frame:focus-visible { outline: 2px solid var(--value); outline-offset: 4px; }
 
@@ -246,7 +263,7 @@
     transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
 .store-btn--primary {
-    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+    background: var(--accent);
     color: #fff;
     box-shadow: 0 10px 30px rgba(131, 59, 255, .32);
 }
@@ -546,7 +563,7 @@
 .tpl-card__price {
     display: block;
     margin-top: 8px;
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 16px;
     font-weight: 700;
     color: var(--value);
@@ -557,7 +574,7 @@
     position: absolute;
     inset: auto 0 0 0;
     padding: 9px 14px;
-    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+    background: var(--accent);
     color: #fff;
     font-size: 12.5px;
     font-weight: 700;
@@ -802,9 +819,9 @@
     border: 1px solid rgba(131, 59, 255, .3);
     /* A single warm pool of colour, so the one thing we want on this page stands out
        from everything above it without another bright band. */
-    background:
-        radial-gradient(120% 160% at 6% 0%, rgba(131, 59, 255, .22) 0%, transparent 62%),
-        var(--raised);
+    /* Flat panel with a coloured edge rather than a wash: the page had a glow on the
+       hero, on the cards and here, so none of them read as more important. */
+    background: var(--raised);
 }
 .tpl-cta__title {
     font-size: clamp(1.25rem, 2vw, 1.6rem);

@@ -4,12 +4,12 @@
     --secondary-color: #0A3612;
     --third-color: #FEE9B5;
     --hover-color:#fc746c;
-    --second-font: 'Be Vietnam Pro';
-    --third-font: 'Be Vietnam Pro';
+    --second-font: 'Manrope';
+    --third-font: 'Manrope';
 }
 
 body{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     background: #eef3f7;
     min-height: 1000px;
 }
@@ -143,47 +143,42 @@ ul li,ol li{
 
 
 /**  PAGE HEADER  */
-.pc-header{
+/* ===========================================================================
+   Site header. Absolutely positioned over the hero, as the previous one was, so every
+   page's hero top padding still lines up.
+   =========================================================================== */
+
+.site-header {
     position: absolute;
-    width:100%;
-    top:0;
+    width: 100%;
+    top: 0;
     z-index: 10;
 }
-.pc-header.white-text-mode .header-contact *{
-    color:#fff;
-    transition: all 0.3s ease;
-}
-.header-upper{
-    padding:20px 0;
-}
-.header-contact a:nth-child(1){
-    margin-right: 25px;
-}
-.header-contact a{
-    position: relative;
-    padding-left:25px;
-    font-weight: 500;
-}
-.header-contact a:before{
-    content:'';
-    display: block;
-    position: absolute;
-    left:0;
-    top:2px;
-    width: 16px;
-    height:16px;
-    font-weight: normal;
-}
-.header-contact a:nth-child(1):before{
-    background: url('img/icon/letter.png');
-}
 
-.header-contact a:nth-child(2):before{
-    background: url('img/icon/phone.png');
+/* ── Slogan row ─────────────────────────────────────────────────────────── */
+
+.site-header__upper { padding: 11px 0; }
+.site-header__upper-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
-.header-social > *:not(:last-child){
-    margin-right:15px;
+.site-header__slogan {
+    margin: 0;
+    min-width: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: #5b6478;
+    /* One line: a slogan that wraps changes the header's height between pages, and every
+       hero's top padding is measured against it. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+/* On the dark pages the slogan has to invert or it disappears into the canvas. */
+.site-header.white-text-mode .site-header__slogan { color: rgba(244, 246, 255, .74); }
 
 /** NAVIGATION */
 .header-middle{
@@ -237,81 +232,272 @@ ul li,ol li{
     /* font-family: var(--second-font); */
     font-size:15px;
 }
+.navigation .dropdown-menu > ul > li > a{ transition: all .3s linear 0s; }
 .navigation .dropdown-menu > ul > li > a:hover{
     background: transparent;
     color:#fc746c;
-    transition: all .3s linear 0s;
+    
 }
-.middle-toolbox form{
-    margin-right:30px;
+/* ── Main row ───────────────────────────────────────────────────────────── */
+
+.site-header__main {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 26px rgba(3, 29, 91, .07);
 }
-.middle-toolbox button{
-    background: transparent;
-    border:0;
-}
-.middle-toolbox button img {
-    max-width: 22px;
+.site-header.white-text-mode .site-header__main {
+    /* Solid, not translucent: the menu has to stay readable over a photo backdrop. */
+    background: #fff;
 }
 
-/* Header search: collapsed to just the magnifier, expanding on focus so it does not
-   compete with the navigation for space. */
-.header-search {
+.site-header__row {
     display: flex;
     align-items: center;
-    background: #f2f5f9;
-    border: 1px solid transparent;
-    border-radius: 22px;
-    padding: 0 4px 0 0;
-    transition: border-color .25s ease, background .25s ease;
+    gap: 18px;
+    padding: 0 18px 0 26px;
 }
-.header-search input {
-    width: 0;
+
+.site-header__logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    height: 78px;
+}
+.site-header__logo img { max-height: 46px; width: auto; display: block; }
+
+.site-header .navigation { flex: 1 1 auto; min-width: 0; }
+
+.site-header__tools {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* One row, never wrapping: the old float layout wrapped into a second line when the
+   toolbox grew, which doubled the header height and pushed every hero down. */
+.site-header .main-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0;
     padding: 0;
+}
+.site-header .main-menu > li { float: none; white-space: nowrap; }
+.site-header .navigation .main-menu > li > a {
+    padding: 28px 11px;
+    font-size: 13px;
+    letter-spacing: .01em;
+}
+
+/* ── Search, on the slogan row ──────────────────────────────────────────── */
+
+/* The previous field expanded on hover, which flickered forever: expanding moved the
+   button out from under the cursor, hover was lost, it collapsed, and the cycle
+   repeated. A fixed width has no such feedback loop. */
+.site-search {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    width: 280px;
+    padding: 0 3px 0 14px;
+    border: 1px solid #e2e8f3;
+    border-radius: 22px;
+    background: #fff;
+    transition: border-color .26s cubic-bezier(.2, .7, .3, 1),
+                background-color .26s cubic-bezier(.2, .7, .3, 1),
+                box-shadow .26s cubic-bezier(.2, .7, .3, 1);
+}
+.site-search:focus-within {
+    background: #fff;
+    border-color: #1c6cdc;
+    box-shadow: 0 0 0 3px rgba(28, 108, 220, .12);
+}
+.site-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 36px;
     border: 0;
     outline: none;
     background: transparent;
+    font-family: inherit;
     font-size: 14px;
-    color: #020637;
-    transition: width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1);
+    color: #031d5b;
 }
-.header-search input::-webkit-search-cancel-button { display: none; }
-.header-search:focus-within,
-.header-search:hover {
-    background: #fff;
-    border-color: rgba(2, 6, 55, .14);
-}
-.header-search:focus-within input,
-.header-search:hover input,
-.header-search input:not(:placeholder-shown) {
-    width: 208px;
-    padding: 9px 4px 9px 16px;
-}
-.header-search button { cursor: pointer; padding: 6px 8px; display: flex; }
-.header-search button:focus-visible {
-    outline: 2px solid #833bff;
-    outline-offset: 2px;
+.site-search input::placeholder { color: #9aa4b8; }
+.site-search input::-webkit-search-cancel-button { display: none; }
+.site-search button {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
     border-radius: 50%;
+    background: transparent;
+    color: #5b6478;
+    cursor: pointer;
+    transition: background-color .26s ease, color .26s ease;
 }
+.site-search button:hover { background: #1c6cdc; color: #fff; }
+.site-search button svg { width: 17px; height: 17px; }
+.site-search button:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
 
-@media (max-width: 1200px) {
-    .header-search:focus-within input,
-    .header-search:hover input,
-    .header-search input:not(:placeholder-shown) { width: 150px; }
+/* ── Call and CTA ───────────────────────────────────────────────────────── */
+
+.site-header__call {
+    display: flex;
+    align-items: center;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 50px;
+    border: 1px solid #e2e8f3;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .01em;
+    color: #031d5b;
+    white-space: nowrap;
+    transition: border-color .26s cubic-bezier(.2, .7, .3, 1),
+                color .26s cubic-bezier(.2, .7, .3, 1),
+                background-color .26s cubic-bezier(.2, .7, .3, 1);
 }
-.middle-toolbox .middle-hotline a{
-    display: block;
+.site-header__call:hover { border-color: #1c6cdc; color: #1c6cdc; background: #f4f8ff; }
+
+.site-header__cta {
+    height: 42px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 50px;
+    /* Flat fill. The old button was an orange-to-coral gradient, one of several on the
+       page competing for the same attention. */
+    background: #ee3d51;
+    color: #fff;
+    font-family: inherit;
     font-size: 15px;
     font-weight: 700;
-    color:#fff;
-    text-transform: uppercase;
-    border-radius: 50px;
-    position: relative;
-    padding:10px 35px;
-    font-size:15px;
-    letter-spacing: 1px;
-    background-image: linear-gradient(to right, #f0994c 0, #ff7268 70%);
-    background-color: transparent;
-    /* background-image: linear-gradient(90deg, rgb(172, 29, 225) 0%, rgb(131, 59, 255) 100%); */
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .26s cubic-bezier(.2, .7, .3, 1),
+                transform .26s cubic-bezier(.2, .7, .3, 1),
+                box-shadow .26s cubic-bezier(.2, .7, .3, 1);
+}
+.site-header__cta:hover {
+    background: #d92c40;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(238, 61, 81, .26);
+}
+.site-header__call:focus-visible,
+.site-header__cta:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
+
+/* ── Social ─────────────────────────────────────────────────────────────── */
+
+/* Monochrome, and they only take their brand colour on hover. Three saturated brand
+   squares in the header pulled attention off everything it exists for. */
+.site-social {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 0 2px;
+    padding: 0;
+    list-style: none;
+}
+.site-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #9aa4b8;
+    transition: color .26s ease, background-color .26s ease;
+}
+.site-social svg { width: 17px; height: 17px; }
+.site-social a:hover { color: #031d5b; background: #f2f5fa; }
+.site-social a:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
+
+/* On the dark pages the search sits on the canvas, not on the white bar. */
+.site-header.white-text-mode .site-search {
+    background: rgba(244, 246, 255, .08);
+    border-color: rgba(244, 246, 255, .16);
+}
+.site-header.white-text-mode .site-search input { color: #f4f6ff; }
+.site-header.white-text-mode .site-search input::placeholder { color: rgba(244, 246, 255, .5); }
+.site-header.white-text-mode .site-search button { color: rgba(244, 246, 255, .75); }
+.site-header.white-text-mode .site-search:focus-within {
+    background: rgba(244, 246, 255, .12);
+    border-color: rgba(244, 246, 255, .45);
+    box-shadow: none;
+}
+
+/* ── Narrower desktops ──────────────────────────────────────────────────── */
+
+@media (max-width: 1320px) {
+    .site-header__row { gap: 10px; padding: 0 12px 0 16px; }
+    .site-header .navigation .main-menu > li > a { padding: 28px 9px; font-size: 12.5px; }
+    .site-search { width: 230px; }
+    .site-social { display: none; }
+}
+@media (max-width: 1200px) {
+    /* The call button and the CTA say the same thing; below this width only one fits. */
+    .site-header__call { display: none; }
+}
+
+/* ── Mobile bar ─────────────────────────────────────────────────────────── */
+
+.mobile-call {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #ee3d51;
+    color: #fff;
+}
+.mobile-call svg { width: 18px; height: 18px; }
+
+.offcanvas-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 18px;
+    padding: 0 6px 0 14px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, .06);
+}
+.offcanvas-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 42px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+}
+.offcanvas-search input::placeholder { color: rgba(255, 255, 255, .5); }
+.offcanvas-search button {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+.offcanvas-search button svg { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .site-search, .site-search button, .site-header__call, .site-header__cta, .site-social a { transition: none; }
+    .site-header__cta:hover { transform: none; }
 }
 
 .panel-slide{
@@ -358,7 +544,8 @@ ul li,ol li{
     margin-bottom:25px;
     line-height:30px;
 }
-.slide-1-button-group a{
+.slide-1-button-group a,
+.slide-1-button-group button{
     fill: #FFFFFF;
     color: #FFFFFF;
     background-color: transparent;
@@ -370,7 +557,8 @@ ul li,ol li{
     transition: all 0.3s ease;
 }
 
-.slide-1-button-group a:hover {
+.slide-1-button-group a:hover,
+.slide-1-button-group button:hover {
     background-color: #AC1DE1;
     border-color: #833BFF;
     box-shadow: 0 3px 5px #00000036;
@@ -547,7 +735,7 @@ ul li,ol li{
     font-family: var(--second-font);
 }
 .slide-2-description .main-title{
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-size:45px;
     line-height:50px;
     color:#fff;
@@ -562,7 +750,8 @@ ul li,ol li{
     font-weight: normal;
 }
 
-.slide-2-button-group a{
+.slide-2-button-group a,
+.slide-2-button-group button{
     display: block;
     font-size: 15px;
     /* font-weight: 700; */
@@ -573,7 +762,7 @@ ul li,ol li{
     padding: 15px 35px;
     font-size: 15px;
     letter-spacing: 1px;
-    background-image: linear-gradient(to right, #f0994c 0, #ff7268 70%);
+    background-color: #ee3d51;
     background-color: transparent;
 }
 
@@ -599,7 +788,12 @@ ul li,ol li{
     margin-bottom:50px !important;
 }
 
-.slide-4-button-group a{
+.slide-4-button-group a,
+.slide-4-button-group button{
+    transition: background-color .3s cubic-bezier(.2, .7, .3, 1),
+                color .3s cubic-bezier(.2, .7, .3, 1),
+                box-shadow .3s cubic-bezier(.2, .7, .3, 1),
+                transform .3s cubic-bezier(.2, .7, .3, 1);
     box-shadow: 0 0 32px 0 rgba(26, 121, 255, .3);
     border-radius: 50px;
     /* font-weight: 700; */
@@ -614,8 +808,8 @@ ul li,ol li{
     border:2px solid;
     margin-right:80px;
 }
-.slide-4-button-group a:hover{
-    transition: all 0.4s linear;
+.slide-4-button-group a:hover,
+.slide-4-button-group button:hover{
     background: #1a79ff;
     color:#fff;
 }
@@ -809,7 +1003,7 @@ ul li,ol li{
 }
 
 .slide-5-description .main-title{
-   font-family: 'Be Vietnam Pro';
+   font-family: 'Manrope';
     font-size: 40px;
     line-height: 56px;
     font-weight: 700;
@@ -1259,7 +1453,7 @@ ul li,ol li{
     background-color: rgba(31,39,58, .6);
 }
 .main-heading{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 700;
     font-size: 40px;
     color: #21293d;
@@ -1286,9 +1480,10 @@ ul li,ol li{
 .intro-item:hover{
     background: #fff;
 }
+.intro-item .icon{ transition: all 0.5s ease; }
 .intro-item:hover .icon{
     background: #fea82b;
-    transition: all 0.5s ease;
+    
 }
 .intro-item .icon{
     width:100px;
@@ -1311,7 +1506,7 @@ ul li,ol li{
     font-weight: 600;
     margin-bottom:5px;
     font-size:16px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
 }
 
 .panel-whyus{
@@ -1390,7 +1585,7 @@ ul li,ol li{
 }
 
 .whyus-item .info .title{
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
 }
 
 .whyus-item .info .description{
@@ -1477,7 +1672,7 @@ ul li,ol li{
     color:#fff;
     font-weight: 600;
     font-size:12px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     letter-spacing: 1px;
 }
 .panel-provider .panel-head .heading-2{
@@ -1490,7 +1685,7 @@ ul li,ol li{
     color:#fff;
     text-transform: uppercase;
     font-size:35px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 700;
     line-height: 60px;
 }
@@ -1519,7 +1714,7 @@ ul li,ol li{
 }
 .service-item-1 .title {
     color:#fff;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-size:24px;
     font-weight: 700;
     margin-bottom:20px;
@@ -1536,7 +1731,7 @@ ul li,ol li{
     color:#fff;
     text-transform: uppercase;
     font-size:13px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 700;
 }
 
@@ -1608,7 +1803,7 @@ ul li,ol li{
    margin-bottom:0; 
 }
 .panel-customer .panel-head .heading-10 > *{
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-size:125px;
     line-height:125px;
     color:transparent;
@@ -1634,7 +1829,7 @@ ul li,ol li{
     max-width: 18px;
 }
 .customer-item .description{
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-size:16px;
     line-height:28px;
     margin-bottom:15px;
@@ -1743,7 +1938,7 @@ ul li,ol li{
     font-size:14px;
     font-weight: 500;
     color:#787c8b;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     margin-bottom:20px;
 }
 .btn-support-button{
@@ -1907,7 +2102,7 @@ ul li,ol li{
 }
 .footer-support .box .label {
     font-size: 15px;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     line-height: 23px;
     color: #fff;
     text-transform: uppercase;
@@ -2063,7 +2258,7 @@ ul li,ol li{
     color:#fff;
     text-transform: uppercase;
     font-weight: 300;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     margin-bottom:25px;
     line-height:64px;
 }
@@ -2076,7 +2271,7 @@ ul li,ol li{
     font-weight: 300;
     color:#fff;
     line-height:64px;
-     font-family: 'Be Vietnam Pro';
+     font-family: 'Manrope';
 }
 .about-button-group{
     margin-top: 35px;
@@ -2091,9 +2286,9 @@ ul li,ol li{
     border-radius: 50px;
     text-transform: uppercase;
     font-weight:500;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     color: #fff;
-    background-image: linear-gradient(to right, #ee3d51 0, #fe5430 70%);
+    background-color: #ee3d51;
     background-size: 100% 100%;
     position: relative;
     padding: 18px 58px;
@@ -2102,11 +2297,12 @@ ul li,ol li{
     transition: all 0.4s ease !important;
     
 }
+.about-button-group .btn-about-item{ transition: all 0.4s ease !important; }
 .about-button-group .btn-about-item:hover{
     background-color: transparent;
     background-image: linear-gradient(90deg, rgb(172, 29, 225) 0%, rgb(131, 59, 255) 100%);
     color:#fff;
-     transition: all 0.4s ease !important;
+     
 }
 .about-banner{
     position: relative;
@@ -2132,7 +2328,7 @@ ul li,ol li{
     margin-bottom: 28px;
     color: #fff;
     background-color: transparent;
-    background-image: linear-gradient(to right, #ee3d51, #fe5430);
+    background-color: #ee3d51;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -2171,7 +2367,7 @@ ul li,ol li{
 .special-text{
     padding-left:50px;
     position: relative;
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 700;
     font-size: 14px;
     line-height: 20px;
@@ -2192,7 +2388,7 @@ ul li,ol li{
     background-color: #ec3c54;
 }
 .panel-best-choose .title{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 800;
     font-size: 35px;
     line-height: 44px;
@@ -2212,7 +2408,7 @@ ul li,ol li{
 }
 .spec-button{
     background-color: transparent;
-    background-image: linear-gradient(to right, #ee3d51, #fe5430);
+    background-color: #ee3d51;
     -webkit-box-shadow: 0 0 32px 0 rgb(255 74 0 / 30%);
     -moz-box-shadow: 0 0 32px 0 rgba(255,74,0,.3);
     box-shadow: 0 0 32px 0 rgb(255 74 0 / 30%);
@@ -2230,7 +2426,11 @@ ul li,ol li{
     top: 0;
     width: 838px;
     height: 824px;
-    z-index: 1;
+    /* 0, not 1. At z-index 1 this 838x824 white shape painted over everything in the
+       container that was not itself positioned — it hid the hero illustration entirely
+       and cut the corner off the third card. It is decoration; it belongs behind. */
+    z-index: 0;
+    pointer-events: none;
     -webkit-border-radius: 0 0 0 824px;
     -moz-border-radius: 0 0 0 824px;
     border-radius: 0 0 0 824px;
@@ -2239,19 +2439,34 @@ ul li,ol li{
     -moz-box-shadow: 0 0 40px 0 rgba(0,12,119,.05);
     box-shadow: 0 0 40px 0 rgb(0 12 119 / 5%);
 }
-.hosting-header lottie-player{
+.hosting-header lottie-player,
+.hosting-header .illus{
     position: relative;
-    z-index: 1;
+    z-index: 2;
+}
+
+/* Every section of a landing page sits above the container decoration. */
+.hosting-container > .panel-best,
+.hosting-container > .panel-steps,
+.hosting-container > .panel-host-pricing,
+.hosting-container > .panel-host-intro,
+.hosting-container > .panel-customer,
+.hosting-container > .panel-support,
+.hosting-container > .uk-container{
+    position: relative;
+    z-index: 2;
 }
 .hosting-header{
-    padding-top:80px;
+    /* The header is absolutely positioned over the page and is 138px tall, so 80px put
+       the first line of the title underneath it. */
+    padding-top: 176px;
 }
 .hosting-content{
     max-width: 600px;
     margin-left:20%;
 }
 .hosting-element-title{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 600;
     font-size: 48px;
     line-height: 58px;
@@ -2274,7 +2489,7 @@ em {
 .hosting-content .description{
     font-size:16px;
     color:#777;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 600;
     line-height:25px;
     position: relative;
@@ -2409,7 +2624,7 @@ em {
     margin-bottom:100px;
 }
 .panel-best .heading-9 > span{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 600;
     font-size: 48px;
     line-height: 58px;
@@ -2419,7 +2634,7 @@ em {
     font-style: normal;
 }
 .panel-best .panel-head > span{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 700;
     font-size: 14px;
     line-height: 20px;
@@ -2463,7 +2678,7 @@ em {
     margin-bottom:35px;
 }
 .host-intro-container .panel-head .heading-9 > span{
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 900;
 }
 .host-intro-container .panel-head .description{
@@ -2475,7 +2690,7 @@ em {
 .elementor-icon-list-icon {
     font-size:22px;
     font-weight: bold;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     color:#1c6cdc
 }
 .elementor-icon-list-item{
@@ -2499,7 +2714,7 @@ em {
     text-align: center;
 }
 .heading-11 > span{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 600;
     font-size: 48px;
     line-height: 58px;
@@ -2514,7 +2729,7 @@ em {
     text-align: center;
 }
 .panel-host-pricing .panel-head .special-text-1{
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 700;
     font-size: 14px;
     line-height: 20px;
@@ -2558,13 +2773,13 @@ em {
     margin-bottom: 15px;
     font-weight: 600;
     color: #031d5b;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
 }
 .panel-host-pricing .head .price{
     font-size: 60px;
     line-height: 60px;
     color:#1c6cdc;
-    font-family: 'Be Vietnam Pro';
+    font-family: 'Manrope';
     font-weight: 700;
     margin-bottom:20px;
 }
@@ -2652,4 +2867,431 @@ em {
         gap: 10px;
         z-index: 10;
     }
+}
+/* ===========================================================================
+   Service landing pages — the bits the hosting page did not already have.
+   Palette taken from the page it follows: #031d5b navy, #1c6cdc blue, #ee3d51 red.
+   Flat fills rather than gradients: the site had a gradient on nearly every
+   surface, which left nothing standing out.
+   =========================================================================== */
+
+.service-eyebrow {
+    position: relative;
+    z-index: 5;
+    margin-bottom: 14px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #1c6cdc;
+}
+
+/* The hosting hero sets 95px, which is right for two short English words and far too
+   large for a Vietnamese sentence. */
+.service-landing .hosting-element-title {
+    font-size: 54px;
+    line-height: 64px;
+    font-weight: 500;
+}
+.service-landing .hosting-element-title strong { font-weight: 800; }
+
+.service-hero-actions {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.svc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 30px;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    text-decoration: none;
+    /* Slower and eased, because the previous 0.15s linear hover felt like a light
+       switch rather than a response. */
+    transition: background-color .28s cubic-bezier(.2, .7, .3, 1),
+                color .28s cubic-bezier(.2, .7, .3, 1),
+                border-color .28s cubic-bezier(.2, .7, .3, 1),
+                transform .28s cubic-bezier(.2, .7, .3, 1),
+                box-shadow .28s cubic-bezier(.2, .7, .3, 1);
+}
+.svc-btn--primary {
+    background: #ee3d51;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(238, 61, 81, .22);
+}
+.svc-btn--primary:hover,
+.svc-btn--primary:focus-visible {
+    background: #d92c40;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(238, 61, 81, .3);
+}
+.svc-btn--secondary {
+    background: #fff;
+    border-color: #d9e2f2;
+    color: #031d5b;
+}
+.svc-btn--secondary:hover,
+.svc-btn--secondary:focus-visible {
+    border-color: #1c6cdc;
+    color: #1c6cdc;
+    transform: translateY(-2px);
+}
+.svc-btn--block { width: 100%; margin-top: 22px; }
+.svc-btn:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 3px; }
+
+/* ── Process ────────────────────────────────────────────────────────────── */
+
+.panel-steps { padding: 70px 0 20px; background: #f7f9fd; }
+.panel-steps .panel-head { text-align: center; margin-bottom: 40px; }
+.panel-steps .panel-head .description {
+    max-width: 620px;
+    margin: 14px auto 0;
+    color: #777;
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.svc-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: svcstep;
+}
+.svc-step {
+    counter-increment: svcstep;
+    position: relative;
+    padding: 26px 22px 24px;
+    background: #fff;
+    border: 1px solid #e6ecf7;
+    border-radius: 14px;
+    transition: transform .3s cubic-bezier(.2, .7, .3, 1), box-shadow .3s cubic-bezier(.2, .7, .3, 1);
+}
+.svc-step:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(3, 29, 91, .1); }
+/* The number is generated, so inserting a step never leaves a stale one behind. */
+.svc-step::before {
+    content: counter(svcstep);
+    position: absolute;
+    top: -14px;
+    left: 22px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #1c6cdc;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+}
+.svc-step__when {
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #ee3d51;
+}
+.svc-step__title {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #031d5b;
+}
+.svc-step__text { font-size: 14.5px; line-height: 24px; color: #777; }
+
+/* ── Offer ──────────────────────────────────────────────────────────────── */
+
+/* One card is marked as the usual choice. Flat border and lift, no gradient. */
+.hosting-item.is-featured {
+    border-color: #1c6cdc;
+    box-shadow: 0 18px 40px rgba(28, 108, 220, .16);
+}
+.hosting-item.is-featured .head { background: #1c6cdc; }
+.hosting-item.is-featured .head .name,
+.hosting-item.is-featured .head .price,
+.hosting-item.is-featured .head .per { color: #fff; }
+
+.svc-note {
+    max-width: 820px;
+    margin: 34px auto 0;
+    text-align: center;
+    font-size: 14.5px;
+    line-height: 26px;
+    color: #777;
+}
+
+@media (max-width: 1023px) {
+    .service-landing .hosting-content { margin-left: 0; }
+    .service-landing .hosting-element-title { font-size: 40px; line-height: 50px; }
+}
+
+@media (max-width: 767px) {
+    .service-landing .hosting-element-title { font-size: 32px; line-height: 42px; }
+    .service-hero-actions .svc-btn { width: 100%; }
+    .panel-steps { padding: 46px 0 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .svc-btn, .svc-step { transition: none; }
+    .svc-btn:hover, .svc-step:hover { transform: none; }
+}
+
+/* ===========================================================================
+   Enquiry popup — shared by every CTA on the site, light pages and dark alike,
+   so it carries its own colours rather than inheriting the page's.
+   =========================================================================== */
+
+.lead-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.lead-modal[hidden] { display: none; }
+
+.lead-modal__veil {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 29, 91, .55);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity .24s ease;
+}
+.lead-modal.is-open .lead-modal__veil { opacity: 1; }
+
+.lead-modal__panel {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding: 34px 32px 30px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 30px 70px rgba(3, 29, 91, .3);
+    /* Rises into place rather than appearing — the same easing the buttons use. */
+    opacity: 0;
+    transform: translateY(14px) scale(.985);
+    transition: opacity .24s ease, transform .28s cubic-bezier(.2, .7, .3, 1);
+}
+.lead-modal.is-open .lead-modal__panel { opacity: 1; transform: none; }
+
+.lead-modal__x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #f2f5fa;
+    color: #031d5b;
+    cursor: pointer;
+    transition: background-color .24s ease, color .24s ease;
+}
+.lead-modal__x:hover { background: #ee3d51; color: #fff; }
+.lead-modal__x svg { width: 17px; height: 17px; }
+.lead-modal__x:focus-visible { outline: 2px solid #1c6cdc; outline-offset: 2px; }
+
+.lead-modal__eyebrow {
+    margin: 0 0 10px;
+    padding-right: 34px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #1c6cdc;
+}
+.lead-modal__eyebrow[hidden] { display: none; }
+
+.lead-modal__title {
+    margin: 0 0 8px;
+    padding-right: 20px;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 32px;
+    color: #031d5b;
+}
+.lead-modal__sub {
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    line-height: 23px;
+    color: #777;
+}
+
+.lead-modal__form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #031d5b;
+}
+.lead-modal__form label span { color: #ee3d51; }
+.lead-modal__form input,
+.lead-modal__form textarea {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border: 1px solid #dde4f1;
+    border-radius: 10px;
+    background: #fff;
+    color: #031d5b;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 22px;
+    transition: border-color .22s ease, box-shadow .22s ease;
+}
+.lead-modal__form textarea { resize: vertical; min-height: 84px; }
+.lead-modal__form input:focus,
+.lead-modal__form textarea:focus {
+    outline: none;
+    border-color: #1c6cdc;
+    box-shadow: 0 0 0 3px rgba(28, 108, 220, .14);
+}
+
+.lead-modal__msg {
+    min-height: 1.2em;
+    margin: 12px 0 0;
+    font-size: 13.5px;
+    line-height: 21px;
+    color: #777;
+}
+.lead-modal__msg.is-good { color: #1a9c6b; font-weight: 600; }
+.lead-modal__msg.is-bad { color: #ee3d51; font-weight: 600; }
+
+.lead-modal__fine {
+    margin: 10px 0 0;
+    font-size: 12.5px;
+    line-height: 20px;
+    color: #9aa4b8;
+}
+.lead-modal__fine a { color: #1c6cdc; font-weight: 700; }
+
+@media (max-width: 480px) {
+    .lead-modal__panel { padding: 28px 20px 24px; }
+    .lead-modal__title { font-size: 21px; line-height: 29px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lead-modal__veil, .lead-modal__panel, .lead-modal__x { transition: none; }
+    .lead-modal__panel { transform: none; }
+}
+
+/* ===========================================================================
+   Skeleton loading — a calm placeholder for anything that arrives after paint
+   (template covers, iframe previews, lazy images).
+   =========================================================================== */
+
+.skel {
+    position: relative;
+    overflow: hidden;
+    background: rgba(3, 29, 91, .07);
+}
+.skel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, .55) 50%, transparent 100%);
+    animation: skel-sweep 1.35s ease-in-out infinite;
+}
+/* On the dark pages the sweep has to be light-on-dark or it reads as a hole. */
+.store .skel { background: rgba(244, 246, 255, .06); }
+.store .skel::after {
+    background: linear-gradient(90deg, transparent 0, rgba(244, 246, 255, .1) 50%, transparent 100%);
+}
+.skel.is-done::after { animation: none; opacity: 0; }
+
+@keyframes skel-sweep {
+    to { transform: translateX(100%); }
+}
+
+/* Text-shaped skeletons, for cards whose copy loads with the page but whose media
+   does not: the block keeps the card's height stable instead of letting it jump. */
+.skel-line { height: 12px; border-radius: 6px; margin-bottom: 8px; }
+.skel-line:last-child { width: 60%; margin-bottom: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+    .skel::after { animation: none; }
+}
+
+/* Several slide CTAs are now <button> rather than <a href=""> — they open the enquiry
+   popup instead of navigating nowhere. Buttons do not inherit type or font, so match
+   them to the anchor styling they replaced. */
+button.button,
+button.btn-support-button,
+button.text-readmore {
+    /* No border reset here: the outline-style slide buttons declare their own border, and
+       this block loads last so a reset would win over them. */
+    background-color: transparent;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+
+/* ===========================================================================
+   Motion defaults.
+
+   The site had hover states that changed instantly — a few rules even declared the
+   transition inside :hover, so only the change *back* animated. Anything that
+   responds to a pointer gets an eased transition here, once, and individual rules
+   can still override it.
+   =========================================================================== */
+
+a,
+button,
+.button,
+.button-style,
+.btn-support-button,
+.text-readmore,
+.readmore,
+.best-item,
+.service-item-1,
+.hosting-item,
+.support-item,
+.customer-item,
+.svc-step {
+    transition-property: background-color, background-image, border-color, color,
+                         box-shadow, transform, opacity;
+    transition-duration: .28s;
+    transition-timing-function: cubic-bezier(.2, .7, .3, 1);
+}
+
+/* Cards lift rather than change colour: a whole panel changing shade at once is the
+   heaviest possible hover. */
+.best-item:hover,
+.service-item-1:hover,
+.hosting-item:hover { transform: translateY(-4px); }
+
+@media (prefers-reduced-motion: reduce) {
+    a, button, .button, .button-style, .btn-support-button, .text-readmore, .readmore,
+    .best-item, .service-item-1, .hosting-item, .support-item, .customer-item, .svc-step {
+        transition: none;
+    }
+    .best-item:hover, .service-item-1:hover, .hosting-item:hover { transform: none; }
 }

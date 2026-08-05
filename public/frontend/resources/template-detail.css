@@ -159,6 +159,44 @@
 .tpl-stage.is-tablet .tpl-frame__screen { aspect-ratio: 4 / 3; }
 .tpl-stage.is-mobile .tpl-frame__screen { aspect-ratio: 9 / 16; }
 
+/* ── Live preview ───────────────────────────────────────────────────────── */
+
+/* The iframe is laid out at desktop width and scaled down to the frame, so the page
+   inside believes it has a real viewport of that size. Switching device changes the
+   width the page is given, so its own breakpoints do the reflowing — the frame is not
+   squashing a desktop rendering. */
+.tpl-frame__screen--live { position: relative; background: #fff; }
+.tpl-frame__screen--live iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1440px;
+    height: 1000px;
+    border: 0;
+    transform-origin: 0 0;
+    /* Set per stage below. The transition is what makes the device change read as a
+       window being resized rather than a swap. */
+    transform: scale(calc(100 / 1440));
+    transition: transform .42s cubic-bezier(.2, .7, .3, 1),
+                width .42s cubic-bezier(.2, .7, .3, 1),
+                height .42s cubic-bezier(.2, .7, .3, 1);
+}
+
+/* Each stage hands the page a real viewport width, then scales the result to fit.
+   --frame-w is the stage's rendered width, published by the stage rules. */
+.tpl-stage.is-desktop .tpl-frame__screen--live iframe {
+    width: 1440px; height: 900px;
+    transform: scale(var(--fit, 1));
+}
+.tpl-stage.is-tablet .tpl-frame__screen--live iframe {
+    width: 820px; height: 615px;
+    transform: scale(var(--fit, 1));
+}
+.tpl-stage.is-mobile .tpl-frame__screen--live iframe {
+    width: 390px; height: 693px;
+    transform: scale(var(--fit, 1));
+}
+
 .tpl-frame__screen img {
     width: 100%;
     height: 100%;
@@ -168,6 +206,48 @@
     object-fit: cover;
     object-position: center top;
 }
+
+/* ── Screenshot that is taller than the frame ───────────────────────────── */
+
+/* A homepage capture is several times the frame's height, so at rest only the masthead
+   is visible. On hover the whole capture pans to the bottom and back, which is the
+   closest a still image gets to letting someone read the page. */
+.tpl-frame__screen--shot { position: relative; }
+.tpl-frame__screen--shot.can-pan img {
+    height: auto;
+    object-fit: fill;
+    transform: translateY(0);
+    transition: transform .5s cubic-bezier(.3, .7, .4, 1);
+}
+.tpl-frame__screen--shot.can-pan:hover img,
+.tpl-frame__screen--shot.can-pan:focus-within img {
+    animation: tpl-pan var(--pan-time, 8s) cubic-bezier(.45, .05, .55, .95) infinite alternate;
+}
+
+@keyframes tpl-pan {
+    from { transform: translateY(0); }
+    to { transform: translateY(var(--pan, 0)); }
+}
+
+/* A quiet hint that the still can be panned, so nobody has to discover it by accident. */
+.tpl-frame__screen--shot.can-pan::after {
+    content: 'Đưa chuột vào để xem cả trang';
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    border-radius: 40px;
+    background: rgba(5, 6, 26, .72);
+    color: rgba(244, 246, 255, .9);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity .3s ease;
+}
+.tpl-frame__screen--shot.can-pan:hover::after { opacity: 0; }
 
 .tpl-stage__note {
     margin: 16px 0 0;
@@ -309,7 +389,7 @@
     align-items: center;
     gap: 18px;
     padding: 12px 0;
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Manrope', sans-serif;
 }
 .tpl-bar__name {
     color: #f4f6ff;

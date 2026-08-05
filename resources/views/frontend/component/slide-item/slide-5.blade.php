@@ -14,7 +14,7 @@
                         </div> 
                         <div class="slide-4-button-group mt50">
                             <div class="uk-flex uk-flex-middle">
-                                <a href="" class="button">Liên hệ với chúng tôi ngay</a>
+                                <button type="button" class="button" data-lead-open data-lead-subject="Slide trang chủ">Liên hệ với chúng tôi ngay</button>
                             </div>
                         </div>
                     </div>

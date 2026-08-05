@@ -87,9 +87,10 @@
     display: flex;
     align-items: flex-end;
     padding: 22px;
-    background:
-        radial-gradient(130% 130% at 12% 6%, color-mix(in srgb, var(--art-accent) 55%, transparent) 0%, transparent 64%),
-        linear-gradient(140deg, #141838 0%, #0a0c22 100%);
+    /* One flat tint per article, taken from its accent. Two stacked gradients per card
+       made a wall of cards look like a lava lamp. */
+    background: color-mix(in srgb, var(--art-accent) 16%, #0d1029);
+    border-bottom: 3px solid var(--art-accent);
 }
 .art-card__type {
     font-size: 19px;

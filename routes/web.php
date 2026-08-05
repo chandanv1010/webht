@@ -86,9 +86,17 @@ use App\Http\Controllers\Ajax\ViettelPostController;
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 Route::get('ve-chung-toi.html', [HomeController::class, 'about'])->name('home.about');
-// dich-vu-hosting.html used to be a hand-built light-themed landing page with a domain
-// search form that posted nowhere. It now resolves through {canonical} to the hosting
-// service page, so all four services share one design and one editable source.
+// One landing page per service, each with its own route so it wins over {canonical}.
+// The hosting page is the design the others follow; its own view stays as it was built.
+Route::get('dich-vu-hosting.html', [HomeController::class, 'hosting'])->name('home.hosting');
+Route::get('thiet-ke-theo-yeu-cau.html', [HomeController::class, 'service'])
+    ->defaults('key', 'custom')->name('home.service.custom');
+Route::get('thiet-ke-website-theo-mau-co-san.html', [HomeController::class, 'service'])
+    ->defaults('key', 'template')->name('home.service.template');
+Route::get('cham-soc-website.html', [HomeController::class, 'service'])
+    ->defaults('key', 'care')->name('home.service.care');
+Route::get('dich-vu-seo.html', [HomeController::class, 'service'])
+    ->defaults('key', 'seo')->name('home.service.seo');
 
 Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler.index');
 

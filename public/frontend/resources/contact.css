@@ -99,10 +99,8 @@ a.contact-channel__value:focus-visible { outline: 2px solid var(--value); outlin
     padding: 34px;
     border-radius: 20px;
     border: 1px solid rgba(131, 59, 255, .28);
-    /* One warm pool of colour marks the thing this page exists for. */
-    background:
-        radial-gradient(120% 150% at 4% 0%, rgba(131, 59, 255, .18) 0%, transparent 60%),
-        var(--raised);
+    /* Flat, with the accent carried by the border instead of a wash. */
+    background: var(--raised);
 }
 
 .contact-formwrap__title {

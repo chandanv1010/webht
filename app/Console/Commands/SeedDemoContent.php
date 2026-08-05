@@ -40,6 +40,7 @@ class SeedDemoContent extends Command
             $this->seedCatalogues($userId);
             $this->seedServicePages($userId);
             $this->seedNewsPosts($userId);
+            $this->seedBlogPosts($userId);
             $this->seedTemplates($userId);
         });
 
@@ -245,13 +246,71 @@ class SeedDemoContent extends Command
                 'canonical' => $canonical,
                 'name' => $name,
                 'desc' => $desc,
-                'blocks' => [
-                    ['Vấn đề', $desc.' Phần dưới đi vào chi tiết dựa trên các dự án chúng tôi đã triển khai.'],
-                    ['Cách xử lý', 'Bắt đầu bằng việc đo, không đoán. Xác định điểm nghẽn lớn nhất, xử lý nó, đo lại. Lặp lại cho đến khi kết quả đủ tốt cho mục tiêu kinh doanh chứ không phải cho một điểm số.'],
-                    ['Tóm lại', 'Chọn một thay đổi có tác động lớn nhất và làm cho xong, thay vì làm nhiều thứ nửa vời.'],
-                ],
+                'blocks' => $this->articleBody($desc),
             ], $newsCatalogueId, $userId, 1, $i);
             $this->line("  article    {$canonical}  #$id");
+        }
+    }
+
+    /**
+     * A body long enough to judge the reading layout on.
+     *
+     * The first version was three sentences, which told us nothing about line length,
+     * heading rhythm or how a list sits in the measure — the things demo data exists to
+     * show.
+     */
+    private function articleBody(string $desc): array
+    {
+        return [
+            ['Vấn đề', $desc.' Phần dưới dựa trên những dự án chúng tôi đã làm và những lần phải sửa lại sau khi bàn giao, nên nó thiên về việc cần làm hơn là lý thuyết.'],
+            ['Đo trước khi sửa', 'Gần như mọi quyết định sai trong việc này bắt đầu từ một phỏng đoán. Trước khi đổi bất cứ thứ gì, hãy có một con số: thời gian tải thật trên 4G, số phần trăm khách rời trang ở bước nào, hoặc số liên hệ mỗi tuần. Không có con số thì sau khi sửa cũng không biết là tốt hơn hay chỉ khác đi.'],
+            ['Ba việc đáng làm trước', 'Việc nào rẻ và ảnh hưởng nhiều thì làm trước. Theo thứ tự đó, thường là: nén và đổi định dạng ảnh, gộp bớt tài nguyên chặn hiển thị, rồi mới đến chuyện nâng cấp hạ tầng. Đảo thứ tự này là cách nhanh nhất để tiêu tiền mà không thấy khác biệt.'],
+            ['Những gì thường bị bỏ qua', 'Phần khách nhìn thấy đầu tiên quan trọng hơn phần đẹp nhất. Một trang tải trong hai giây với bố cục bình thường bán được nhiều hơn một trang tải trong tám giây với hiệu ứng đẹp. Điều này đúng với gần như mọi ngành chúng tôi từng làm.'],
+            ['Tóm lại', 'Chọn một thay đổi có tác động lớn nhất, làm cho xong, đo lại, rồi mới sang việc tiếp theo. Làm năm việc nửa vời tệ hơn làm một việc trọn vẹn.'],
+        ];
+    }
+
+    /** The Blog category the menu links to had no posts at all. */
+    private function seedBlogPosts(int $userId): void
+    {
+        $blogCatalogueId = (int) (DB::table('post_catalogues')
+            ->join('post_catalogue_language as l', 'l.post_catalogue_id', '=', 'post_catalogues.id')
+            ->where('l.canonical', 'blog')
+            ->value('post_catalogues.id'));
+
+        if ($blogCatalogueId === 0) {
+            $this->warn('  skip blog — catalogue not found');
+
+            return;
+        }
+
+        $articles = [
+            ['chi-phi-that-cua-mot-website-re', 'Chi phí thật của một website giá rẻ',
+             'Ba triệu cho một website nghe rất hợp lý, cho đến khi cộng thêm những khoản không ai nói trước.'],
+            ['khach-hang-can-gi-o-trang-chu', 'Khách hàng thực sự tìm gì ở trang chủ của bạn',
+             'Chúng tôi ghi lại hành vi trên 40 website và ba thứ khách tìm đầu tiên gần như không đổi.'],
+            ['bao-nhieu-anh-la-du-cho-mot-san-pham', 'Bao nhiêu ảnh là đủ cho một sản phẩm?',
+             'Thêm ảnh không phải lúc nào cũng tốt. Điểm mà thêm ảnh bắt đầu làm giảm chuyển đổi.'],
+            ['khi-nao-nen-lam-lai-website', 'Khi nào nên làm lại website thay vì sửa tiếp',
+             'Bốn dấu hiệu cho thấy sửa tiếp sẽ tốn hơn làm mới, và cách tự kiểm tra trong một buổi.'],
+            ['ten-mien-dung-ten-ai', 'Tên miền của bạn đang đứng tên ai?',
+             'Rủi ro lớn nhất mà phần lớn chủ website không biết mình đang mang. Cách kiểm tra trong hai phút.'],
+            ['mot-nam-sau-khi-ban-giao', 'Một năm sau khi bàn giao, website của bạn ra sao',
+             'Chúng tôi mở lại 25 website sau 12 tháng. Đây là những gì hỏng, và vì sao.'],
+            ['viet-mo-ta-san-pham-cho-nguoi-mua', 'Viết mô tả sản phẩm cho người mua, không cho Google',
+             'Nhồi từ khoá từng hiệu quả. Bây giờ nó làm mất cả thứ hạng và cả khách.'],
+            ['form-lien-he-nen-hoi-may-o', 'Form liên hệ nên hỏi bao nhiêu ô là vừa',
+             'Mỗi ô thêm vào là một phần khách bỏ dở. Con số cụ thể và cách chọn ô nào giữ lại.'],
+        ];
+
+        foreach ($articles as $i => [$canonical, $name, $desc]) {
+            $id = $this->upsertPost([
+                'canonical' => $canonical,
+                'name' => $name,
+                'desc' => $desc,
+                'blocks' => $this->articleBody($desc),
+            ], $blogCatalogueId, $userId, 1, $i);
+            $this->line("  blog       {$canonical}  #$id");
         }
     }
 

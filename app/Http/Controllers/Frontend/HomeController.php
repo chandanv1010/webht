@@ -156,5 +156,80 @@ class HomeController extends FrontendController
         ));
     }
 
+    /**
+     * One landing page per service. They share the layout the hosting page established —
+     * hero, three promises, the offer as cards, a closing enquiry — and differ only in
+     * content, which lives in config/apps/services.php so the copy is editable without
+     * touching four near-identical Blade files.
+     */
+    public function service(string $key)
+    {
+        $service = config('apps.services.'.$key);
+
+        if (is_null($service)) {
+            abort(404);
+        }
+
+        $slides = $this->slideService->getSlide(
+            [SlideEnum::BANNER, SlideEnum::MAIN, 'mobile-slide', 'banner-1', 'brand-baochi'],
+            $this->language
+        );
+
+        $config = $this->config();
+        $system = $this->system;
+        $language = $this->language;
+
+        $seo = [
+            'meta_title' => $service['meta_title'],
+            'meta_keyword' => $service['meta_keyword'] ?? '',
+            'meta_description' => $service['meta_description'],
+            'meta_image' => $this->system['seo_meta_images'],
+            'canonical' => write_url($service['canonical']),
+        ];
+
+        $widgets = $this->widgetService->getWidget([
+            ['keyword' => 'feedback', 'object' => true],
+        ], $this->language);
+
+        return view('frontend.homepage.home.service', compact(
+            'config',
+            'seo',
+            'system',
+            'language',
+            'slides',
+            'widgets',
+            'service'
+        ));
+    }
+
+    public function hosting(){
+        $slides = $this->slideService->getSlide(
+            [SlideEnum::BANNER, SlideEnum::MAIN, 'mobile-slide' , 'banner-1', 'brand-baochi'],
+            $this->language
+        );
+        $config = $this->config();
+        $system = $this->system;
+        $seo = [
+            'meta_title' => 'Dịch vụ Hosting Chuyên Nghiệp - Tốc độ cao, Bảo mật vượt trội | HT VIỆT NAM',
+            'meta_keyword' => 'HTVIETNAM, htvietnam, HTVIETNAM Hosting. hosting',
+            'meta_description' => 'HT Việt Nam cung cấp dịch vụ hosting tốc độ cao, ổn định, bảo mật và hỗ trợ 24/7. Giải pháp lưu trữ tối ưu cho website doanh nghiệp, sẵn sàng mở rộng khi cần.',
+            'meta_image' => $this->system['seo_meta_images'],
+            'canonical' => write_url('dich-vu-hosting'),
+        ];
+        $widgets = $this->widgetService->getWidget([
+            ['keyword' => 'feedback','object' => true],
+        ], $this->language);
+
+        $language = $this->language;
+        $template = 'frontend.homepage.home.hosting';
+        return view($template, compact(
+            'config',
+            'seo',
+            'system',
+            'language',
+            'slides',
+            'widgets'
+        ));
+    }
 
 }

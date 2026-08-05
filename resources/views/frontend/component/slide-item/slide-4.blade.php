@@ -22,7 +22,7 @@
                         </div>
                         <div class="slide-4-button-group">
                             <div class="uk-flex uk-flex-middle">
-                                <a href="" class="button">Bắt đầu ngay bây giờ</a>
+                                <button type="button" class="button" data-lead-open data-lead-subject="Slide trang chủ">Bắt đầu ngay bây giờ</button>
                                 <div class="button-container" style="position: relative;">
                                     <button class="play-button" data-uk-modal="{target:'#video-modal'}">
                                         <div class="play-icon"></div>

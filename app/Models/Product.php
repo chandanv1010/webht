@@ -14,6 +14,10 @@ class Product extends Model
 
     protected $fillable = [
         'image',
+        // "Mã Nhúng" in the admin: the URL the template runs at, or a full <iframe>
+        // snippet. It was missing from $fillable, so anything typed into that field was
+        // dropped on save without a word.
+        'iframe',
         'album',
         'publish',
         'follow',

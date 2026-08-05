@@ -265,6 +265,39 @@
 <script>
     // Shelf arrows are added by script because they do nothing without it. Scrolling
     // with a trackpad, touch, or the keyboard works whether this runs or not.
+    // Eased horizontal scroll. behavior:'smooth' is quick and near-linear, which is why
+    // the shelves felt like they jumped rather than moved; this runs long enough to read
+    // as motion and decelerates into place.
+    function glide(el, delta) {
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var max = el.scrollWidth - el.clientWidth;
+        var from = el.scrollLeft;
+        var to = Math.max(0, Math.min(max, from + delta));
+
+        if (reduced || from === to) { el.scrollLeft = to; return; }
+
+        // One animation per element: a second click replaces the first rather than
+        // fighting it.
+        if (el._glide) cancelAnimationFrame(el._glide);
+
+        var DURATION = 620;
+        var start = null;
+
+        el._glide = requestAnimationFrame(function step(now) {
+            if (start === null) start = now;
+            var t = Math.min(1, (now - start) / DURATION);
+            // easeOutCubic
+            var eased = 1 - Math.pow(1 - t, 3);
+            el.scrollLeft = from + (to - from) * eased;
+
+            if (t < 1) {
+                el._glide = requestAnimationFrame(step);
+            } else {
+                el._glide = null;
+            }
+        });
+    }
+
     document.querySelectorAll('[data-shelf]').forEach(function (shelf) {
         var track = shelf.querySelector('.store-shelf__track');
         if (!track) return;
@@ -280,10 +313,7 @@
             btn.className = 'store-shelf__nav store-shelf__nav--' + dir;
             btn.setAttribute('aria-label', dir === 'prev' ? 'Xem các mẫu trước' : 'Xem các mẫu tiếp theo');
             btn.addEventListener('click', function () {
-                track.scrollBy({
-                    left: (dir === 'next' ? 1 : -1) * Math.round(track.clientWidth * 0.8),
-                    behavior: 'smooth'
-                });
+                glide(track, (dir === 'next' ? 1 : -1) * Math.round(track.clientWidth * 0.8));
             });
             shelf.appendChild(btn);
         });

@@ -12,7 +12,7 @@
                     <a href="{{ write_url('lien-he') }}" class="btn-about-item">
                         Liên hệ ngay
                     </a>
-                    <a href=""  class="btn-about-item">
+                    <a href="{{ write_url('lien-he') }}"  class="btn-about-item">
                         Hotline: {{ $system['contact_hotline'] }}
                     </a>
                 </div>
@@ -217,7 +217,7 @@
                                         <div class="support-article">
                                             <div class="title">Hỗ trợ qua Email</div>
                                             <div class="description">Dịch vụ phát triển website chuyên nghiệp. Hãy gửi cho chúng tôi Email của bạn</div>
-                                            <a href="" class="btn-support-button">Give Me A Email</a>
+                                            <button type="button" class="btn-support-button" data-lead-open data-lead-subject="Hỗ trợ qua email">Gửi yêu cầu</button>
                                         </div>
                                     </div>
                                     <div class="uk-width-large-1-2">
@@ -235,7 +235,7 @@
                                         <div class="support-article">
                                             <div class="title">Hỗ trợ Hotline</div>
                                             <div class="description">Dịch vụ phát triển website chuyên nghiệp. Hãy gọi ngay cho chúng tôi</div>
-                                            <a href="" class="btn-support-button support-phone-button">{{ $system['contact_hotline'] }}</a>
+                                            <a href="{{ tel_href($system['contact_hotline']) }}" class="btn-support-button support-phone-button">{{ $system['contact_hotline'] }}</a>
                                         </div>
                                     </div>
                                     <div class="uk-width-large-1-2">
