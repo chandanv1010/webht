@@ -1,0 +1,439 @@
+/* ===========================================================================
+   Template detail page. Loads after store.css and reuses its tokens, so a
+   template's page and the catalogue it came from are visibly the same place.
+   =========================================================================== */
+
+.tpl-detail { padding-bottom: 120px; }
+
+/* The billboard here is shorter than the store's: this page has content below it that
+   people came for, so it should not fill the screen. */
+.tpl-hero { min-height: 0; padding: calc(144px + 54px) 0 70px; }
+
+.tpl-hero .store-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.tpl-hero__cat {
+    color: var(--value);
+    text-decoration: none;
+    letter-spacing: .14em;
+}
+.tpl-hero__cat:hover { text-decoration: underline; }
+.tpl-hero__code {
+    padding: 3px 9px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    color: var(--ink-faint);
+}
+
+/* ── Price ──────────────────────────────────────────────────────────────── */
+
+.tpl-price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 8px;
+}
+.tpl-price__was {
+    font-size: 16px;
+    color: var(--ink-faint);
+    text-decoration: line-through;
+}
+.tpl-price__off {
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: var(--value);
+    color: #05261f;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* ── Section heads ──────────────────────────────────────────────────────── */
+
+.tpl-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+.tpl-head__title {
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin: 0;
+}
+
+/* ── Device preview ─────────────────────────────────────────────────────── */
+
+.tpl-preview { padding: 58px 0 8px; border-top: 1px solid var(--line); }
+
+.tpl-devices {
+    display: inline-flex;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(244, 246, 255, .04);
+}
+.tpl-device {
+    padding: 9px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-dim);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+.tpl-device:hover { color: var(--ink); }
+.tpl-device.is-on {
+    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+    color: #fff;
+}
+.tpl-device:focus-visible { outline: 2px solid var(--value); outline-offset: 2px; }
+
+/* The stage animates its own width. The screenshot inside keeps its aspect ratio and
+   is anchored to the top, so narrowing the frame crops rather than squashes — which is
+   what a real browser does to a page that is wider than the window. */
+.tpl-stage {
+    margin: 0 auto;
+    transition: max-width .55s cubic-bezier(.22, .8, .3, 1);
+}
+.tpl-stage.is-desktop { max-width: 100%; }
+.tpl-stage.is-tablet  { max-width: 820px; }
+.tpl-stage.is-mobile  { max-width: 390px; }
+
+.tpl-frame {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0a0c22;
+    border: 1px solid rgba(244, 246, 255, .14);
+    box-shadow: 0 34px 80px rgba(0, 0, 0, .55);
+}
+.tpl-frame__bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 14px;
+    background: #101433;
+}
+.tpl-frame__bar > span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: rgba(244, 246, 255, .2);
+    flex: 0 0 auto;
+}
+.tpl-frame__bar > span:first-child { background: #fc746c; }
+.tpl-frame__bar > span:nth-child(2) { background: #f5c451; }
+.tpl-frame__bar > span:nth-child(3) { background: #35d0ba; }
+.tpl-frame__url {
+    width: auto !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    background: rgba(244, 246, 255, .07) !important;
+    margin-left: 10px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tpl-frame__screen {
+    /* Each device gets its real viewport proportion, so the frame is shaped like the
+       thing it represents. A fixed pixel height left the mobile frame two-thirds empty:
+       a 1400x875 screenshot scaled to 390px wide is only 244px tall. */
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+.tpl-stage.is-tablet .tpl-frame__screen { aspect-ratio: 4 / 3; }
+.tpl-stage.is-mobile .tpl-frame__screen { aspect-ratio: 9 / 16; }
+
+.tpl-frame__screen img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* cover + top anchoring: a narrower frame crops the sides and keeps the masthead,
+       which is what a browser does to a page wider than its window. */
+    object-fit: cover;
+    object-position: center top;
+}
+
+.tpl-stage__note {
+    margin: 16px 0 0;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+}
+
+/* ── Tabs ───────────────────────────────────────────────────────────────── */
+
+.tpl-info { padding: 58px 0 8px; }
+
+.tpl-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 30px;
+    scrollbar-width: none;
+}
+.tpl-tabs::-webkit-scrollbar { display: none; }
+
+.tpl-tab {
+    position: relative;
+    padding: 13px 20px;
+    border: 0;
+    background: transparent;
+    color: var(--ink-faint);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+.tpl-tab::after {
+    content: '';
+    position: absolute;
+    left: 20px; right: 20px; bottom: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-end), var(--accent));
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.tpl-tab:hover { color: var(--ink-dim); }
+.tpl-tab.is-on { color: var(--ink); }
+.tpl-tab.is-on::after { opacity: 1; }
+.tpl-tab:focus-visible { outline: 2px solid var(--value); outline-offset: -4px; }
+
+.tpl-panel[hidden] { display: none; }
+
+/* ── Prose ──────────────────────────────────────────────────────────────── */
+
+.tpl-prose {
+    max-width: 76ch;
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    line-height: 1.78;
+}
+.tpl-prose > :first-child { margin-top: 0; }
+.tpl-prose :is(h2, h3) {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin: 28px 0 10px;
+}
+.tpl-prose h2 {
+    font-size: 17.5px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+    line-height: 1.35;
+}
+.tpl-prose h3 { font-size: 15px; }
+.tpl-prose p { margin: 0 0 14px; }
+.tpl-prose ul { margin: 0 0 16px; padding-left: 20px; }
+.tpl-prose li { margin-bottom: 8px; }
+.tpl-prose a { color: var(--value); }
+.tpl-prose img { max-width: 100%; height: auto; border-radius: 10px; }
+
+/* ── Specs ──────────────────────────────────────────────────────────────── */
+
+.tpl-specs {
+    max-width: 760px;
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.tpl-specs__row {
+    display: grid;
+    grid-template-columns: minmax(140px, 220px) 1fr;
+    gap: 18px;
+    padding: 15px 20px;
+}
+.tpl-specs__row + .tpl-specs__row { border-top: 1px solid var(--line); }
+.tpl-specs__row:nth-child(odd) { background: rgba(244, 246, 255, .022); }
+.tpl-specs dt { color: var(--ink-faint); font-size: 13.5px; font-weight: 600; }
+.tpl-specs dd { margin: 0; color: var(--ink); font-size: 14.5px; }
+
+/* ── Handover list ──────────────────────────────────────────────────────── */
+
+.tpl-list {
+    max-width: 800px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.tpl-list li {
+    position: relative;
+    padding: 0 0 18px 34px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+}
+.tpl-list li:last-child { border-bottom: 0; margin-bottom: 0; }
+/* A tick, because every line here is something you receive. */
+.tpl-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--value);
+}
+.tpl-list li::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    width: 8px;
+    height: 4px;
+    border-left: 2px solid #05261f;
+    border-bottom: 2px solid #05261f;
+    transform: rotate(-45deg);
+}
+.tpl-list__title {
+    display: block;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.tpl-list__body {
+    display: block;
+    color: var(--ink-dim);
+    font-size: 14.5px;
+    line-height: 1.7;
+}
+
+/* ── Enquiry ────────────────────────────────────────────────────────────── */
+
+.tpl-cta { padding: 62px 0 10px; }
+
+.tpl-cta__box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 40px;
+    align-items: center;
+    padding: 38px;
+    border-radius: 20px;
+    border: 1px solid rgba(131, 59, 255, .3);
+    /* A single warm pool of colour, so the one thing we want on this page stands out
+       from everything above it without another bright band. */
+    background:
+        radial-gradient(120% 160% at 6% 0%, rgba(131, 59, 255, .22) 0%, transparent 62%),
+        var(--raised);
+}
+.tpl-cta__title {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin: 0 0 10px;
+}
+.tpl-cta__sub {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 52ch;
+}
+
+.tpl-form { display: grid; gap: 12px; }
+.tpl-form input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(5, 6, 26, .55);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14.5px;
+}
+.tpl-form input::placeholder { color: var(--ink-faint); }
+.tpl-form input:focus {
+    outline: none;
+    border-color: rgba(131, 59, 255, .7);
+    box-shadow: 0 0 0 3px rgba(131, 59, 255, .18);
+}
+.tpl-form button { width: 100%; }
+
+.tpl-form__msg {
+    margin: 2px 0 0;
+    min-height: 1.2em;
+    font-size: 13px;
+    color: var(--ink-faint);
+}
+.tpl-form__msg.is-good { color: var(--value); }
+.tpl-form__msg.is-bad { color: #fc746c; }
+
+/* ── Sticky bar ─────────────────────────────────────────────────────────── */
+
+.tpl-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    background: rgba(5, 6, 26, .93);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    transform: translateY(100%);
+    transition: transform .32s cubic-bezier(.22, .8, .3, 1);
+}
+.tpl-bar.is-on { transform: translateY(0); }
+
+.tpl-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 0;
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+.tpl-bar__name {
+    color: #f4f6ff;
+    font-size: 14.5px;
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.tpl-bar__price {
+    margin-left: auto;
+    color: #35d0ba;
+    font-size: 19px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.tpl-bar .store-btn { min-height: 42px; padding: 0 22px; flex: 0 0 auto; }
+
+/* ── Small screens ──────────────────────────────────────────────────────── */
+
+@media (max-width: 959px) {
+    .tpl-cta__box { grid-template-columns: minmax(0, 1fr); padding: 26px; }
+}
+
+@media (max-width: 767px) {
+    .tpl-hero { padding: calc(96px + 28px) 0 44px; }
+    .tpl-head { flex-direction: column; align-items: flex-start; }
+    .tpl-devices { width: 100%; overflow-x: auto; }
+    /* On a phone the desktop frame would be unreadably small; give it a taller crop. */
+    .tpl-frame__screen { aspect-ratio: 4 / 3; }
+    .tpl-specs__row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    /* The name is the first thing to go — the price and the button are the point. */
+    .tpl-bar__name { display: none; }
+    .tpl-detail { padding-bottom: 90px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tpl-stage, .tpl-bar, .tpl-device, .tpl-tab, .tpl-tab::after { transition: none; }
+}

@@ -170,7 +170,7 @@ class ProductController extends FrontendController
             'schema',
             'productRelated',
             'children'
-        ));
+        ) + ['dark' => true]);
     }
 
     private function schema($product, $productCatalogue, $breadcrumb){
@@ -295,6 +295,10 @@ class ProductController extends FrontendController
             ],
             'css' => [
                 'frontend/core/css/product.css',
+                // Same dark surface as the store, so a template's page feels like part
+                // of the catalogue rather than a different site.
+                'frontend/resources/store.css',
+                'frontend/resources/template-detail.css',
                 'https://prohousevn.com/scripts/fancybox-3/dist/jquery.fancybox.min.css'
             ]
         ];

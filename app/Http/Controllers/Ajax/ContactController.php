@@ -60,13 +60,17 @@ class ContactController extends Controller
             return response()->json($response);
         }
 
-        $flag = $this->contactService->create($request);
+        $result = $this->contactService->create($request);
+
+        // Report the service's actual code. This used to be `(!$flag) ? 11 : 10` on an
+        // array that is always truthy, so a failed insert still told the visitor "thành
+        // công" and their enquiry vanished silently.
+        $ok = ($result['code'] ?? 11) === 10;
 
         return response()->json([
-            'response' => $flag, 
-            'messages' => 'Đặt hàng thành công',
-            'code' => (!$flag) ? 11 : 10,
-        ]);  
+            'code' => $result['code'] ?? 11,
+            'messages' => $result['message'] ?? 'Có vấn đề xảy ra! Hãy thử lại',
+        ], $ok ? 200 : 500);
     }
 
     

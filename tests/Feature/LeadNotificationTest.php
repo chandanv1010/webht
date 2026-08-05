@@ -45,6 +45,36 @@ class LeadNotificationTest extends TestCase
         $this->assertStringContainsString('0912345678', urldecode((string) $calls[0][0]->body()));
     }
 
+    /**
+     * The template detail page posts product_id and a content note alongside the name
+     * and phone. contacts has no content column, so that field has to be dropped
+     * silently rather than failing the insert — and the enquiry must still record which
+     * template it was about.
+     */
+    public function test_enquiry_from_a_template_page_is_saved(): void
+    {
+        Http::fake(['api.telegram.org/*' => Http::response(['ok' => true], 200)]);
+
+        $productId = (int) DB::table('products')->value('id');
+
+        $res = $this->postJson('/ajax/contact/advise', [
+            'name' => 'Lê Test Mẫu',
+            'phone' => '0900555666',
+            'content' => 'Quan tâm mẫu: Kidzone',
+            'product_id' => $productId,
+        ]);
+
+        $res->assertStatus(200);
+
+        $row = DB::table('contacts')->where('phone', '0900555666')->first();
+        $this->assertNotNull($row, 'enquiry from a template page was not saved');
+        $this->assertSame($productId, (int) $row->product_id, 'the template was not recorded');
+
+        // The note still has to reach Telegram even though it is not stored.
+        $body = urldecode((string) Http::recorded()[0][0]->body());
+        $this->assertStringContainsString('Kidzone', $body);
+    }
+
     /** The whole point: a dead notification API must not cost us the customer. */
     public function test_enquiry_survives_a_failing_telegram_api(): void
     {
