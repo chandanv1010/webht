@@ -15,8 +15,14 @@
 @php
     $templateCount = $heroStats[0]['value'] ?? '';
 
-    // The second line of the dark headline cycles through these.
-    $typedWords = ['thiết kế website', 'viết bài SEO', 'chăm sóc website', 'tối ưu tốc độ'];
+    // The second line of the dark headline cycles through these. Upper-cased by CSS, so
+    // the strings stay readable here.
+    $typedWords = [
+        'Thiết kế website',
+        'Thiết kế app mobile',
+        'SEO website chuyên nghiệp',
+        'Chăm sóc website',
+    ];
 @endphp
 
 <section class="hero" data-hero>
@@ -30,7 +36,9 @@
             <div class="uk-container uk-container-center">
                 <div class="hero__grid">
                     <div class="hero__copy">
-                        <span class="hero__badge"><i aria-hidden="true"></i>Website &amp; SEO</span>
+                        <span class="hero__badge">
+                            <i class="hero__dot" aria-hidden="true"><b></b></i>Website &amp; SEO
+                        </span>
 
                         <h1 class="hero__title hero__title--dark">
                             <span class="hero__line">Chúng tôi làm</span>
@@ -261,10 +269,11 @@
             i += adding ? 1 : -1;
             out.textContent = word.slice(0, i);
 
-            var wait = adding ? 70 : 40;
+            var wait = adding ? 55 : 30;
 
-            if (adding && i === word.length) { adding = false; wait = 1900; }
-            else if (!adding && i === 0) { adding = true; w = (w + 1) % words.length; wait = 260; }
+            // Two seconds on the finished word, then it clears and the next one types.
+            if (adding && i === word.length) { adding = false; wait = 2000; }
+            else if (!adding && i === 0) { adding = true; w = (w + 1) % words.length; wait = 240; }
 
             setTimeout(tick, wait);
         })();

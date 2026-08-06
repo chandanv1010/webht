@@ -580,8 +580,11 @@
     font-weight: 700;
     text-align: center;
     transform: translateY(100%);
-    transition: transform .22s cubic-bezier(.2, .8, .3, 1);
+    /* Leaves at once, arrives after a beat: a label that appears the instant the pointer
+       crosses the card feels twitchy, and it fires on every card you pass over. */
+    transition: transform .26s cubic-bezier(.2, .8, .3, 1);
 }
+.tpl-card__link:hover .tpl-card__hint { transition-delay: .18s; }
 .tpl-card__link:hover .tpl-card__hint,
 .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); }
 
@@ -745,8 +748,10 @@
     .store-btn, .tpl-card__link, .tpl-card__hint,
     .store-about__body, .store-about__more, .store-about__more::after { transition: none; }
     .store-btn:hover, .tpl-card__link:hover, .tpl-card__link:focus-visible { transform: none; }
+    /* No delay here: someone who has asked for less motion should not also be made to
+       wait for the label. */
     .tpl-card__link:hover .tpl-card__hint,
-    .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); }
+    .tpl-card__link:focus-visible .tpl-card__hint { transform: translateY(0); transition-delay: 0s; }
     .store-shelf__track { scroll-behavior: auto; }
 }
 

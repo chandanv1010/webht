@@ -163,16 +163,28 @@ ul li,ol li{
 /* Violet, and thin. It carries one sentence and a row of small links; anything taller
    pushes the menu and the page's own first line further down for no gain. */
 .site-header__upper { background: #0459cc; padding: 0; }
+/* The slogan is centred in the strip and the social links sit at the right, so the
+   sentence reads as a statement rather than as a label pinned to one corner. */
 .site-header__upper-row {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 20px;
     min-height: 34px;
+}
+.site-header__upper-row .site-social {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .site-header__slogan {
     margin: 0;
     min-width: 0;
+    text-align: center;
+    /* Room for the social links, which are out of the flow. */
+    padding: 0 190px;
     font-size: 12.5px;
     font-weight: 500;
     color: rgba(255, 255, 255, .82);
@@ -270,7 +282,7 @@ ul li,ol li{
     height: 44px;
     padding: 0 30px;
     border: 0;
-    border-radius: 0;
+    border-radius: 6px;
     background-image: linear-gradient(90deg, #ff7337 0%, #ee4d2d 100%);
     color: #fff;
     font-family: inherit;
@@ -288,6 +300,7 @@ ul li,ol li{
 .site-header__cta:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
 
 @media (max-width: 1320px) {
+    .site-header__slogan { padding: 0 150px; }
     .site-header__row { gap: 12px; }
     .site-header .navigation .main-menu > li > a { padding: 27px 9px; font-size: 12.5px; }
     .site-header__cta { padding: 0 20px; font-size: 13.5px; }
@@ -951,10 +964,11 @@ ul li,ol li{
 }
 
 .homepage-pricing{
-    /* 250px was clearance for the old 700px-tall slide, which the cards were meant to
-       overlap. The hero is a normal section now, so this was 250px of nothing. */
-    padding-top: 76px;
-    padding-bottom: 50px;
+    /* 250px was clearance for the old 700px-tall slide the cards were meant to overlap.
+       The hero is a normal section now, so this is the row's own breathing room — and the
+       middle card stands 75px proud, which eats into the top of it. */
+    padding-top: 150px;
+    padding-bottom: 60px;
 }
 .box-content *{
 	text-align: center;
@@ -3538,14 +3552,14 @@ button,
 /* ── Shared copy ────────────────────────────────────────────────────────── */
 
 .hero__title { margin: 0 0 18px; font-weight: 700; letter-spacing: -.03em; }
-.hero__line { display: block; font-size: 40px; line-height: 53px; color: #0b1b3d; }
+.hero__line { display: block; font-size: 50px; line-height: 63px; color: #0b1b3d; }
 .hero__line em { font-style: normal; color: #0573ff; }
 
 .hero__lead {
     margin: 0;
     max-width: 52ch;
-    font-size: 16.5px;
-    line-height: 28px;
+    font-size: 17.5px;
+    line-height: 30px;
     color: #5b6478;
 }
 
@@ -3606,24 +3620,52 @@ button,
     font-weight: 600;
     color: rgba(255, 255, 255, .8);
 }
-.hero__badge i { width: 7px; height: 7px; border-radius: 50%; background: #35d0ba; }
+/* The dot pulses and sends a ring outward, as in the sample. The ring is a child so the
+   dot itself stays a constant size — scaling the dot would make the whole badge breathe. */
+.hero__dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #35d0ba;
+    animation: hero-dot 2.4s ease-in-out infinite;
+}
+.hero__dot b {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #35d0ba;
+    animation: hero-ripple 2.4s cubic-bezier(.2, .6, .3, 1) infinite;
+}
+
+@keyframes hero-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(53, 208, 186, .5); }
+    50% { box-shadow: 0 0 0 3px rgba(53, 208, 186, .18); }
+}
+@keyframes hero-ripple {
+    0% { transform: scale(1); opacity: .55; }
+    70%, 100% { transform: scale(3.6); opacity: 0; }
+}
 
 .hero__title--dark .hero__line { color: #fff; }
-/* The typed line carries the one warm accent on this slide. */
+/* The typed line carries the one warm accent on this slide, and is set in caps: it is the
+   name of a service, so it reads as a label rather than as part of the sentence. */
 .hero__title--dark .hero__line--type {
+    text-transform: uppercase;
+    letter-spacing: -.01em;
     background-image: linear-gradient(90deg, #ff8a3d 0%, #ffd166 42%, #35d0ba 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-    min-height: 58px;
+    min-height: 63px;
 }
 .hero__caret {
     display: inline-block;
     width: 3px;
-    height: 40px;
+    height: 46px;
     margin-left: 6px;
-    vertical-align: -6px;
+    vertical-align: -7px;
     background: #35d0ba;
     -webkit-text-fill-color: #35d0ba;
     animation: hero-caret 1.05s steps(1) infinite;
@@ -3635,19 +3677,20 @@ button,
 .hero__stats {
     display: flex;
     flex-wrap: wrap;
-    gap: 34px;
+    gap: 40px;
     margin: 34px 0 0;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255, 255, 255, .07);
+    padding-top: 26px;
+    /* A hint of a rule. At .07 it still read as a drawn line against the navy. */
+    border-top: 1px solid rgba(255, 255, 255, .035);
 }
 .hero__stats dd {
-    margin: 0 0 3px;
-    font-size: 27px;
+    margin: 0 0 10px;
+    font-size: 30px;
     font-weight: 700;
     letter-spacing: -.02em;
     color: #fff;
 }
-.hero__stats dt { font-size: 12.5px; line-height: 18px; color: rgba(255, 255, 255, .5); max-width: 15ch; }
+.hero__stats dt { font-size: 13px; line-height: 19px; color: rgba(255, 255, 255, .46); max-width: 15ch; }
 
 /* ── The orbit ──────────────────────────────────────────────────────────── */
 
@@ -3707,7 +3750,9 @@ button,
    orbit. Not by transform: a percentage inside translateX() resolves against the
    element's own width, so 50% of a 58px bubble is 29px and all eight ended up in a heap
    at the centre. */
-.hero__bubbles { position: absolute; inset: 0; }
+/* The ring of bubbles turns; each bubble turns back by the same amount so its icon and
+   label stay upright. Two animations of identical duration, opposite directions. */
+.hero__bubbles { position: absolute; inset: 0; animation: hero-orbit 54s linear infinite; }
 
 .hero__bubble {
     position: absolute;
@@ -3723,8 +3768,7 @@ button,
     border: 1px solid rgba(255, 255, 255, .09);
     color: rgba(255, 255, 255, .72);
     transform: translate(-50%, -50%);
-    animation: hero-float 7s ease-in-out infinite;
-    animation-delay: calc(var(--d, 0) * 1s);
+    animation: hero-counter 54s linear infinite;
 }
 .hero__bubble svg { width: 19px; height: 19px; }
 .hero__bubble b {
@@ -3751,9 +3795,12 @@ button,
 .hero__bubble--7 { left: 23.6%; top: 55.6%; --d: 2.4; }
 .hero__bubble--8 { left: 43.0%; top: 23.9%; --d: 0.0; }
 
-/* Floating, not spinning: the sample's diagram barely moves. */
-@keyframes hero-float {
-    50% { transform: translate(-50%, calc(-50% - 7px)); }
+@keyframes hero-orbit { to { transform: rotate(360deg); } }
+/* The counter-turn has to carry the centring translate, or the bubble jumps off its point
+   the moment the animation takes over the transform property. */
+@keyframes hero-counter {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 /* ── Slide 2: light ─────────────────────────────────────────────────────── */
@@ -3924,18 +3971,18 @@ button,
 
 @media (max-width: 1023px) {
     .hero__grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
-    .hero__line { font-size: 33px; line-height: 44px; }
-    .hero__title--dark .hero__line--type { min-height: 44px; }
-    .hero__caret { height: 30px; vertical-align: -4px; }
+    .hero__line { font-size: 37px; line-height: 48px; }
+    .hero__title--dark .hero__line--type { min-height: 48px; }
+    .hero__caret { height: 34px; vertical-align: -5px; }
     .hero__orbit { max-width: 360px; margin: 0 auto; }
     .hero__fan { height: 230px; }
 }
 
 @media (max-width: 767px) {
     .hero__slide { padding: 38px 0 68px; }
-    .hero__line { font-size: 26px; line-height: 35px; }
-    .hero__title--dark .hero__line--type { min-height: 35px; }
-    .hero__caret { height: 24px; vertical-align: -3px; }
+    .hero__line { font-size: 28px; line-height: 38px; }
+    .hero__title--dark .hero__line--type { min-height: 38px; }
+    .hero__caret { height: 26px; vertical-align: -4px; }
     .hero__actions .hero__btn { width: 100%; }
     .hero__stats { gap: 20px; }
     .hero__stats dd { font-size: 23px; }
@@ -3958,438 +4005,9 @@ button,
         transform: none;
         transition: none;
     }
-    .hero__bubble, .hero__caret { animation: none; }
+    .hero__bubbles, .hero__bubble, .hero__caret, .hero__dot, .hero__dot b { animation: none; }
+    .hero__bubble { transform: translate(-50%, -50%); }
     .hero__showcase:hover .hero__fan-item { transform: translateX(var(--shift)) rotate(var(--tilt)); }
-}
-
-/* ===========================================================================
-   Search panel — what the header's search icon opens.
-   =========================================================================== */
-
-.search-panel {
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 96px 20px 20px;
-}
-.search-panel[hidden] { display: none; }
-
-.search-panel__veil {
-    position: absolute;
-    inset: 0;
-    background: rgba(3, 12, 40, .62);
-    backdrop-filter: blur(3px);
-    opacity: 0;
-    transition: opacity .2s ease;
-}
-.search-panel.is-open .search-panel__veil { opacity: 1; }
-
-.search-panel__body {
-    position: relative;
-    width: 100%;
-    max-width: 660px;
-    padding: 26px 28px 28px;
-    background: #fff;
-    opacity: 0;
-    transform: translateY(-12px);
-    transition: opacity .2s ease, transform .26s cubic-bezier(.2, .7, .3, 1);
-}
-.search-panel.is-open .search-panel__body { opacity: 1; transform: none; }
-
-.search-panel__form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 18px;
-    border-bottom: 2px solid #0459cc;
-}
-.search-panel__icon { display: flex; color: #0459cc; }
-.search-panel__icon svg { width: 20px; height: 20px; }
-
-.search-panel__form input {
-    flex: 1 1 auto;
-    min-width: 0;
-    height: 40px;
-    border: 0;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 19px;
-    color: #031d5b;
-}
-.search-panel__form input::placeholder { color: #a7afc0; }
-.search-panel__form input::-webkit-search-cancel-button { display: none; }
-
-.search-panel__go {
-    flex: 0 0 auto;
-    height: 40px;
-    padding: 0 22px;
-    border: 0;
-    background: #0459cc;
-    color: #fff;
-    font-family: inherit;
-    font-size: 14.5px;
-    font-weight: 700;
-    cursor: pointer;
-}
-.search-panel__go:hover { background: #03429b; }
-
-.search-panel__x {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 0;
-    background: transparent;
-    color: #8b93a5;
-    cursor: pointer;
-}
-.search-panel__x svg { width: 17px; height: 17px; }
-.search-panel__x:hover { color: #ee4d2d; }
-
-/* The suggestions. This is the half that makes a search box useful to someone who does
-   not yet know the word for what they want. */
-.search-panel__hot { margin-top: 22px; }
-.search-panel__hot-label {
-    margin: 0 0 12px;
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: #8b93a5;
-}
-.search-panel__chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.search-panel__chips a {
-    display: block;
-    padding: 8px 14px;
-    background: #f4f5f9;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: #3f4657;
-    text-decoration: none;
-}
-.search-panel__chips a:hover { background: #0459cc; color: #fff; }
-.search-panel__chips a:focus-visible { outline: 2px solid #0459cc; outline-offset: 2px; }
-
-@media (max-width: 600px) {
-    .search-panel { padding-top: 70px; }
-    .search-panel__body { padding: 20px 18px 22px; }
-    .search-panel__form input { font-size: 17px; }
-    .search-panel__go { padding: 0 16px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .search-panel__veil, .search-panel__body { transition: none; }
-    .search-panel__body { transform: none; }
-}
-
-/* ===========================================================================
-   Home: "Về chúng tôi".
-
-   The section had no padding of its own, so it sat flush against the video panel above
-   it — two different subjects with no seam between them. It also had no type hierarchy:
-   the eyebrow, the heading and the body were all within a few pixels of each other after
-   the site-wide type reduction.
-   =========================================================================== */
-
-.panel-intro {
-    padding: 84px 0 88px;
-    background: #fff;
-}
-
-/* The eyebrow. Small on purpose — it labels the section, it is not the heading. */
-.panel-intro .heading-1 { margin: 0 0 14px; }
-.panel-intro .heading-1 > * {
-    font-size: 12.5px;
-    font-weight: 700;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: #0459cc;
-}
-
-.panel-intro .main-heading {
-    margin: 0 0 18px;
-    max-width: 22ch;
-    font-size: 31px;
-    line-height: 42px;
-    font-weight: 700;
-    letter-spacing: -.015em;
-    color: #031d5b;
-}
-
-.panel-intro > .uk-container .description {
-    max-width: 60ch;
-    font-size: 16px;
-    line-height: 28px;
-    color: #5b6478;
-}
-
-/* The two points below the copy. A rule down the left instead of a hover card: they are
-   read once, not clicked. */
-.panel-intro .intro-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 18px 0 18px 20px;
-    border-left: 2px solid #d7e8ff;
-    border-radius: 0;
-    cursor: default;
-}
-.panel-intro .intro-item:hover { background: transparent; border-left-color: #0459cc; }
-.panel-intro .intro-item .icon { flex: 0 0 auto; width: 42px; }
-.panel-intro .intro-item .icon img { width: 100%; height: auto; display: block; }
-.panel-intro .intro-title {
-    margin-bottom: 6px;
-    font-size: 17.5px;
-    font-weight: 700;
-    color: #031d5b;
-}
-.panel-intro .intro-item .description { margin-bottom: 0; font-size: 15px; line-height: 26px; }
-
-/* The illustration column: capped and centred so it does not tower over the copy. */
-.panel-intro .illus { max-width: 420px; }
-
-@media (max-width: 1023px) {
-    .panel-intro { padding: 56px 0 60px; }
-    .panel-intro .main-heading { max-width: none; font-size: 26px; line-height: 36px; }
-}
-
-/* ===========================================================================
-   Home hero.
-
-   Replaces the five-slide carousel. Two slides that argue different things — the
-   studio, then the library — on a flat ground, with the primary blue carrying the
-   accent and nothing else competing.
-   =========================================================================== */
-
-.hero {
-    position: relative;
-    background: #f6f8fc;
-    overflow: hidden;
-}
-
-.hero__slides { position: relative; }
-
-/* The slide is a flex box, which makes the container a flex item — and a flex item
-   shrink-fits its content instead of taking the container's own width, so the copy
-   drifted inward by a hundred pixels on one slide and not the other. */
-.hero__slide > .uk-container { width: 100%; }
-
-/* Stacked, so the height is the taller of the two and nothing jumps on change. */
-.hero__slide {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    padding: 64px 0 96px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity .55s cubic-bezier(.4, 0, .2, 1);
-}
-.hero__slide.is-on { opacity: 1; visibility: visible; position: relative; }
-
-.hero__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
-    gap: 56px;
-    align-items: center;
-    width: 100%;
-}
-
-/* ── Copy ───────────────────────────────────────────────────────────────── */
-
-.hero__eyebrow {
-    margin: 0 0 14px;
-    font-size: 12.5px;
-    font-weight: 700;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: #0573ff;
-}
-
-.hero__title {
-    margin: 0 0 18px;
-    max-width: 20ch;
-    font-size: 40px;
-    line-height: 52px;
-    font-weight: 500;
-    letter-spacing: -.02em;
-    color: #0b1b3d;
-}
-.hero__title strong { font-weight: 700; }
-
-.hero__lead {
-    margin: 0;
-    max-width: 54ch;
-    font-size: 16.5px;
-    line-height: 28px;
-    color: #5b6478;
-}
-
-.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-
-.hero__btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 28px;
-    border: 1px solid transparent;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-}
-.hero__btn--primary { background: #0573ff; color: #fff; }
-.hero__btn--primary:hover { background: #0459cc; color: #fff; }
-.hero__btn--ghost { background: #fff; border-color: #d7e2f2; color: #0b1b3d; }
-.hero__btn--ghost:hover { border-color: #0573ff; color: #0573ff; }
-.hero__btn:focus-visible { outline: 2px solid #0573ff; outline-offset: 2px; }
-
-/* ── Slide 1: the numbers ───────────────────────────────────────────────── */
-
-.hero__stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 34px;
-    margin: 36px 0 0;
-    padding-top: 26px;
-    border-top: 1px solid #e2e8f3;
-}
-.hero__stats dd {
-    margin: 0 0 4px;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -.02em;
-    color: #0573ff;
-}
-.hero__stats dt { font-size: 13px; line-height: 19px; color: #8b93a5; max-width: 14ch; }
-
-/* The four capabilities, offset from each other so the column reads as a stack of
-   cards rather than a list. */
-.hero__caps { margin: 0; padding: 0; list-style: none; }
-.hero__caps li {
-    padding: 18px 22px;
-    margin-left: calc(var(--i) * 22px);
-    margin-bottom: 10px;
-    background: #fff;
-    border: 1px solid #e6ecf7;
-    box-shadow: 0 10px 26px rgba(11, 27, 61, .05);
-}
-.hero__cap-name {
-    display: block;
-    margin-bottom: 3px;
-    font-size: 15px;
-    font-weight: 700;
-    color: #0b1b3d;
-}
-.hero__cap-note { display: block; font-size: 13.5px; line-height: 20px; color: #8b93a5; }
-
-/* ── Slide 2: the chips and the wall ────────────────────────────────────── */
-
-.hero__chips { margin-top: 30px; padding-top: 24px; border-top: 1px solid #e2e8f3; }
-.hero__chips-label {
-    display: block;
-    margin-bottom: 12px;
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: #8b93a5;
-}
-.hero__chips ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.hero__chips a {
-    display: block;
-    padding: 8px 14px;
-    background: #fff;
-    border: 1px solid #e2e8f3;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: #3f4657;
-    text-decoration: none;
-}
-.hero__chips a:hover { border-color: #0573ff; color: #0573ff; }
-
-/* Three columns of real covers drifting at different speeds. Masked at both ends so
-   they fade out rather than being cut. */
-.hero__wall {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    height: 440px;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
-}
-.hero__wall-col { display: grid; gap: 12px; animation: hero-drift 34s linear infinite; }
-.hero__wall-col:nth-child(2) { animation-duration: 44s; animation-direction: reverse; }
-.hero__wall-col:nth-child(3) { animation-duration: 39s; }
-.hero__wall-col span {
-    display: block;
-    aspect-ratio: 4 / 3;
-    background-size: cover;
-    background-position: center top;
-    border: 1px solid #e6ecf7;
-    background-color: #eef2f9;
-}
-
-@keyframes hero-drift {
-    from { transform: translateY(0); }
-    /* Half, because each column's covers are repeated twice — so the loop has no seam. */
-    to { transform: translateY(-50%); }
-}
-
-/* ── Which slide ────────────────────────────────────────────────────────── */
-
-.hero__nav { position: absolute; left: 0; right: 0; bottom: 30px; z-index: 3; }
-.hero__dots { display: flex; gap: 8px; }
-.hero__dot {
-    width: 34px;
-    height: 4px;
-    padding: 0;
-    border: 0;
-    background: #cbd6e8;
-    cursor: pointer;
-    transition: background-color .3s ease, width .3s ease;
-}
-.hero__dot.is-on { width: 54px; background: #0573ff; }
-.hero__dot:focus-visible { outline: 2px solid #0573ff; outline-offset: 3px; }
-
-/* ── Narrow ─────────────────────────────────────────────────────────────── */
-
-@media (max-width: 1023px) {
-    .hero__grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
-    .hero__title { max-width: none; font-size: 32px; line-height: 42px; }
-    .hero__caps li { margin-left: 0; }
-    .hero__wall { height: 320px; }
-}
-
-@media (max-width: 767px) {
-    .hero__slide { padding: 40px 0 66px; }
-    .hero__title { font-size: 27px; line-height: 36px; }
-    .hero__actions .hero__btn { width: 100%; }
-    .hero__stats { gap: 22px; }
-    .hero__stats dd { font-size: 25px; }
-    .hero__wall { grid-template-columns: repeat(2, 1fr); height: 260px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero__slide { transition: none; }
-    .hero__wall-col { animation: none; }
-    .hero__dot { transition: none; }
 }
 
 /* ── Hero arrows ────────────────────────────────────────────────────────── */

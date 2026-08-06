@@ -280,20 +280,28 @@
         // fighting it.
         if (el._glide) cancelAnimationFrame(el._glide);
 
-        var DURATION = 620;
+        // The track carries scroll-snap-type: x proximity for swiping. Snapping and a
+        // hand-driven scrollLeft fight each other every frame — the browser keeps pulling
+        // the position back to the nearest card — which is why the arrows jumped instead
+        // of gliding. Off for the duration, on again at the end.
+        el.style.scrollSnapType = 'none';
+
+        var DURATION = 720;
         var start = null;
 
         el._glide = requestAnimationFrame(function step(now) {
             if (start === null) start = now;
             var t = Math.min(1, (now - start) / DURATION);
-            // easeOutCubic
-            var eased = 1 - Math.pow(1 - t, 3);
+            // easeInOutCubic: it leaves and arrives slowly, which is what reads as a glide
+            // rather than a shove.
+            var eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
             el.scrollLeft = from + (to - from) * eased;
 
             if (t < 1) {
                 el._glide = requestAnimationFrame(step);
             } else {
                 el._glide = null;
+                el.style.scrollSnapType = '';
             }
         });
     }

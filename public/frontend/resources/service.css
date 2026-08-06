@@ -543,11 +543,17 @@
 .svc-status__legend i.is-warn { background: #f5a623; }
 
 .svc-faults { padding: 66px 0; }
+/* Five cards. auto-fit put four on the first row and left one stranded on the second,
+   flush left. Three and two, with the pair centred under the row above. */
 .svc-faults__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 18px;
 }
+/* Each card spans two of the six columns: three fit a row exactly. */
+.svc-faults__grid > * { grid-column: span 2; }
+/* The fourth starts one column in, so the last two sit centred. */
+.svc-faults__grid > *:nth-child(4) { grid-column: 2 / span 2; }
 .svc-fault {
     padding: 24px 22px;
     border-radius: 12px;
@@ -718,12 +724,21 @@
     .svc-hero__grid,
     .svc-band__grid,
     .svc-sla__grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+    /* Two across, and the odd one out spans the pair rather than sitting half-width. */
+    .svc-faults__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .svc-faults__grid > *,
+    .svc-faults__grid > *:nth-child(4) { grid-column: span 2; }
+    .svc-faults__grid > *:nth-child(5) { grid-column: 2 / span 2; }
     .svc-triptych { order: -1; }
     .svc-tri--wire, .svc-tri--live { transform: none; }
 }
 
 @media (max-width: 767px) {
     .svc { padding-top: 0; }
+    .svc-faults__grid { grid-template-columns: minmax(0, 1fr); }
+    .svc-faults__grid > *,
+    .svc-faults__grid > *:nth-child(4),
+    .svc-faults__grid > *:nth-child(5) { grid-column: 1 / -1; }
     .svc-title { font-size: 27px; line-height: 36px; }
     .svc-h2 { font-size: 22px; line-height: 31px; }
     .svc-hero { padding: 36px 0 44px; }

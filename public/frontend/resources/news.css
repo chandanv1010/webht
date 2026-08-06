@@ -335,3 +335,236 @@
     .service-hero { padding: 26px 0 38px; }
     .service-hero .store-hero__actions .store-btn { width: 100%; }
 }
+
+/* ===========================================================================
+   Article contents.
+
+   The right column was empty, which left a long article as a narrow strip on a wide
+   screen. A contents list belongs there: it is the one thing a long article can offer
+   that a printed page cannot.
+   =========================================================================== */
+
+.article-layout { display: grid; grid-template-columns: minmax(0, 1fr); }
+.article-body.has-toc .article-layout {
+    grid-template-columns: minmax(0, 1fr) 268px;
+    gap: 56px;
+    align-items: start;
+}
+/* The measure stays what it was; the column is wider than the text on purpose. */
+.article-body.has-toc .article-body__inner { max-width: 68ch; }
+
+.article-toc {
+    position: sticky;
+    /* Clears the header, whose height the page publishes as --header-h. */
+    top: calc(var(--header-h, 111px) + 24px);
+    padding: 22px 20px 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(244, 246, 255, .03);
+}
+
+.article-toc__label {
+    margin: 0 0 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.article-toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: toc;
+    max-height: min(58vh, 520px);
+    overflow-y: auto;
+    /* The list scrolls inside the card on a short window rather than pushing the card
+       past the bottom of the screen. */
+    scrollbar-width: thin;
+}
+.article-toc__list li { counter-increment: toc; }
+.article-toc__list a {
+    display: flex;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: background-color .24s ease, color .24s ease, padding-left .24s ease;
+}
+.article-toc__list a::before {
+    content: counter(toc);
+    flex: 0 0 auto;
+    padding-top: 1px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    transition: color .24s ease;
+}
+/* Sub-headings step in, so the shape of the article is visible in the list. */
+.article-toc__list li.is-h3 a { padding-left: 24px; font-size: 13px; }
+.article-toc__list a:hover { background: rgba(244, 246, 255, .06); color: var(--ink); }
+.article-toc__list a.is-on {
+    background: rgba(5, 115, 255, .16);
+    color: var(--ink);
+}
+.article-toc__list a.is-on::before { color: #8ec2ff; }
+.article-toc__list a:focus-visible { outline: 2px solid var(--value); outline-offset: 1px; }
+
+/* How far through the article you are. Quieter than a number, and it never lies. */
+.article-toc__progress {
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: rgba(244, 246, 255, .08);
+    overflow: hidden;
+}
+.article-toc__progress span {
+    display: block;
+    height: 100%;
+    background: #0573ff;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform .18s linear;
+}
+
+/* Headings need to clear the header when a contents link jumps to them. */
+.article-body__inner :is(h2, h3) { scroll-margin-top: calc(var(--header-h, 111px) + 24px); }
+.article-body__inner :is(h2, h3):focus { outline: none; }
+
+/* ── The button that takes over ─────────────────────────────────────────── */
+
+.toc-fab {
+    position: fixed;
+    left: 24px;
+    bottom: 26px;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 46px;
+    padding: 0 18px;
+    border: 1px solid rgba(244, 246, 255, .14);
+    border-radius: 40px;
+    background: rgba(11, 14, 42, .92);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    /* Out of reach until the sidebar has scrolled away. */
+    opacity: 0;
+    transform: translateY(14px) scale(.96);
+    pointer-events: none;
+    transition: opacity .3s ease, transform .38s cubic-bezier(.2, .78, .28, 1),
+                background-color .26s ease, border-color .26s ease;
+}
+.toc-fab.is-in { opacity: 1; transform: none; pointer-events: auto; }
+.toc-fab:hover { background: #0573ff; border-color: #0573ff; }
+.toc-fab:focus-visible { outline: 2px solid var(--value); outline-offset: 3px; }
+
+.toc-fab__bars { display: flex; flex-direction: column; gap: 3px; width: 16px; }
+.toc-fab__bars i {
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: width .3s cubic-bezier(.2, .78, .28, 1);
+}
+.toc-fab__bars i:nth-child(1) { width: 16px; }
+.toc-fab__bars i:nth-child(2) { width: 11px; }
+.toc-fab__bars i:nth-child(3) { width: 14px; }
+/* The bars line up on hover — a small acknowledgement that the button does something. */
+.toc-fab:hover .toc-fab__bars i { width: 16px; }
+
+/* ── The panel it opens ─────────────────────────────────────────────────── */
+
+.toc-sheet { position: fixed; inset: 0; z-index: 9997; display: flex; }
+.toc-sheet[hidden] { display: none; }
+
+.toc-sheet__veil {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 5, 20, .6);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity .24s ease;
+}
+.toc-sheet.is-open .toc-sheet__veil { opacity: 1; }
+
+.toc-sheet__panel {
+    position: relative;
+    width: min(360px, 88vw);
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 24px;
+    padding: 22px 20px 20px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #0b0e2a;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, .5);
+    /* Rises from the button it came from rather than appearing. */
+    opacity: 0;
+    transform: translateY(18px) scale(.97);
+    transform-origin: 0 100%;
+    transition: opacity .24s ease, transform .34s cubic-bezier(.2, .78, .28, 1);
+}
+.toc-sheet.is-open .toc-sheet__panel { opacity: 1; transform: none; }
+
+.toc-sheet__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+.toc-sheet__title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+.toc-sheet__x {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(244, 246, 255, .06);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: background-color .24s ease, color .24s ease;
+}
+.toc-sheet__x svg { width: 15px; height: 15px; }
+.toc-sheet__x:hover { background: #0573ff; color: #fff; }
+
+.toc-sheet .article-toc__list { max-height: min(64vh, 560px); }
+
+/* ── Narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1099px) {
+    /* No room for a column beside the text; the button and the panel do the whole job. */
+    .article-body.has-toc .article-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .article-toc { display: none; }
+    .toc-fab { opacity: 1; transform: none; pointer-events: auto; }
+}
+
+@media (max-width: 767px) {
+    .toc-fab { left: 16px; bottom: 18px; height: 42px; padding: 0 15px; }
+    .toc-sheet__panel { margin-left: 16px; margin-right: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .article-toc__list a, .article-toc__progress span, .toc-fab, .toc-fab__bars i,
+    .toc-sheet__veil, .toc-sheet__panel, .toc-sheet__x { transition: none; }
+    .toc-fab { transform: none; }
+    .toc-sheet__panel { transform: none; }
+}
