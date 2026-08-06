@@ -289,8 +289,26 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $query->paginate(20);
     }
     
-    public function getRelated($limit = 6, $productCatalogueId = 0, $productId = 0){
-        return $this->model->where('publish' , 2)->where('product_catalogue_id', $productCatalogueId)->where('id', '!=', $productId)->orderBy('id', 'desc')->limit($limit)->get();
+    /**
+     * The "more like this" row on a template page.
+     *
+     * The eager loads are the point: every card prints its name and its category name, and
+     * without them that was two queries per card — six cards, twelve queries, all of them
+     * identical in shape. `product_catalogues.languages` in particular has to be nested;
+     * loading only `product_catalogues` still leaves the category name to fetch per card.
+     */
+    public function getRelated($limit = 6, $productCatalogueId = 0, $productId = 0, $languageId = 1){
+        return $this->model
+            ->with([
+                'languages' => fn ($q) => $q->where('language_id', $languageId),
+                'product_catalogues.languages' => fn ($q) => $q->where('language_id', $languageId),
+            ])
+            ->where('publish', 2)
+            ->where('product_catalogue_id', $productCatalogueId)
+            ->where('id', '!=', $productId)
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
     }
 
     /**

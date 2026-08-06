@@ -281,13 +281,17 @@ class postController extends FrontendController
                 'frontend/core/library/cart.js',
                 'frontend/core/library/product.js',
                 'frontend/core/library/review.js',
-                'https://prohousevn.com/scripts/fancybox-3/dist/jquery.fancybox.min.js'
+                // Vendored. This was loaded from prohousevn.com — the site this codebase was
+                // reused from. That host stopped answering, and a blocking <script>
+                // from a dead host leaves the page loading until the browser gives
+                // up, which is what made these pages hang.
+                'frontend/resources/vendor/fancybox/jquery.fancybox.min.js'
             ],
             'css' => [
                 'frontend/core/css/product.css',
                 'frontend/resources/store.css',
                 'frontend/resources/news.css',
-                'https://prohousevn.com/scripts/fancybox-3/dist/jquery.fancybox.min.css'
+                'frontend/resources/vendor/fancybox/jquery.fancybox.min.css'
             ]
         ];
     }

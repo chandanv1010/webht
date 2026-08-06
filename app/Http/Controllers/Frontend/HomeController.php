@@ -155,7 +155,11 @@ class HomeController extends FrontendController
             ],
             'js' => [
                 'frontend/resources/plugins/OwlCarousel2-2.3.4/dist/owl.carousel.min.js',
-                'https://getuikit.com/v2/src/js/components/sticky.js'
+                // The local copy, which was already in the repo. Loading this from
+                // getuikit.com made every home page wait on someone else's server for a
+                // blocking script — the same failure that had the template pages hanging
+                // on a dead host.
+                'frontend/resources/uikit/js/components/sticky.min.js'
             ]
         ];
     }
