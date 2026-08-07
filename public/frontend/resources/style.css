@@ -4079,3 +4079,14 @@ button,
 @media (prefers-reduced-motion: reduce) {
     .hero__arrow { transition: opacity .2s ease; transform: none; }
 }
+
+/* The logo. Inline SVG so the wordmark renders in Manrope — an <svg> loaded as an image
+   cannot fetch a web font, and would fall back to Arial.
+   aspect-ratio is load-bearing: with only a viewBox and no width attribute, `width: auto`
+   does not derive the width from the ratio — the mobile copy came out 25px wide. */
+.brand {
+    display: block;
+    width: auto;
+    aspect-ratio: 194 / 44;
+    flex: 0 0 auto;
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194 44" width="194" height="44"
+     role="img" aria-label="HT Việt Nam">
+  <title>HT Việt Nam</title>
+
+  <!--
+    An H built from three bars in the site's three colours. Both uprights run the full
+    height; the teal band is drawn last so it crosses both, which is where the three
+    colours meet and what makes the mark read as one letter rather than three shapes.
+  -->
+  <rect x="2"  y="4"  width="10" height="36" rx="5" fill="#0573ff"/>
+  <rect x="24" y="4"  width="10" height="36" rx="5" fill="#0b1b3d"/>
+  <rect x="2"  y="17" width="32" height="10" rx="5" fill="#35d0ba"/>
+
+  <!--
+    Manrope where the page has it. An <svg> used as <img> cannot fetch a web font, which is
+    why the header inlines this markup instead — see
+    resources/views/frontend/component/logo.blade.php.
+  -->
+  <text x="46" y="31"
+        font-family="Manrope, 'Segoe UI', Roboto, Arial, sans-serif"
+        font-size="25" font-weight="800" letter-spacing="-0.5">
+    <tspan fill="#0573ff">HT</tspan><tspan fill="#0b1b3d" dx="3">VIETNAM</tspan>
+  </text>
+</svg>

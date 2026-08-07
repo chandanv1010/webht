@@ -96,7 +96,7 @@
             <div class="site-header__row">
 
                 <a href="{{ url('/') }}" class="site-header__logo" title="{{ $system['homepage_company'] ?? '' }}">
-                    <img src="{{ $system['homepage_logo'] }}" alt="{{ $system['homepage_brand'] ?? '' }}">
+                    @include('frontend.component.logo', ['height' => '40px'])
                 </a>
 
                 @include('frontend.component.navigation')
@@ -127,8 +127,8 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="mobile-logo">
-                    <a href="{{ url('/') }}" title="{{ $system['seo_meta_title'] ?? '' }}" class="image img-cover">
-                        <img src="{{ $system['homepage_logo'] }}" alt="{{ $system['homepage_brand'] ?? '' }}">
+                    <a href="{{ url('/') }}" title="{{ $system['seo_meta_title'] ?? '' }}" class="image">
+                        @include('frontend.component.logo', ['height' => '34px'])
                     </a>
                 </div>
                 <div class="tool uk-flex uk-flex-middle">
