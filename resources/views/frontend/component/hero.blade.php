@@ -53,8 +53,21 @@
 
                         <div class="hero__actions">
                             <button type="button" class="hero__btn hero__btn--primary" data-lead-open
-                                    data-lead-subject="TƯ VẤN THIẾT KẾ">Nhận tư vấn</button>
-                            <a class="hero__btn hero__btn--outline" href="{{ write_url('kho-giao-dien') }}">Xem dự án</a>
+                                    data-lead-subject="TƯ VẤN THIẾT KẾ">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 12a7.5 7.5 0 0 1-7.5 7.5 8 8 0 0 1-3.2-.66L4.5 20l1.2-3.5A7.5 7.5 0 1 1 20 12Z"/>
+                                </svg>
+                                Nhận tư vấn
+                            </button>
+                            <a class="hero__btn hero__btn--outline" href="{{ write_url('kho-giao-dien') }}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                     aria-hidden="true">
+                                    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+                                    <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+                                </svg>
+                                Xem kho giao diện
+                            </a>
                         </div>
 
                         {{-- Counted from the database. A number nobody can check is worth
@@ -79,18 +92,31 @@
                             <img src="{{ $system['homepage_logo'] }}" alt="">
                         </div>
 
-                        <div class="hero__bubbles">
-                            @foreach ([
-                                ['UI/UX', 'layout', 1],
-                                ['Cloud', 'cloud', 2],
-                                ['CMS', 'cms', 3],
-                                ['SEO', 'seo', 4],
-                                [null, 'cart', 5],
-                                [null, 'code', 6],
-                                [null, 'data', 7],
-                                [null, 'chart', 8],
-                            ] as [$label, $icon, $slot])
-                                <span class="hero__bubble hero__bubble--{{ $slot }} {{ $label ? 'has-label' : '' }}">
+                        {{-- Each item rides its own arm. The arm spins, the item spins
+                             back the same amount so it stays upright, and the rings do not
+                             move at all — which is what makes the items look like they are
+                             travelling rather than the whole disc turning.
+
+                             The arm's box *is* the radius: the outer arm fills the orbit so
+                             its top edge is the outer ring, the inner arm is inset to match
+                             the inner ring. No length maths, and it stays correct at every
+                             width.
+
+                             --delay is negative so each item starts partway round: for a
+                             duration D and a start angle A, delay = -(A / 360) x D. --}}
+                        @foreach ([
+                            ['UI/UX', 'layout', 'outer', '0s'],
+                            ['Cloud', 'cloud', 'outer', '-9s'],
+                            ['CMS', 'cms', 'outer', '-18s'],
+                            ['SEO', 'seo', 'outer', '-27s'],
+                            [null, 'cart', 'inner', '-3s'],
+                            [null, 'code', 'inner', '-9s'],
+                            [null, 'data', 'inner', '-15s'],
+                            [null, 'chart', 'inner', '-21s'],
+                        ] as [$label, $icon, $ring, $delay])
+                            <div class="hero__arm hero__arm--{{ $ring }}" style="--delay: {{ $delay }}">
+                                <span class="hero__bubble {{ $label ? 'has-label' : '' }}"
+                                      style="--delay: {{ $delay }}">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                                          stroke-linecap="round" stroke-linejoin="round">
                                         @switch($icon)
@@ -121,8 +147,8 @@
                                     </svg>
                                     @if ($label)<b>{{ $label }}</b>@endif
                                 </span>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
